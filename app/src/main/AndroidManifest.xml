@@ -8,6 +8,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ESPG9app" />
+        android:theme="@style/Theme.ESPG9app" >
+
+
+        <activity android:name=".QRPage" />
+
+    </application>
 
 </manifest>
