@@ -18,6 +18,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/bt_generate"
         android:text="Generate"/>
+
+    <ImageView
+        android:layout_width= "match_parent"
+        android:layout_height= "wrap_content"
+        android:id="@+id/iv_qr"
+        android:scaleType="fitCenter"/>
+
 <!--        at 2:33 in the video https://youtu.be/n8HdrLYL9DA-> -->
 
 </LinearLayout>
