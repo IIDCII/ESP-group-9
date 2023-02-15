@@ -13,4 +13,10 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="StudentMainCardView">
+        <item name="cardBackgroundColor">#575757</item>
+    </style>
+    <style name="StudentMainCardText">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>
