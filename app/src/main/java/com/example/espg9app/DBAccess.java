@@ -2,29 +2,55 @@ package com.example.espg9app;
 import java.sql.*;
 
 public class DBAccess {
-    public static void main(String[] args) {
-        Connection conn = null;
 
-        System.out.println("Working");
+    public Connection conn;
+    public Statement st;
+    public static String url = "jdbc:mysql://sql8.freemysqlhosting.net";
+    public static String dbUsername = "sql8598438";
+    public static String dbPassword = "mQ2acQ2I4h";
 
+    public void openConnection() {
         try {
-            String url = "jdbc:mysql://sql8.freemysqlhosting.net";
-            Class.forName("com.mysql.jdbc.Driver");
-
-            conn = DriverManager.getConnection(url, "sql8598438", "mQ2acQ2I4h");
-            System.out.println("Database connection established");
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                    System.out.println("Database connection terminated");
-                } catch (Exception e) {
-                    /* ignore close errors */ }
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
+
+            conn = DriverManager.getConnection(url, dbUsername, dbPassword);
+            st = conn.createStatement();
+            st.executeQuery("USE sql8598438");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public void closeConnection() {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                /* ignore close errors */ }
+        }
+    }
+    public Boolean emailInDB(String email) {
+        openConnection();
+        ResultSet rs;
+        try {
+            rs = st.executeQuery("SELECT * FROM `tbl_studentInfo` WHERE email = \"jamiebrine@yahoo.co.uk\"");
+            if (rs.next()) return true;
+            return false;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        DBAccess dba = new DBAccess();
+        System.out.println(dba.emailInDB("jamiebrine@yahoo.co.uk"));
+        dba.closeConnection();
     }
 }
 
