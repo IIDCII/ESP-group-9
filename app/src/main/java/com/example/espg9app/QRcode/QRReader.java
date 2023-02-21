@@ -1,21 +1,18 @@
-package com.example.espg9app;
+package com.example.espg9app.QRcode;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.espg9app.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.journeyapps.barcodescanner.ScanContract;
-import com.journeyapps.barcodescanner.ScanOptions;
 
 public class QRReader extends AppCompatActivity {
 
@@ -61,7 +58,7 @@ public class QRReader extends AppCompatActivity {
             });
             builder.show();
         } else {
-            Toast.makeText(this, "rhatted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "not available", Toast.LENGTH_SHORT).show();
         }
 
     }

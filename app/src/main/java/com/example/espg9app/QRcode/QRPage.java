@@ -1,4 +1,4 @@
-package com.example.espg9app;
+package com.example.espg9app.QRcode;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.espg9app.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
