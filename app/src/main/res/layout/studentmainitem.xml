@@ -18,13 +18,14 @@
         android:animateLayoutChanges="true"
         android:animationCache="true"
         android:theme="@style/StudentMainCardView"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp"
-        app:cardElevation="5dp"
-        app:cardMaxElevation="8dp"
+        app:cardElevation="3dp"
+        app:cardMaxElevation="5dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="false">
 
-        <TableLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical">
@@ -40,27 +41,34 @@
                 android:layout_marginBottom="@dimen/small_padding"
                 android:text="This is a test"
                 android:textSize="23sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:theme="@style/StudentMainCardText" />
+
             <ImageView
                 android:id="@+id/image_main"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="20dp" />
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.943"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/text_date"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|end"
-                android:layout_marginStart="200dp"
-                android:layout_marginTop="2.5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"
-                android:text="20:23 6/03/2020"
-                android:textSize="15sp"
-                android:theme="@style/StudentMainCardText" />
-        </TableLayout>
+            <RatingBar
+                android:id="@+id/ratingBar2"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="56dp"
+                android:numStars="5"
+                android:rating="3.5"
+                android:isIndicator="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>

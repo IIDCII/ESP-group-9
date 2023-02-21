@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,12 +35,13 @@ public class StudentMainAdapter extends ArrayAdapter<Business>
         {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.studentmainitem, parent, false);
         }
+        RatingBar rb =(RatingBar) convertView.findViewById(R.id.ratingBar2);
         TextView tv = (TextView) convertView.findViewById(R.id.text_main);
         ImageView iv = (ImageView) convertView.findViewById(R.id.image_main);
 
         tv.setText(business.getName());
         iv.setImageResource(business.getImage());
-
+        rb.setRating(business.getRating());
 
         return convertView;
     }
