@@ -20,6 +20,7 @@ public class QRPage extends Activity {
     Button bt_generate;
     ImageView iv_qr;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,4 +51,5 @@ public class QRPage extends Activity {
             e.printStackTrace();
         }
     }
+
 }

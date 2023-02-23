@@ -45,10 +45,11 @@ public class QRReader extends AppCompatActivity {
 
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
 
+//      when implementing, you need to change the code inside here for it to open up the voucher
         if (intentResult.getContents() != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(QRReader.this);
 
-            builder.setTitle("Result");
+            builder.setTitle("voucher key");
             builder.setMessage(intentResult.getContents());
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
@@ -58,7 +59,7 @@ public class QRReader extends AppCompatActivity {
             });
             builder.show();
         } else {
-            Toast.makeText(this, "not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "this qr code is not available", Toast.LENGTH_SHORT).show();
         }
 
     }
