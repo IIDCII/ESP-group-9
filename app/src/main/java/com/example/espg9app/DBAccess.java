@@ -1,5 +1,6 @@
 package com.example.espg9app;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DBAccess {
 
@@ -50,13 +51,13 @@ public class DBAccess {
         try {
             rs = st.executeQuery("SELECT * FROM `User` WHERE Email = \"" + email + "\"");
             if (rs.next()) {
-                this.closeConnection();
+                closeConnection();
                 return false;
             }
 
             rs = st.executeQuery("SELECT * FROM `User` WHERE Username = \"" + email + "\"");
             if (rs.next()) {
-                this.closeConnection();
+                closeConnection();
                 return false;
             }
 
@@ -71,9 +72,9 @@ public class DBAccess {
         openConnection();
 
         try {
-            st.executeUpdate("INSERT INTO `User` (`Username`, `Firstname`, `Lastname`, `Email`) VALUES " +
-                    "('" + username + "', '" + firstName + "', '" + lastName + "', '" + email + "')");
-            this.closeConnection();
+            st.executeUpdate("INSERT INTO `User` (`Username`, `Firstname`, `Lastname`, `Email`) VALUES ('"
+                    + username + "', '" + firstName + "', '" + lastName + "', '" + email + "')");
+            closeConnection();
             return true;
         }
 
@@ -83,16 +84,63 @@ public class DBAccess {
 
     }
 
+    public ArrayList<Business> getAllBusinesses() {
+        openConnection();
+        ResultSet rs;
+
+        try {
+            rs = st.executeQuery("SELECT * FROM `BusinessInfo`");
+            Business businessToAdd = new Business();
+            ArrayList<Business> businessArray = new ArrayList<>();
+
+            while (rs.next()) {
+                businessToAdd.setName(rs.getString("BusinessName"));
+                businessToAdd.setIconPath(rs.getString("Icon"));
+                businessToAdd.setTags(rs.getString("Tags"));
+                businessToAdd.setDescription(rs.getString("Description"));
+                businessToAdd.setSusRating(rs.getFloat("SusRating"));
+
+                Coordinates coordToAdd = new Coordinates(rs.getDouble("Latitude"), rs.getDouble("Longitude"));
+                businessToAdd.setCoordinates(coordToAdd);
+
+                businessArray.add(businessToAdd);
+            }
+
+            closeConnection();
+            return businessArray;
+            
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public boolean addBusiness(String email, String name, String iconPath, String tags, String description, double susRating, Coordinates coordinates) {
+        openConnection();
+
+        try {
+
+            st.executeUpdate("INSERT INTO `BusinessUser` (`BusinessEmail`) VALUES ('" + email + "')");
+            st.executeUpdate("INSERT INTO `BusinessInfo` VALUES ((SELECT BusinessID FROM `BusinessUser` WHERE BusinessEmail = '" + email + "'), '"
+                    + name + "', '" + iconPath + "', '" + tags + "', '" + description + "', " + susRating + ", "
+                    + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ")");
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     //
     // ----
     //
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-//        test whatever you like in here
-//        if (dba.checkStudentAccountValid("alexanderager@yahoo.co.uk", "alex456")) {
-//            System.out.println(dba.addStudentAccount("alex456", "Alex", "Ager", "alexanderager@gmail.com", "Alex456!"));
-//        }
     }
 }
 
