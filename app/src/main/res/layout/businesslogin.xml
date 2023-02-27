@@ -68,13 +68,25 @@
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/et_password"
         android:layout_centerInParent="true"
-        android:ems="12"
         android:layout_marginTop="30dp"
-        android:text="Login"/>
+        android:ems="12"
+        android:text="Login"
+        android:background="@color/colourPrimary"/>
+
+    <Button
+        android:id="@+id/btn_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_login"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:ems="12"
+        android:text="Sign up"
+        android:background="@color/colourPrimary"/>
 
 
 </RelativeLayout>

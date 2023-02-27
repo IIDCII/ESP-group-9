@@ -1,6 +1,5 @@
 package com.example.espg9app;
 import android.content.Intent;
-import android.support.*;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,12 +12,13 @@ public class BusinessLogin extends AppCompatActivity {
 
     EditText et_username, et_password;
     Button btn_login;
-
+    Button btn_signup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.businesslogin);
         Login();
+        Signup();
     }
 
     void Login(){
@@ -29,7 +29,7 @@ public class BusinessLogin extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(et_username.getText().toString().equals("admin") && et_password.getText().toString().equals("admin")){
+                if(et_username.getText().toString().equals("") && et_password.getText().toString().equals("")){
                     Toast.makeText(BusinessLogin.this, "Username and Password is correct", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(BusinessLogin.this, BusinessMain.class);
                     startActivity(intent);
@@ -39,4 +39,17 @@ public class BusinessLogin extends AppCompatActivity {
             }
         });
     }
+    void Signup(){
+        btn_signup = (Button)findViewById(R.id.btn_signup);
+
+        btn_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BusinessSignup dialog = new BusinessSignup();
+                dialog.show(getSupportFragmentManager(), "signup_dialog");
+                }
+            }
+        );
+    }
+
 }
