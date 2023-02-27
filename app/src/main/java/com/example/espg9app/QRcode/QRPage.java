@@ -1,6 +1,7 @@
 package com.example.espg9app.QRcode;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,31 +16,10 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 
-public class QRPage extends Activity {
-    EditText edit_input;
-    Button bt_generate;
-    ImageView iv_qr;
+public class QRPage{
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.qrpage);
-
-        edit_input = findViewById(R.id.edit_input);
-        bt_generate = findViewById(R.id.bt_generate);
-        iv_qr = findViewById(R.id.iv_qr);
-        TextView url_link = (TextView) findViewById(R.id.url_link);
-
-        bt_generate.setOnClickListener(v -> {
-            generateQR();
-        });
-
-
-    }
-
-    private void generateQR() {
-        String text = edit_input.getText().toString().trim();
+    public void generateQR(ImageView iv_qr, String text) {
+        text = "in the jungle";
         MultiFormatWriter writer = new MultiFormatWriter();
         try {
             BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, 1000, 1000);

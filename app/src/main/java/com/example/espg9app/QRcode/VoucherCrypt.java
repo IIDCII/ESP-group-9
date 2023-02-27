@@ -5,10 +5,7 @@ import java.time.LocalTime;
 
 public class VoucherCrypt {
     private String voucherTitle;
-    private int discount;
     private String user;
-    private LocalDate date;
-    private LocalTime time;
 
     public VoucherCrypt(String vid,String bid){
         String voucherId = vid;
