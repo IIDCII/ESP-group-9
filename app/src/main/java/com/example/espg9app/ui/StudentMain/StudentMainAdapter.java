@@ -13,14 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
+import com.example.espg9app.Business;
 import com.example.espg9app.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentMainAdapter extends ArrayAdapter<Business>
 {
 
-    public StudentMainAdapter(Context context, int resource, List<Business> BusinessList)
+    public StudentMainAdapter(Context context, int resource, ArrayList<Business> BusinessList)
     {
         super(context,resource,BusinessList);
     }
@@ -40,8 +42,8 @@ public class StudentMainAdapter extends ArrayAdapter<Business>
         ImageView iv = (ImageView) convertView.findViewById(R.id.image_main);
 
         tv.setText(business.getName());
-        iv.setImageResource(business.getImage());
-        rb.setRating(business.getRating());
+//        iv.setImageResource(business.getIconPath());
+        rb.setRating(business.getSusRating());
 
         return convertView;
     }

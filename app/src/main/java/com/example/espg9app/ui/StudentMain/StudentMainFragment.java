@@ -3,6 +3,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
@@ -16,6 +17,9 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.espg9app.Business;
+import com.example.espg9app.Coordinates;
+import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 
 import java.util.ArrayList;
@@ -33,11 +37,12 @@ public class StudentMainFragment extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.studentmainfragment);
-
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         initSearchWidgets();
         setupData();
         setUpList();
-        setUpOnclickListener();
+//        setUpOnclickListener();
 
     }
 
@@ -83,18 +88,22 @@ public class StudentMainFragment extends AppCompatActivity {
 
     }
 
-    private void setupData() {
-        Business fishandchip = new Business("0", "fishandchip", R.drawable.fish, "foodanddrink", 5.0F);
-        businessArraylist.add(fishandchip);
-
-        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
-        businessArraylist.add(hairdresser);
+    private void setupData(){
+//        Business fishandchip = new Business("0", "fishandchip", R.drawable.fish, "foodanddrink", 5.0F);
+//        businessArraylist.add(fishandchip);
+//
+//        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
+//        businessArraylist.add(hairdresser);
         TextView tv1 = findViewById(R.id.StudentMainEmptyText);
-        if (!businessArraylist.isEmpty()){
-            tv1.setText("");
-        }
-        else{
-            tv1.setText("Nothing to see here today, check again later");
+        DBAccess dba = new DBAccess();
+        dba.openConnection();
+        businessArraylist = dba.getAllBusinesses();
+        System.out.println(businessArraylist);
+        dba.closeConnection();
+        if (!businessArraylist.isEmpty()) {
+        tv1.setText("");
+        } else {
+        tv1.setText("Nothing to see here today, check again later");
         }
     }
 
@@ -105,17 +114,17 @@ public class StudentMainFragment extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
-    private void setUpOnclickListener() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Business selectBusiness = (Business) (listView.getItemAtPosition(position));
-                Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
-                showDetail.putExtra("id", selectBusiness.getId());
-                startActivity(showDetail);
-            }
-        });
-    }
+//    private void setUpOnclickListener() {
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                Business selectBusiness = (Business) (listView.getItemAtPosition(position));
+//                Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
+//                showDetail.putExtra("id", selectBusiness.get());
+//                startActivity(showDetail);
+//            }
+//        });
+//    }
     private void filterList(String filter)
     {
         Animation aniFade = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in);

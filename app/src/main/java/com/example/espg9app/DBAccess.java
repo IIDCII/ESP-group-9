@@ -141,7 +141,11 @@ public class DBAccess {
     //
 
     public static void main(String[] args) {
-        DBAccess dba = new DBAccess();
+        DBAccess dba2 = new DBAccess();
+        dba2.openConnection();
+        dba2.addBusiness("busi@gmail.com", "Hairdresser", "", "Beauty", "Hair", 5, new Coordinates(-64.59216, 110.95493));
+        dba2.closeConnection();
     }
+
 }
 

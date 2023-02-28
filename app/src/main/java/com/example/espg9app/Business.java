@@ -8,6 +8,7 @@ public class Business {
     private float susRating;
     private Coordinates coordinates;
 
+
     public String getName() {
         return name;
     }

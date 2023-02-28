@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.espg9app.Business;
 import com.example.espg9app.R;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
@@ -40,8 +41,8 @@ public class BusinessDetail extends AppCompatActivity
         TextView tv = (TextView) findViewById(R.id.businessName);
         ImageView iv = (ImageView) findViewById(R.id.businessImage);
 
-        rb.setRating(selectedBusiness.getRating());
+        rb.setRating(selectedBusiness.getSusRating());
         tv.setText(selectedBusiness.getName());
-        iv.setImageResource(selectedBusiness.getImage());
+//        iv.setImageResource(selectedBusiness.getIconPath());
     }
 }
