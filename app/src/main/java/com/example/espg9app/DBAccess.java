@@ -75,6 +75,7 @@ public class DBAccess {
             st.executeUpdate("INSERT INTO `User` (`Username`, `Firstname`, `Lastname`, `Email`) VALUES ('"
                     + username + "', '" + firstName + "', '" + lastName + "', '" + email + "')");
             closeConnection();
+
             return true;
         }
 
