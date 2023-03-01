@@ -105,6 +105,10 @@ public class DBAccess {
                 Coordinates coordToAdd = new Coordinates(rs.getDouble("Latitude"), rs.getDouble("Longitude"));
                 businessToAdd.setCoordinates(coordToAdd);
 
+                if (rs.getInt("VoucherActive") == 0) businessToAdd.setVoucherActive(false);
+                else businessToAdd.setVoucherActive(true);
+
+                businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
                 businessArray.add(businessToAdd);
             }
 
@@ -118,15 +122,19 @@ public class DBAccess {
 
     }
 
-    public boolean addBusiness(String email, String name, String iconPath, String tags, String description, double susRating, Coordinates coordinates) {
+    public boolean addBusiness(String email, String name, String iconPath, String tags, String description,
+                               double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers) {
         openConnection();
+        int x;
+        if (voucherActive) x = 1;
+        else x = 0;
 
         try {
 
             st.executeUpdate("INSERT INTO `BusinessUser` (`BusinessEmail`) VALUES ('" + email + "')");
             st.executeUpdate("INSERT INTO `BusinessInfo` VALUES ((SELECT BusinessID FROM `BusinessUser` WHERE BusinessEmail = '" + email + "'), '"
                     + name + "', '" + iconPath + "', '" + tags + "', '" + description + "', " + susRating + ", "
-                    + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ")");
+                    + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "')");
 
             closeConnection();
             return true;
@@ -137,11 +145,11 @@ public class DBAccess {
         }
     }
 
-    public boolean createVoucherInstance (int voucherID, String username) {
+    public boolean createVoucherInstance (int businessID, String username) {
         openConnection();
 
         try {
-            st.executeUpdate("INSERT INTO `VoucherClaims` (`VoucherID`, `Username`, `NumRedeemed`) VALUES (" + voucherID + ", '" + username + "', 0)");
+            st.executeUpdate("INSERT INTO `VoucherClaims` (`BusinessID`, `Username`, `NumRedeemed`) VALUES (" + businessID + ", '" + username + "', 0)");
 
             closeConnection();
             return true;
@@ -151,6 +159,51 @@ public class DBAccess {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public boolean redeemVoucher (int voucherClaimID) {
+        openConnection();
+
+        try {
+            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean deactivateVoucher(int businessID) {
+        openConnection();
+
+        try {
+            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 0 WHERE BusinessID = '" + businessID + "'");
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean activateVoucher(int businessID) {
+        openConnection();
+
+        try {
+            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 1 WHERE BusinessID = '" + businessID + "'");
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //
@@ -159,7 +212,11 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        System.out.println(dba.createVoucherInstance(111, "jamie123"));
+        dba.activateVoucher(9);
+        dba.activateVoucher(3);
+        dba.activateVoucher(4);
+        dba.activateVoucher(5);
+        dba.activateVoucher(8);
     }
 }
 
