@@ -95,6 +95,7 @@ public class DBAccess {
             ArrayList<Business> businessArray = new ArrayList<>();
 
             while (rs.next()) {
+                businessToAdd.setId(rs.getInt("BusinessID"));
                 businessToAdd.setName(rs.getString("BusinessName"));
                 businessToAdd.setIconPath(rs.getString("Icon"));
                 businessToAdd.setTags(rs.getString("Tags"));
@@ -136,12 +137,29 @@ public class DBAccess {
         }
     }
 
+    public boolean createVoucherInstance (int voucherID, String username) {
+        openConnection();
+
+        try {
+            st.executeUpdate("INSERT INTO `VoucherClaims` (`VoucherID`, `Username`, `NumRedeemed`) VALUES (" + voucherID + ", '" + username + "', 0)");
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     //
     // ----
     //
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
+        System.out.println(dba.createVoucherInstance(111, "jamie123"));
     }
 }
 

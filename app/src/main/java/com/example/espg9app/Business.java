@@ -1,12 +1,22 @@
 package com.example.espg9app;
 
 public class Business {
+
+    private int id;
     private String name;
     private String iconPath;
     private String description;
     private String tags;
     private float susRating;
     private Coordinates coordinates;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
