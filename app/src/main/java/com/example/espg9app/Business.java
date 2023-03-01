@@ -1,12 +1,25 @@
 package com.example.espg9app;
 
 public class Business {
+
+    private int id;
     private String name;
     private String iconPath;
     private String description;
     private String tags;
     private float susRating;
     private Coordinates coordinates;
+    private boolean voucherActive;
+    private String discountTiers;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -55,4 +68,21 @@ public class Business {
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
+
+    public boolean isVoucherActive() {
+        return voucherActive;
+    }
+
+    public void setVoucherActive(boolean voucherActive) {
+        this.voucherActive = voucherActive;
+    }
+
+    public String getDiscountTiers() {
+        return discountTiers;
+    }
+
+    public void setDiscountTiers(String discountTiers) {
+        this.discountTiers = discountTiers;
+    }
+
 }
