@@ -1,19 +1,19 @@
 package com.example.espg9app;
 
 public class Coordinates {
-    private double latitude;
-    private double longitude;
+    private float latitude;
+    private float longitude;
 
-    public Coordinates(double latitude, double longitude) {
+    public Coordinates(float latitude, float longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public void setLatitude(double x) {
+    public void setLatitude(float x) {
         this.latitude = x;
     }
 
-    public void setLongitude(double x) {
+    public void setLongitude(float x) {
         this.longitude = x;
     }
 

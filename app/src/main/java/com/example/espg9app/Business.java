@@ -8,6 +8,7 @@ public class Business {
     private String description;
     private String tags;
     private float susRating;
+    private float userRating;
     private Coordinates coordinates;
     private boolean voucherActive;
     private String discountTiers;
@@ -59,6 +60,14 @@ public class Business {
 
     public void setSusRating(float susRating) {
         this.susRating = susRating;
+    }
+
+    public float getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(float userRating) {
+        this.userRating = userRating;
     }
 
     public Coordinates getCoordinates() {
