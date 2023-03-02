@@ -64,7 +64,7 @@ public class DBAccess {
             return true;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
@@ -80,7 +80,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
         }
 
     }
@@ -88,11 +88,14 @@ public class DBAccess {
     public ArrayList<Business> getAllBusinesses() {
         openConnection();
         ResultSet rs;
+        ResultSet rs2;
 
         try {
             rs = st.executeQuery("SELECT * FROM `BusinessInfo`");
             Business businessToAdd = new Business();
             ArrayList<Business> businessArray = new ArrayList<>();
+            float sumRatings;
+            float numRatings;
 
             while (rs.next()) {
                 businessToAdd.setId(rs.getInt("BusinessID"));
@@ -102,13 +105,24 @@ public class DBAccess {
                 businessToAdd.setDescription(rs.getString("Description"));
                 businessToAdd.setSusRating(rs.getFloat("SusRating"));
 
-                Coordinates coordToAdd = new Coordinates(rs.getDouble("Latitude"), rs.getDouble("Longitude"));
+                Coordinates coordToAdd = new Coordinates(rs.getFloat("Latitude"), rs.getFloat("Longitude"));
                 businessToAdd.setCoordinates(coordToAdd);
 
                 if (rs.getInt("VoucherActive") == 0) businessToAdd.setVoucherActive(false);
                 else businessToAdd.setVoucherActive(true);
 
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
+
+                rs2 = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + rs.getInt("BusinessID"));
+                sumRatings = 0;
+                numRatings = 0;
+                while (rs2.next()) {
+                    sumRatings += rs2.getInt("NumberOfStars");
+                    numRatings += 1.0;
+                }
+                if (numRatings == 0) businessToAdd.setUserRating(0);
+                else businessToAdd.setUserRating(sumRatings / numRatings);
+
                 businessArray.add(businessToAdd);
             }
 
@@ -117,7 +131,7 @@ public class DBAccess {
             
         }
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return null;
         }
 
     }
@@ -141,7 +155,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
@@ -156,7 +170,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
         }
 
     }
@@ -172,7 +186,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
@@ -187,7 +201,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
@@ -202,7 +216,53 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
+        }
+    }
+
+    public boolean isVoucherInstance(int businessID, String username) {
+        openConnection();
+        ResultSet rs;
+
+        try {
+            rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
+            if (rs.next()) return true;
+            else return false;
+        }
+
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean changeDiscountTiers(int businessID, String newDiscountTiers) {
+        openConnection();
+
+        try {
+            st.executeUpdate("UPDATE BusinessInfo SET DiscountTiers = '" + newDiscountTiers + "' WHERE BusinessID = '" + businessID + "'");
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean leaveReview(String username, int businessID, int numberOfStars) {
+        openConnection();
+
+        try {
+            st.executeUpdate("DELETE FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
+            st.executeUpdate("INSERT INTO `Ratings` VALUES ('" + username + "', " + businessID + ", " + numberOfStars + ")");
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            return false;
         }
     }
 
@@ -212,11 +272,7 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        dba.activateVoucher(9);
-        dba.activateVoucher(3);
-        dba.activateVoucher(4);
-        dba.activateVoucher(5);
-        dba.activateVoucher(8);
+        dba.getAllBusinesses();
     }
 }
 
