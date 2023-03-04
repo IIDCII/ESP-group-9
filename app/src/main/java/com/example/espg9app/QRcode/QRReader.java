@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.espg9app.R;
+import com.example.espg9app.VoucherPage;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -47,9 +48,10 @@ public class QRReader extends AppCompatActivity {
 
 //      when implementing, you need to change the code inside here for it to open up the voucher
         if (intentResult.getContents() != null) {
+//          decrypt the qr code to get the voucher id and show the contents of it and that's all
             AlertDialog.Builder builder = new AlertDialog.Builder(QRReader.this);
 
-            builder.setTitle("voucher key");
+            builder.setTitle("voucher");
             builder.setMessage(intentResult.getContents());
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override

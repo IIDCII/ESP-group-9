@@ -19,7 +19,6 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 public class QRPage{
 
     public void generateQR(ImageView iv_qr, String text) {
-        text = "in the jungle";
         MultiFormatWriter writer = new MultiFormatWriter();
         try {
             BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, 1000, 1000);
@@ -32,4 +31,7 @@ public class QRPage{
         }
     }
 
+    public void getQR(){
+
+    }
 }

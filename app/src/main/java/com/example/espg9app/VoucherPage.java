@@ -21,6 +21,11 @@ public class VoucherPage extends AppCompatActivity {
     Button add_to_wallet;
     TextView description;
     ImageView qr_viewer;
+    String text;
+
+    public VoucherPage(String t) {
+        text = t;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceBundle) {
@@ -28,7 +33,7 @@ public class VoucherPage extends AppCompatActivity {
         setContentView(R.layout.voucherpage);
 
         QRPage qr = new QRPage();
-        String text = "In the jungle the mighty jungle";
+        text = "In the jungle the mighty jungle";
 
         add_to_wallet = findViewById(R.id.add_to_wallet);
         description = findViewById(R.id.description);
@@ -36,11 +41,12 @@ public class VoucherPage extends AppCompatActivity {
 
         description.setText("Butchers\n10% off all products\nActive");
 
+        qr.generateQR(qr_viewer,text);
 
-        qr.generateQR(qr_viewer, text);
-
+//      just add to DB, don't need to open the page
         add_to_wallet.setOnClickListener(v-> {
             System.out.println("Going to add this voucher id to the wallet");
+//            change colour to confirm that it's been added
         });
     }
 }
