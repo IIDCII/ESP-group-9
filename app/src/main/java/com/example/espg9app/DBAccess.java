@@ -74,14 +74,17 @@ public class DBAccess {
         try {
             st.executeUpdate("INSERT INTO `User` (`Username`, `Firstname`, `Lastname`, `Email`) VALUES ('"
                     + username + "', '" + firstName + "', '" + lastName + "', '" + email + "')");
+            
+            //Add in calculations for password salt and hash here
+            
+            
+            st.executeUpdate("INSERT INTO `UserLogin` (`Username`, `PasswordSalt`, `PasswordHash`) VALUES ('"
+                    + username + "', '" + PasswordSalt + "', '" + PasswordHash + "')");
             closeConnection();
 
             return true;
         }
 
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
