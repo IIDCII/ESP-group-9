@@ -23,9 +23,6 @@ public class VoucherPage extends AppCompatActivity {
     ImageView qr_viewer;
     String text;
 
-    public VoucherPage(String t) {
-        text = t;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceBundle) {
