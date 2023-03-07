@@ -22,6 +22,8 @@ public class VoucherPage extends AppCompatActivity {
     TextView description;
     ImageView qr_viewer;
     String text;
+    TextView live;
+    Boolean liveCheck = false;
 
 
     @Override
@@ -35,8 +37,17 @@ public class VoucherPage extends AppCompatActivity {
         add_to_wallet = findViewById(R.id.add_to_wallet);
         description = findViewById(R.id.description);
         qr_viewer = findViewById(R.id.qr_viewer);
+        live = findViewById(R.id.live);
+
 
         description.setText("Butchers\n10% off all products\nActive");
+
+        if(liveCheck == true){
+            live.setText("active");
+        }
+        else {
+            live.setText("inactive");
+        }
 
         qr.generateQR(qr_viewer,text);
 
