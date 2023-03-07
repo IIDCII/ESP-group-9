@@ -21,10 +21,16 @@ public class VoucherPage extends AppCompatActivity {
     Button add_to_wallet;
     TextView description;
     ImageView qr_viewer;
-    String text;
+    String voucherName;
+    String voucherID;
     TextView live;
     Boolean liveCheck = false;
 
+    public VoucherPage(String voucherName, Boolean liveCheck, String voucherID ){
+        this.voucherName = voucherName;
+        this.liveCheck = liveCheck;
+        this.voucherID = voucherID;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceBundle) {
@@ -32,7 +38,7 @@ public class VoucherPage extends AppCompatActivity {
         setContentView(R.layout.voucherpage);
 
         QRPage qr = new QRPage();
-        text = "In the jungle the mighty jungle";
+        voucherName = "In the jungle the mighty jungle";
 
         add_to_wallet = findViewById(R.id.add_to_wallet);
         description = findViewById(R.id.description);
@@ -49,7 +55,7 @@ public class VoucherPage extends AppCompatActivity {
             live.setText("inactive");
         }
 
-        qr.generateQR(qr_viewer,text);
+        qr.generateQR(qr_viewer,voucherName);
 
 //      just add to DB, don't need to open the page
         add_to_wallet.setOnClickListener(v-> {
