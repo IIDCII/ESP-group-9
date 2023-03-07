@@ -140,6 +140,16 @@ public class DBAccess {
                     businessToAdd.setNumReviews(0);
                 }
 
+                rs2 = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + rs.getInt("BusinessID"));
+                sumRatings = 0;
+                numRatings = 0;
+                while (rs2.next()) {
+                    sumRatings += rs2.getInt("NumberOfStars");
+                    numRatings += 1.0;
+                }
+                if (numRatings == 0) businessToAdd.setUserRating(0);
+                else businessToAdd.setUserRating(sumRatings / numRatings);
+
                 businessArray.add(businessToAdd);
             }
 
@@ -148,7 +158,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            return null;
         }
 
     }
