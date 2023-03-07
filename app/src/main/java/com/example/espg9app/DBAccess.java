@@ -89,6 +89,7 @@ public class DBAccess {
         openConnection();
         ResultSet rs;
         ResultSet rs2;
+        Statement st2 = null;
 
         try {
             rs = st.executeQuery("SELECT * FROM `BusinessInfo`");
@@ -96,9 +97,12 @@ public class DBAccess {
             ArrayList<Business> businessArray = new ArrayList<>();
             float sumRatings;
             float numRatings;
+            int currentID;
 
             while (rs.next()) {
-                businessToAdd.setId(rs.getInt("BusinessID"));
+                currentID = rs.getInt("BusinessID");
+                businessToAdd.setId(currentID);
+
                 businessToAdd.setName(rs.getString("BusinessName"));
                 businessToAdd.setIconPath(rs.getString("Icon"));
                 businessToAdd.setTags(rs.getString("Tags"));
@@ -108,10 +112,33 @@ public class DBAccess {
                 Coordinates coordToAdd = new Coordinates(rs.getFloat("Latitude"), rs.getFloat("Longitude"));
                 businessToAdd.setCoordinates(coordToAdd);
 
-                if (rs.getInt("VoucherActive") == 0) businessToAdd.setVoucherActive(false);
-                else businessToAdd.setVoucherActive(true);
+                businessToAdd.setVoucherActive(rs.getInt("VoucherActive") != 0);
 
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
+
+                try {
+                    rs2 = st2.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + currentID);
+                }
+                catch (NullPointerException e) {
+                    rs2 = null;
+                }
+
+                sumRatings = 0;
+                numRatings = 0;
+
+                if (rs2 != null) {
+                    while (rs2.next()) {
+                        sumRatings += rs2.getInt("NumberOfStars");
+                        numRatings += 1.0;
+                    }
+                    businessToAdd.setUserRating(sumRatings / numRatings);
+                    businessToAdd.setNumReviews((int) numRatings);
+                }
+
+                else {
+                    businessToAdd.setUserRating(0);
+                    businessToAdd.setNumReviews(0);
+                }
 
                 rs2 = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + rs.getInt("BusinessID"));
                 sumRatings = 0;
@@ -128,8 +155,8 @@ public class DBAccess {
 
             closeConnection();
             return businessArray;
-            
         }
+
         catch (SQLException e) {
             return null;
         }
@@ -289,8 +316,7 @@ public class DBAccess {
 
         try {
             rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
-            if (rs.next()) return true;
-            else return false;
+            return rs.next();
         }
 
         catch (SQLException e) {

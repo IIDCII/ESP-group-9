@@ -9,6 +9,7 @@ public class Business {
     private String tags;
     private float susRating;
     private float userRating;
+    private int numReviews;
     private Coordinates coordinates;
     private boolean voucherActive;
     private String discountTiers;
@@ -69,6 +70,14 @@ public class Business {
 
     public void setUserRating(float userRating) {
         this.userRating = userRating;
+    }
+
+    public int getNumReviews() {
+        return numReviews;
+    }
+
+    public void setNumReviews(int numReviews) {
+        this.numReviews = numReviews;
     }
 
     public Coordinates getCoordinates() {
