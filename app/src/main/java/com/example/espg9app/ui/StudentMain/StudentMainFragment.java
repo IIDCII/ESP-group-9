@@ -1,24 +1,16 @@
 package com.example.espg9app.ui.StudentMain;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.transition.TransitionManager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.espg9app.Business;
-import com.example.espg9app.Coordinates;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 
@@ -75,7 +67,7 @@ public class StudentMainFragment extends AppCompatActivity {
                 }
                 StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, filteredBusinesses);
                 listView.setAdapter(adapter);
-                TextView tv1 = findViewById(R.id.StudentMainEmptyText);
+                TextView tv1 = findViewById(R.id.voucherEmptyText);
                 if (!filteredBusinesses.isEmpty()){
                     tv1.setText("");
                 }
@@ -94,7 +86,7 @@ public class StudentMainFragment extends AppCompatActivity {
 //
 //        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
 //        businessArraylist.add(hairdresser);
-        TextView tv1 = findViewById(R.id.StudentMainEmptyText);
+        TextView tv1 = findViewById(R.id.voucherEmptyText);
         DBAccess dba = new DBAccess();
         dba.openConnection();
         businessArraylist = dba.getAllBusinesses();
@@ -108,7 +100,7 @@ public class StudentMainFragment extends AppCompatActivity {
     }
 
     private void setUpList() {
-        listView = (ListView) findViewById(R.id.BusinessListView);
+        listView = (ListView) findViewById(R.id.voucherList);
 
         StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, businessArraylist);
         listView.setAdapter(adapter);
@@ -152,7 +144,7 @@ public class StudentMainFragment extends AppCompatActivity {
         }
         StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, filteredBusinesses);
         listView.setAdapter(adapter);
-        TextView tv1 = findViewById(R.id.StudentMainEmptyText);
+        TextView tv1 = findViewById(R.id.voucherEmptyText);
         if (!filteredBusinesses.isEmpty()){
             tv1.setText("");
         }

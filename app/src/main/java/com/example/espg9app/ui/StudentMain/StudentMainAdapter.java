@@ -9,15 +9,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 
 import com.example.espg9app.Business;
 import com.example.espg9app.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StudentMainAdapter extends ArrayAdapter<Business>
 {
@@ -38,7 +34,7 @@ public class StudentMainAdapter extends ArrayAdapter<Business>
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.studentmainitem, parent, false);
         }
         RatingBar rb =(RatingBar) convertView.findViewById(R.id.ratingBar2);
-        TextView tv = (TextView) convertView.findViewById(R.id.text_main);
+        TextView tv = (TextView) convertView.findViewById(R.id.voucherName);
         ImageView iv = (ImageView) convertView.findViewById(R.id.image_main);
 
         tv.setText(business.getName());

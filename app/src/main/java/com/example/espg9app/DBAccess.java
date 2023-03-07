@@ -249,67 +249,6 @@ public class DBAccess {
         }
     }
 
-    public boolean createVoucherInstance (int businessID, String username) {
-        openConnection();
-
-        try {
-            st.executeUpdate("INSERT INTO `VoucherClaims` (`BusinessID`, `Username`, `NumRedeemed`) VALUES (" + businessID + ", '" + username + "', 0)");
-
-            closeConnection();
-            return true;
-        }
-
-        catch (SQLException e) {
-            return false;
-        }
-
-    }
-
-    public boolean redeemVoucher (int voucherClaimID) {
-        openConnection();
-
-        try {
-            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
-
-            closeConnection();
-            return true;
-        }
-
-        catch (SQLException e) {
-            return false;
-        }
-    }
-
-    public boolean deactivateVoucher(int businessID) {
-        openConnection();
-
-        try {
-            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 0 WHERE BusinessID = '" + businessID + "'");
-
-            closeConnection();
-            return true;
-        }
-
-        catch (SQLException e) {
-            return false;
-        }
-    }
-
-    public boolean activateVoucher(int businessID) {
-        openConnection();
-
-        try {
-            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 1 WHERE BusinessID = '" + businessID + "'");
-
-            closeConnection();
-            return true;
-        }
-
-        catch (SQLException e) {
-            return false;
-        }
-    }
-
     public boolean isVoucherInstance(int businessID, String username) {
         openConnection();
         ResultSet rs;
@@ -362,7 +301,7 @@ public class DBAccess {
     public static void main(String[] args) {
         DBAccess dba2 = new DBAccess();
         dba2.openConnection();
-        dba2.addBusiness("busi@gmail.com", "Hairdresser", "", "Beauty", "Hair", 5, new Coordinates(-64.59216, 110.95493));
+        dba2.addBusiness("busi@gmail.com", "Hairdresser", "", "Beauty", "Hair", 5, new Coordinates(-64.59216f, 110.95493f), false, "0");
         dba2.closeConnection();
     }
 
