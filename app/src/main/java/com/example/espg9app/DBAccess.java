@@ -88,77 +88,64 @@ public class DBAccess {
     public ArrayList<Business> getAllBusinesses() {
         openConnection();
         ResultSet rs;
-        ResultSet rs2;
-        Statement st2 = null;
+        int numBusinesses = 0;
 
         try {
             rs = st.executeQuery("SELECT * FROM `BusinessInfo`");
-            Business businessToAdd = new Business();
+            if (rs == null) return null;
+
             ArrayList<Business> businessArray = new ArrayList<>();
-            float sumRatings;
-            float numRatings;
-            int currentID;
 
             while (rs.next()) {
-                currentID = rs.getInt("BusinessID");
-                businessToAdd.setId(currentID);
+                Business businessToAdd = new Business();
 
+                businessToAdd.setId(rs.getInt("BusinessID"));
                 businessToAdd.setName(rs.getString("BusinessName"));
                 businessToAdd.setIconPath(rs.getString("Icon"));
                 businessToAdd.setTags(rs.getString("Tags"));
                 businessToAdd.setDescription(rs.getString("Description"));
                 businessToAdd.setSusRating(rs.getFloat("SusRating"));
-
                 Coordinates coordToAdd = new Coordinates(rs.getFloat("Latitude"), rs.getFloat("Longitude"));
                 businessToAdd.setCoordinates(coordToAdd);
-
                 businessToAdd.setVoucherActive(rs.getInt("VoucherActive") != 0);
-
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
 
-                try {
-                    rs2 = st2.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + currentID);
-                }
-                catch (NullPointerException e) {
-                    rs2 = null;
-                }
+                businessArray.add(businessToAdd);
+                numBusinesses++;
+            }
+
+            float sumRatings;
+            float numRatings;
+
+            for (int i = 0; i < numBusinesses; i++) {
+                rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
                 sumRatings = 0;
                 numRatings = 0;
 
-                if (rs2 != null) {
-                    while (rs2.next()) {
-                        sumRatings += rs2.getInt("NumberOfStars");
-                        numRatings += 1.0;
-                    }
-                    businessToAdd.setUserRating(sumRatings / numRatings);
-                    businessToAdd.setNumReviews((int) numRatings);
+                while (rs.next()) {
+                    sumRatings += rs.getInt("NumberOfStars");
+                    numRatings += 1.0;
+                }
+
+                if (numRatings == 0) {
+                    businessArray.get(i).setUserRating(0);
+                    businessArray.get(i).setNumReviews(0);
                 }
 
                 else {
-                    businessToAdd.setUserRating(0);
-                    businessToAdd.setNumReviews(0);
+                    businessArray.get(i).setUserRating(sumRatings / numRatings);
+                    businessArray.get(i).setNumReviews((int) numRatings);
                 }
-
-                rs2 = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + rs.getInt("BusinessID"));
-                sumRatings = 0;
-                numRatings = 0;
-                while (rs2.next()) {
-                    sumRatings += rs2.getInt("NumberOfStars");
-                    numRatings += 1.0;
-                }
-                if (numRatings == 0) businessToAdd.setUserRating(0);
-                else businessToAdd.setUserRating(sumRatings / numRatings);
-
-                businessArray.add(businessToAdd);
             }
+
 
             closeConnection();
             return businessArray;
         }
 
         catch (SQLException e) {
-            return null;
+            throw new RuntimeException(e);
         }
 
     }
@@ -299,6 +286,8 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
+        ArrayList<Business> a = dba.getAllBusinesses();
+        for (int i = 0; i < a.size(); i++) a.get(i).soutBusiness();
     }
 }
 
