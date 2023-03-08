@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,8 +28,12 @@ public class BusinessVoucherListAdapter extends ArrayAdapter<VoucherPage> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.voucherlistitem,parent,false);
 
         }
-//        at 9:28 in the video
 
-        return super.getView(position, convertView, parent);
+        TextView voucherTitle = convertView.findViewById(R.id.voucher_title);
+        Button deleteVoucher = convertView.findViewById(R.id.delete_voucher);
+
+        voucherTitle.setText(voucherPage.voucherName);
+
+        return convertView;
     }
 }
