@@ -114,6 +114,7 @@ public class DBAccess {
                 numBusinesses++;
             }
 
+
             float sumRatings;
             float numRatings;
 
