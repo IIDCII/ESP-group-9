@@ -1,6 +1,9 @@
 package com.example.espg9app;
 import java.sql.*;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.util.*;
 
 public class DBAccess {
 
@@ -296,9 +299,116 @@ public class DBAccess {
     //
     // ----
     //
+    public boolean encrypt(String username,String plaintext) {
+        String salt;
+        MessageDigest sha;
+        openConnection();
+        byte[] arr;
 
+        try {
+            arr = getSalt();
+            salt = new String(arr, StandardCharsets.UTF_8);
+            String pepper = "ab23foed2";
+            plaintext += salt;
+            plaintext += pepper;
+
+            sha = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+
+        sha.reset();
+        sha.update(plaintext.getBytes());
+
+        byte[] digest = sha.digest();
+        BigInteger bigInt = new BigInteger(1,digest);
+        String hashtext = bigInt.toString(16);
+
+        while(hashtext.length() < 32 ){
+            hashtext = "0"+hashtext;
+        }
+
+        try {
+            st.executeUpdate("INSERT INTO `UserLogin` (`Username`, `PasswordSalt`, `PasswordHash`) VALUES ('"
+                    + username + "', '" + salt + "', '" + hashtext + "')");
+            closeConnection();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+
+    }
+
+    //Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db for any user.
+    public boolean CheckPassword(String username, String Password) {
+        //Function to check whether entered password matches hash in database.
+        String salt;
+        MessageDigest sha;
+        openConnection();
+        ResultSet arr;
+        ResultSet hash;
+        String hashStr;
+        byte[] SaltStr;
+
+        try {
+            try {
+                arr = st.executeQuery("SELECT PasswordSalt FROM `UserLogin` WHERE Username = '" + username + "'");
+                arr.next();
+                SaltStr = arr.getBytes("PasswordSalt");
+            } catch(SQLException e) {
+                return false;
+            }
+
+            salt = new String(SaltStr, StandardCharsets.UTF_8);
+
+            String pepper = "ab23foed2";
+            Password += salt;
+            Password += pepper;
+
+            sha = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+
+        sha.reset();
+        sha.update(Password.getBytes());
+
+        //Converting to string.
+        byte[] digest = sha.digest();
+        BigInteger bigInt = new BigInteger(1,digest);
+        String hashtext = bigInt.toString(16);
+
+        while(hashtext.length() < 32 ){
+            hashtext = "0"+hashtext;
+        }
+
+        try {
+            hash = st.executeQuery("SELECT PasswordHash FROM `UserLogin` WHERE Username = '" + username + "'");
+            hash.next();
+            hashStr = hash.getString("PasswordHash");
+        }catch(SQLException e){
+            return false;
+        }
+
+        if(hashtext.equals(hashStr)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public static byte[] getSalt() throws NoSuchAlgorithmException {
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        secureRandom.nextBytes(salt);
+
+        return salt;
+    }
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
+
+        System.out.println(dba.encrypt("35","secretcode"));
+        System.out.println(dba.CheckPassword("35","secretcode"));
     }
 }
 
