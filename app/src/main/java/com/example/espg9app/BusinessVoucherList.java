@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,14 +16,18 @@ import java.util.ArrayList;
 public class BusinessVoucherList extends AppCompatActivity {
 
     BusinessvoucherlistBinding binding;
+    ListView listview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
        super.onCreate(savedInstanceState);
        binding = BusinessvoucherlistBinding.inflate(getLayoutInflater());
+       listview = findViewById(R.id.listview);
        setContentView(R.layout.businessvoucherlist);
        setContentView(binding.getRoot());
 
+
+//     this will just get extracted from the the DB
        String [] name = {"50% off all products","100% off mega munch sale!","Navi discount","Bee Movie","Vin Diesel family discount"};
 
        ArrayList<VoucherPage> voucherPageArrayList = new ArrayList<>();
@@ -40,7 +45,6 @@ public class BusinessVoucherList extends AppCompatActivity {
            @Override
            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                Intent i = new Intent(BusinessVoucherList.this,VoucherPage.class);
-               i.putExtra("name",name[position]);
                startActivity(i);
            }
        });
