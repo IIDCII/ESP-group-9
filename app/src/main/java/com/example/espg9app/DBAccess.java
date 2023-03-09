@@ -238,8 +238,6 @@ public class DBAccess {
 
         try {
             st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 1 WHERE BusinessID = '" + businessID + "'");
-
-
             closeConnection();
             return true;
         }
