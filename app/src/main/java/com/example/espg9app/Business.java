@@ -23,7 +23,6 @@ public class Business {
         this.id = id;
     }
 
-
     public String getName() {
         return name;
     }
@@ -102,6 +101,22 @@ public class Business {
 
     public void setDiscountTiers(String discountTiers) {
         this.discountTiers = discountTiers;
+    }
+
+    public void soutBusiness() {
+        System.out.println(this.getName());
+        System.out.println(this.getTags());
+        System.out.println(this.getDescription());
+        System.out.println(this.getIconPath());
+        System.out.println(this.getId());
+        System.out.println(this.getSusRating());
+        System.out.println(this.getUserRating());
+        System.out.println(this.getNumReviews());
+        System.out.println(this.getCoordinates().getLatitude());
+        System.out.println(this.getCoordinates().getLongitude());
+        System.out.println(this.getDiscountTiers());
+        System.out.println();
+        System.out.println();
     }
 
 }
