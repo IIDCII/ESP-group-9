@@ -55,7 +55,7 @@ public class DBAccess {
                 return false;
             }
 
-            rs = st.executeQuery("SELECT * FROM `User` WHERE Username = \"" + email + "\"");
+            rs = st.executeQuery("SELECT * FROM `User` WHERE Username = \"" + username + "\"");
             if (rs.next()) {
                 closeConnection();
                 return false;
@@ -176,8 +176,12 @@ public class DBAccess {
 
     public boolean createVoucherInstance (int businessID, String username) {
         openConnection();
+        ResultSet rs;
 
         try {
+            rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE Username = '" + username + "' AND BusinessID = " + businessID);
+            if (rs.next()) return false;
+
             st.executeUpdate("INSERT INTO `VoucherClaims` (`BusinessID`, `Username`, `NumRedeemed`) VALUES (" + businessID + ", '" + username + "', 0)");
 
             closeConnection();
@@ -190,7 +194,7 @@ public class DBAccess {
 
     }
 
-    public boolean redeemVoucher (int voucherClaimID) {
+    public boolean markVoucherRedeemed (int voucherClaimID) {
         openConnection();
 
         try {
@@ -280,14 +284,26 @@ public class DBAccess {
         }
     }
 
+    public boolean checkVoucherInstanceValid(int voucherClaimID) {
+        openConnection();
+        ResultSet rs;
+
+        try {
+            rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
+            return rs.next();
+        }
+
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
     //
     // ----
     //
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        ArrayList<Business> a = dba.getAllBusinesses();
-        for (int i = 0; i < a.size(); i++) a.get(i).soutBusiness();
     }
 }
 
