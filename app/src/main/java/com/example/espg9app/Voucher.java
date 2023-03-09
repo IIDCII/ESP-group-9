@@ -28,7 +28,7 @@ public class Voucher
 
     public void setDescription(String description)
     {
-        this.name = description;
+        this.description = description;
     }
 
 }

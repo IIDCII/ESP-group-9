@@ -18,7 +18,6 @@ import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
 import android.widget.RatingBar;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BusinessDetail extends AppCompatActivity
 {
@@ -66,7 +65,7 @@ public class BusinessDetail extends AppCompatActivity
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
 
-        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, businessList);
+        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, voucherArrayList);
         listView.setAdapter(adapter);
     }
 

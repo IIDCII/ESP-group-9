@@ -12,22 +12,23 @@ import android.widget.TextView;
 
 import com.example.espg9app.Business;
 import com.example.espg9app.R;
+import com.example.espg9app.Voucher;
 
 import java.util.ArrayList;
 
-public class BusinessViewAdapter extends ArrayAdapter<Business>
+public class BusinessViewAdapter extends ArrayAdapter<Voucher>
 {
 
-    public BusinessViewAdapter(Context context, int resource, ArrayList<Business> BusinessList)
+    public BusinessViewAdapter(Context context, int resource, ArrayList<Voucher> voucherList)
     {
-        super(context,resource,BusinessList);
+        super(context, resource, voucherList);
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        Business business = getItem(position);
+        Voucher voucher = getItem(position);
 
         if(convertView == null)
         {
@@ -37,8 +38,8 @@ public class BusinessViewAdapter extends ArrayAdapter<Business>
         TextView voucherName = (TextView) convertView.findViewById(R.id.voucherName);
         TextView voucherDetail = (TextView) convertView.findViewById(R.id.voucherDetail);
 
-        voucherName.setText(business.getName());
-        voucherDetail.setText(business.getName());
+        voucherName.setText(voucher.getName());
+        voucherDetail.setText(voucher.getDescription());
 
         return convertView;
     }
