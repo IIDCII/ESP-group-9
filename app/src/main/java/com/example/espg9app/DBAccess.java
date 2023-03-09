@@ -115,7 +115,6 @@ public class DBAccess {
                 businessToAdd.setVoucherActive(rs.getInt("VoucherActive") != 0);
 
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
-
                 try {
                     rs2 = st2.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + currentID);
                 }
@@ -158,6 +157,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
+            System.out.println(e);
             return null;
         }
 
@@ -299,9 +299,8 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba2 = new DBAccess();
-        dba2.openConnection();
-        dba2.addBusiness("busi@gmail.com", "Hairdresser", "", "Beauty", "Hair", 5, new Coordinates(-64.59216, 110.95493));
-        dba2.closeConnection();
+        dba2.addBusiness("busi1@gmail.com","Borgor","","Food&Drink","Borgor very yum",5.0,new Coordinates((float) 56.02439, (float) -69.19667),true,"10, 15, 20");
+
     }
 
 }
