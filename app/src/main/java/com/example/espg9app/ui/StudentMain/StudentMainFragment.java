@@ -37,7 +37,7 @@ public class StudentMainFragment extends AppCompatActivity {
         initSearchWidgets();
         setupData();
         setUpList();
-//        setUpOnclickListener();
+        setUpOnclickListener();
 
     }
 
@@ -92,7 +92,8 @@ public class StudentMainFragment extends AppCompatActivity {
         TextView tv1 = findViewById(R.id.StudentMainEmptyText);
         DBAccess dba = new DBAccess();
         businessArraylist = dba.getAllBusinesses();
-        System.out.println(businessArraylist);
+//        System.out.println(businessArraylist);
+//        for (int i = 0; i < businessArraylist.size(); i++) businessArraylist.get(i).soutBusiness();
         if (!businessArraylist.isEmpty()) {
         tv1.setText("");
         } else {
@@ -113,7 +114,8 @@ public class StudentMainFragment extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Business selectBusiness = (Business) (listView.getItemAtPosition(position));
                 Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
-                showDetail.putExtra("id", selectBusiness.getId());
+                showDetail.putExtra("id", (Integer.toString(selectBusiness.getId())));
+//                System.out.println(selectBusiness.getId());
                 startActivity(showDetail);
             }
         });
