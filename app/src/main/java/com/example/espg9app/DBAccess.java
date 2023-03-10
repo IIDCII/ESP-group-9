@@ -1,6 +1,9 @@
 package com.example.espg9app;
 import java.sql.*;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.util.*;
 
 public class DBAccess {
 
@@ -11,8 +14,9 @@ public class DBAccess {
     public static String dbPassword = "mQ2acQ2I4h";
 
     //
-    //helper functions ---- make sure each function calls these once each at the start and end
+    //helper functions ---- make sure each main function calls these once each at the start and end
     //
+
     public void openConnection() {
         try {
             try {
@@ -41,6 +45,80 @@ public class DBAccess {
     }
 
     //
+    //helper functions for redeemVoucher ---- these will fail if run by themselves as they don't establish a DB connection
+    //
+
+    public boolean markVoucherRedeemed (int voucherClaimID) {
+        try {
+            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
+            return true;
+        }
+
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean checkVoucherInstanceExistsAndActive(int voucherClaimID) {
+        ResultSet rs;
+        int businessID;
+
+        try {
+            rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
+
+            if (!rs.next()) return false;
+            else {
+                businessID = rs.getInt("BusinessID");
+                rs = st.executeQuery("SELECT `VoucherActive` FROM `BusinessInfo` WHERE BusinessID = " + businessID);
+                rs.next();
+
+                int active = rs.getInt("VoucherActive");
+                return (active == 1);
+            }
+        }
+
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public int getDiscountPercent(int voucherClaimID) {
+        int maxDiscountAchieved = 0;
+
+        try {
+            ResultSet rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
+            rs.next();
+
+            int businessID = rs.getInt("BusinessID");
+            int numRedeemed = rs.getInt("NumRedeemed");
+
+            rs = st.executeQuery("SELECT DiscountTiers FROM `BusinessInfo` WHERE BusinessID = " + businessID);
+            rs.next();
+
+            String discountTiers = rs.getString("DiscountTiers");
+            String[] tiersArray = discountTiers.split(",");
+
+            for (String s : tiersArray) {
+
+                //converts string representation of discount tiers into integer arraylists
+                Scanner scanner = new Scanner(s);
+                List<Integer> tierArrayList = new ArrayList<>();
+                while (scanner.hasNextInt()) {
+                    tierArrayList.add(scanner.nextInt());
+                }
+
+                if (numRedeemed >= tierArrayList.get(0)) maxDiscountAchieved = tierArrayList.get(1);
+            }
+
+            return maxDiscountAchieved;
+        }
+
+        catch (SQLException e) {
+            return 0;
+        }
+    }
+
+    //
     //main functions ---- add all the specific use cases under here
     //
 
@@ -55,7 +133,7 @@ public class DBAccess {
                 return false;
             }
 
-            rs = st.executeQuery("SELECT * FROM `User` WHERE Username = \"" + email + "\"");
+            rs = st.executeQuery("SELECT * FROM `User` WHERE Username = \"" + username + "\"");
             if (rs.next()) {
                 closeConnection();
                 return false;
@@ -114,15 +192,11 @@ public class DBAccess {
                 numBusinesses++;
             }
 
-
             float sumRatings;
             float numRatings;
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
-
-                sumRatings = 0;
-                numRatings = 0;
 
                 while (rs.next()) {
                     sumRatings += rs.getInt("NumberOfStars");
@@ -177,8 +251,12 @@ public class DBAccess {
 
     public boolean createVoucherInstance (int businessID, String username) {
         openConnection();
+        ResultSet rs;
 
         try {
+            rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE Username = '" + username + "' AND BusinessID = " + businessID);
+            if (rs.next()) return false;
+
             st.executeUpdate("INSERT INTO `VoucherClaims` (`BusinessID`, `Username`, `NumRedeemed`) VALUES (" + businessID + ", '" + username + "', 0)");
 
             closeConnection();
@@ -189,21 +267,6 @@ public class DBAccess {
             return false;
         }
 
-    }
-
-    public boolean redeemVoucher (int voucherClaimID) {
-        openConnection();
-
-        try {
-            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
-
-            closeConnection();
-            return true;
-        }
-
-        catch (SQLException e) {
-            return false;
-        }
     }
 
     public boolean deactivateVoucher(int businessID) {
@@ -279,6 +342,168 @@ public class DBAccess {
         catch (SQLException e) {
             return false;
         }
+    }
+
+    public int redeemVoucher(int voucherClaimID) {
+        openConnection();
+
+        if (!checkVoucherInstanceExistsAndActive(voucherClaimID)) {
+            closeConnection();
+            return 0;
+        }
+        int discount = getDiscountPercent(voucherClaimID);
+        if (discount > 0) {
+            boolean redeemedSuccessfully = markVoucherRedeemed(voucherClaimID);
+            if (!redeemedSuccessfully) {
+                closeConnection();
+                return 0;
+            }
+        }
+
+        closeConnection();
+        return discount;
+    }
+
+    // Encrypts plaintext password into a hash. Takes username/businessID (as string), password, and a Bool to specify whether a user or business.
+    public boolean encrypt(String username,String plaintext, boolean UserTrueBusinessFalse) {
+        String salt;
+        MessageDigest sha;
+        openConnection();
+        ResultSet array;
+        byte[] arr;
+        byte[] SaltStr;
+        String x = "temp";
+
+        try {
+            arr = getSalt();
+            salt = new String(arr, StandardCharsets.UTF_8);
+            String pepper = "ab23foed2";
+
+            if(UserTrueBusinessFalse){
+                st.executeUpdate("INSERT INTO `UserLogin` (`Username`, `PasswordSalt`, `PasswordHash`) VALUES ('"
+                        + username + "', '" + salt + "', '" + x + "')");
+                array = st.executeQuery("SELECT PasswordSalt FROM `UserLogin` WHERE Username = '" + username + "'");
+            }else {
+                int businessID;
+                businessID = Integer.parseInt(username);
+                st.executeUpdate("INSERT INTO `BusinessLogin` (`BusinessID`, `PasswordSalt`, `PasswordHash`) VALUES ('"
+                        + businessID + "', '" + salt + "', '" + x + "')");
+                array = st.executeQuery("SELECT PasswordSalt FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+
+            }
+
+            array.next();
+            SaltStr = array.getBytes("PasswordSalt");
+            salt = new String(SaltStr, StandardCharsets.UTF_8);
+
+            plaintext += salt;
+            plaintext += pepper;
+
+            sha = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException | SQLException e) {
+            return false;
+        }
+
+        sha.reset();
+        sha.update(plaintext.getBytes());
+
+        byte[] digest = sha.digest();
+        BigInteger bigInt = new BigInteger(1,digest);
+        String hashtext = bigInt.toString(16);
+
+        while(hashtext.length() < 32 ){
+            hashtext = "0"+hashtext;
+        }
+
+        try {
+            if(UserTrueBusinessFalse){
+                st.executeUpdate("UPDATE `UserLogin` SET PasswordHash = '" + hashtext + "'WHERE Username = '" + username + "'");
+            }else{
+                int businessID;
+                businessID = Integer.parseInt(username);
+                st.executeUpdate("UPDATE `BusinessLogin` SET PasswordHash = '" + hashtext + "'WHERE BusinessID = '" + businessID + "'");
+            }
+            closeConnection();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+
+    }
+
+    //Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db for any user. Takes username/businessID (as string), password, and a Bool to specify whether a user or business.
+    public boolean CheckPassword(String username, String Password, boolean UserTrueBusinessFalse) {
+        //Function to check whether entered password matches hash in database.
+        String salt;
+        MessageDigest sha;
+        openConnection();
+        ResultSet arr;
+        ResultSet hash;
+        String hashStr;
+        byte[] SaltStr;
+
+        try {
+            try {
+                if(UserTrueBusinessFalse){
+                    arr = st.executeQuery("SELECT PasswordSalt FROM `UserLogin` WHERE Username = '" + username + "'");
+                }else{
+                    int businessID;
+                    businessID = Integer.parseInt(username);
+                    arr = st.executeQuery("SELECT PasswordSalt FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+                }
+                arr.next();
+                SaltStr = arr.getBytes("PasswordSalt");
+
+            } catch(SQLException e) {
+                return false;
+            }
+
+            salt = new String(SaltStr, StandardCharsets.UTF_8);
+
+            String pepper = "ab23foed2";
+            Password += salt;
+            Password += pepper;
+            sha = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+
+        sha.reset();
+        sha.update(Password.getBytes());
+
+        //Converting to string.
+        byte[] digest = sha.digest();
+        BigInteger bigInt = new BigInteger(1,digest);
+        String hashtext = bigInt.toString(16);
+
+        while(hashtext.length() < 32 ){
+            hashtext = "0"+hashtext;
+        }
+
+        try {
+            if(UserTrueBusinessFalse) {
+                hash = st.executeQuery("SELECT PasswordHash FROM `UserLogin` WHERE Username = '" + username + "'");
+            }else{
+                int businessID;
+                businessID = Integer.parseInt(username);
+                hash = st.executeQuery("SELECT PasswordHash FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+            }
+            hash.next();
+            hashStr = hash.getString("PasswordHash");
+        }catch(SQLException e){
+            return false;
+        }
+
+        return hashtext.equals(hashStr);
+
+    }
+
+    public static byte[] getSalt() throws NoSuchAlgorithmException {
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        secureRandom.nextBytes(salt);
+
+        return salt;
     }
 
     //
