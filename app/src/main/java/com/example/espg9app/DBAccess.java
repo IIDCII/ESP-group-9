@@ -14,8 +14,9 @@ public class DBAccess {
     public static String dbPassword = "mQ2acQ2I4h";
 
     //
-    //helper functions ---- make sure each function calls these once each at the start and end
+    //helper functions ---- make sure each main function calls these once each at the start and end
     //
+
     public void openConnection() {
         try {
             try {
@@ -40,6 +41,80 @@ public class DBAccess {
             } catch (Exception e) {
                throw new RuntimeException(e);
             }
+        }
+    }
+
+    //
+    //helper functions for redeemVoucher ---- these will fail if run by themselves as they don't establish a DB connection
+    //
+
+    public boolean markVoucherRedeemed (int voucherClaimID) {
+        try {
+            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
+            return true;
+        }
+
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean checkVoucherInstanceExistsAndActive(int voucherClaimID) {
+        ResultSet rs;
+        int businessID;
+
+        try {
+            rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
+
+            if (!rs.next()) return false;
+            else {
+                businessID = rs.getInt("BusinessID");
+                rs = st.executeQuery("SELECT `VoucherActive` FROM `BusinessInfo` WHERE BusinessID = " + businessID);
+                rs.next();
+
+                int active = rs.getInt("VoucherActive");
+                return (active == 1);
+            }
+        }
+
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public int getDiscountPercent(int voucherClaimID) {
+        int maxDiscountAchieved = 0;
+
+        try {
+            ResultSet rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
+            rs.next();
+
+            int businessID = rs.getInt("BusinessID");
+            int numRedeemed = rs.getInt("NumRedeemed");
+
+            rs = st.executeQuery("SELECT DiscountTiers FROM `BusinessInfo` WHERE BusinessID = " + businessID);
+            rs.next();
+
+            String discountTiers = rs.getString("DiscountTiers");
+            String[] tiersArray = discountTiers.split(",");
+
+            for (String s : tiersArray) {
+
+                //converts string representation of discount tiers into integer arraylists
+                Scanner scanner = new Scanner(s);
+                List<Integer> tierArrayList = new ArrayList<>();
+                while (scanner.hasNextInt()) {
+                    tierArrayList.add(scanner.nextInt());
+                }
+
+                if (numRedeemed >= tierArrayList.get(0)) maxDiscountAchieved = tierArrayList.get(1);
+            }
+
+            return maxDiscountAchieved;
+        }
+
+        catch (SQLException e) {
+            return 0;
         }
     }
 
@@ -197,21 +272,6 @@ public class DBAccess {
 
     }
 
-    public boolean markVoucherRedeemed (int voucherClaimID) {
-        openConnection();
-
-        try {
-            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
-
-            closeConnection();
-            return true;
-        }
-
-        catch (SQLException e) {
-            return false;
-        }
-    }
-
     public boolean deactivateVoucher(int businessID) {
         openConnection();
 
@@ -287,23 +347,26 @@ public class DBAccess {
         }
     }
 
-    public boolean checkVoucherInstanceValid(int voucherClaimID) {
+    public int redeemVoucher(int voucherClaimID) {
         openConnection();
-        ResultSet rs;
 
-        try {
-            rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
-            return rs.next();
+        if (!checkVoucherInstanceExistsAndActive(voucherClaimID)) {
+            closeConnection();
+            return 0;
+        }
+        int discount = getDiscountPercent(voucherClaimID);
+        if (discount > 0) {
+            boolean redeemedSuccessfully = markVoucherRedeemed(voucherClaimID);
+            if (!redeemedSuccessfully) {
+                closeConnection();
+                return 0;
+            }
         }
 
-        catch (SQLException e) {
-            return false;
-        }
+        closeConnection();
+        return discount;
     }
 
-    //
-    // ----
-    //
     // Encrypts plaintext password into a hash. Takes username/businessID (as string), password, and a Bool to specify whether a user or business.
     public boolean encrypt(String username,String plaintext, boolean UserTrueBusinessFalse) {
         String salt;
@@ -340,9 +403,7 @@ public class DBAccess {
             plaintext += pepper;
 
             sha = MessageDigest.getInstance("SHA-512");
-        } catch (NoSuchAlgorithmException e) {
-            return false;
-        } catch (SQLException e) {
+        } catch (NoSuchAlgorithmException | SQLException e) {
             return false;
         }
 
@@ -436,10 +497,7 @@ public class DBAccess {
             return false;
         }
 
-        if(hashtext.equals(hashStr)) {
-            return true;
-        }
-        return false;
+        return hashtext.equals(hashStr);
 
     }
 
@@ -450,6 +508,11 @@ public class DBAccess {
 
         return salt;
     }
+
+    //
+    // ----
+    //
+
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
     }
