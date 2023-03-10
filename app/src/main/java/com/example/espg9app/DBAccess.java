@@ -1,6 +1,9 @@
 package com.example.espg9app;
 import java.sql.*;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.util.*;
 
 public class DBAccess {
 
@@ -284,11 +287,160 @@ public class DBAccess {
     //
     // ----
     //
+    // Encrypts plaintext password into a hash. Takes username/businessID (as string), password, and a Bool to specify whether a user or business.
+    public boolean encrypt(String username,String plaintext, boolean UserTrueBusinessFalse) {
+        String salt;
+        MessageDigest sha;
+        openConnection();
+        ResultSet array;
+        byte[] arr;
+        byte[] SaltStr;
+        String x = "temp";
 
+        try {
+            arr = getSalt();
+            salt = new String(arr, StandardCharsets.UTF_8);
+            String pepper = "ab23foed2";
+
+            if(UserTrueBusinessFalse){
+                st.executeUpdate("INSERT INTO `UserLogin` (`Username`, `PasswordSalt`, `PasswordHash`) VALUES ('"
+                        + username + "', '" + salt + "', '" + x + "')");
+                array = st.executeQuery("SELECT PasswordSalt FROM `UserLogin` WHERE Username = '" + username + "'");
+            }else {
+                int businessID;
+                businessID = Integer.parseInt(username);
+                st.executeUpdate("INSERT INTO `BusinessLogin` (`BusinessID`, `PasswordSalt`, `PasswordHash`) VALUES ('"
+                        + businessID + "', '" + salt + "', '" + x + "')");
+                array = st.executeQuery("SELECT PasswordSalt FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+
+            }
+
+            array.next();
+            SaltStr = array.getBytes("PasswordSalt");
+            salt = new String(SaltStr, StandardCharsets.UTF_8);
+
+            plaintext += salt;
+            plaintext += pepper;
+
+            sha = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            return false;
+        } catch (SQLException e) {
+            return false;
+        }
+
+        sha.reset();
+        sha.update(plaintext.getBytes());
+
+        byte[] digest = sha.digest();
+        BigInteger bigInt = new BigInteger(1,digest);
+        String hashtext = bigInt.toString(16);
+
+        while(hashtext.length() < 32 ){
+            hashtext = "0"+hashtext;
+        }
+
+        try {
+            if(UserTrueBusinessFalse){
+                st.executeUpdate("UPDATE `UserLogin` SET PasswordHash = '" + hashtext + "'WHERE Username = '" + username + "'");
+            }else{
+                int businessID;
+                businessID = Integer.parseInt(username);
+                st.executeUpdate("UPDATE `BusinessLogin` SET PasswordHash = '" + hashtext + "'WHERE BusinessID = '" + businessID + "'");
+            }
+            closeConnection();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+
+    }
+
+    //Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db for any user. Takes username/businessID (as string), password, and a Bool to specify whether a user or business.
+    public boolean CheckPassword(String username, String Password, boolean UserTrueBusinessFalse) {
+        //Function to check whether entered password matches hash in database.
+        String salt;
+        MessageDigest sha;
+        openConnection();
+        ResultSet arr;
+        ResultSet hash;
+        String hashStr;
+        byte[] SaltStr;
+
+        try {
+            try {
+                if(UserTrueBusinessFalse){
+                    arr = st.executeQuery("SELECT PasswordSalt FROM `UserLogin` WHERE Username = '" + username + "'");
+                }else{
+                    int businessID;
+                    businessID = Integer.parseInt(username);
+                    arr = st.executeQuery("SELECT PasswordSalt FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+                }
+                arr.next();
+                SaltStr = arr.getBytes("PasswordSalt");
+
+            } catch(SQLException e) {
+                return false;
+            }
+
+            salt = new String(SaltStr, StandardCharsets.UTF_8);
+
+            String pepper = "ab23foed2";
+            Password += salt;
+            Password += pepper;
+            sha = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+
+        sha.reset();
+        sha.update(Password.getBytes());
+
+        //Converting to string.
+        byte[] digest = sha.digest();
+        BigInteger bigInt = new BigInteger(1,digest);
+        String hashtext = bigInt.toString(16);
+
+        while(hashtext.length() < 32 ){
+            hashtext = "0"+hashtext;
+        }
+
+        try {
+            if(UserTrueBusinessFalse) {
+                hash = st.executeQuery("SELECT PasswordHash FROM `UserLogin` WHERE Username = '" + username + "'");
+            }else{
+                int businessID;
+                businessID = Integer.parseInt(username);
+                hash = st.executeQuery("SELECT PasswordHash FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+            }
+            hash.next();
+            hashStr = hash.getString("PasswordHash");
+        }catch(SQLException e){
+            return false;
+        }
+
+        if(hashtext.equals(hashStr)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public static byte[] getSalt() throws NoSuchAlgorithmException {
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[16];
+        secureRandom.nextBytes(salt);
+
+        return salt;
+    }
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        ArrayList<Business> a = dba.getAllBusinesses();
-        for (int i = 0; i < a.size(); i++) a.get(i).soutBusiness();
+        //ArrayList<Business> a = dba.getAllBusinesses();
+        //for (int i = 0; i < a.size(); i++) a.get(i).soutBusiness();
+        //System.out.println(dba.encrypt("13","passworddf3",false));
+        //System.out.println(dba.CheckPassword("13","passworddf3",false));
+        System.out.println(dba.encrypt("h","passwoffdrddf3",true));
+        System.out.println(dba.CheckPassword("h","passwoffdrddf3",true));
     }
 }
 
