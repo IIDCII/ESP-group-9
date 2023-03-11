@@ -19,7 +19,7 @@
             android:textSize="20sp"
             />
 
-        <Button
+        <TextView
             android:id="@+id/delete_voucher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

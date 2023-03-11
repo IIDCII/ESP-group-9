@@ -21,6 +21,11 @@
         android:name=".BusinessVoucherList"
         android:exported="true"/>
 
+    <activity
+        android:name=".VoucherPage"
+        android:enabled="true"
+        />
+
     <activity android:name=".QRcode.CaptureAct"
         android:screenOrientation="portrait"
         android:stateNotNeeded="true"

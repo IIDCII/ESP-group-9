@@ -14,25 +14,25 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 // need to pull from my section before I can do this
-public class BusinessVoucherListAdapter extends ArrayAdapter<VoucherPage> {
-    public BusinessVoucherListAdapter(Context context, ArrayList<VoucherPage> voucherPageArrayList){
-        super(context,R.layout.voucherlistitem,voucherPageArrayList);
+public class BusinessVoucherListAdapter extends ArrayAdapter<VoucherInfo> {
+    public BusinessVoucherListAdapter(Context context, ArrayList<VoucherInfo> voucherInfoArrayList){
+        super(context,R.layout.voucherlistitem,voucherInfoArrayList);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
-        VoucherPage voucherPage = getItem(position);
+        VoucherInfo voucherInfo = getItem(position);
 
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.voucherlistitem,parent,false);
-
         }
 
         TextView voucherTitle = convertView.findViewById(R.id.voucher_title);
-        Button deleteVoucher = convertView.findViewById(R.id.delete_voucher);
+//        Button deleteVoucher = convertView.findViewById(R.id.delete_voucher);
 
-        voucherTitle.setText(voucherPage.voucherName);
+        voucherTitle.setText(voucherInfo.voucherName);
+
 
         return convertView;
     }
