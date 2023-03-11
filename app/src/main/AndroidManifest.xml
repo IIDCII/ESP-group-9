@@ -18,7 +18,7 @@
         />
 
     <activity
-        android:name=".BusinessVoucherList"
+        android:name=".WalletList"
         android:exported="true"/>
 
     <activity

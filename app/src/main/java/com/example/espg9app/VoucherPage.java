@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.espg9app.QRcode.QRPage;
-import com.example.espg9app.databinding.BusinessvoucherlistBinding;
 
 public class VoucherPage extends AppCompatActivity {
     Button add_to_wallet;
@@ -15,6 +14,7 @@ public class VoucherPage extends AppCompatActivity {
     ImageView qr_viewer;
     String voucherName;
     String voucherID;
+    String businessName;
     TextView live;
     Boolean liveCheck;
 
@@ -37,6 +37,7 @@ public class VoucherPage extends AppCompatActivity {
             voucherName = intent.getStringExtra("name");
             voucherID = intent.getStringExtra("voucherID");
             liveCheck = intent.getBooleanExtra("liveCheck", false);
+            businessName = intent.getStringExtra("businessName");
         }
 
         description.setText(voucherName);
