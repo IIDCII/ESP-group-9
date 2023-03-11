@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "764095214008",
+    "project_id": "moneytrees-65e7e",
+    "storage_bucket": "moneytrees-65e7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764095214008:android:4b0c367867db494e0a1f4d",
+        "android_client_info": {
+          "package_name": "com.example.espg9app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764095214008-tp12rb7oibp82sptubpo7mksgppk89e7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxF718E1sW_PYP5rIw18lZZ5q3wCGkIu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764095214008-tp12rb7oibp82sptubpo7mksgppk89e7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
