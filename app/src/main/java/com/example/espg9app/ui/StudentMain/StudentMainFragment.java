@@ -1,6 +1,5 @@
 package com.example.espg9app.ui.StudentMain;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
@@ -70,7 +69,7 @@ public class StudentMainFragment extends AppCompatActivity {
                 }
                 StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, filteredBusinesses);
                 listView.setAdapter(adapter);
-                TextView tv1 = findViewById(R.id.StudentMainEmptyText);
+                TextView tv1 = findViewById(R.id.voucherEmptyText);
                 if (!filteredBusinesses.isEmpty()){
                     tv1.setText("");
                 }
@@ -89,7 +88,7 @@ public class StudentMainFragment extends AppCompatActivity {
 //
 //        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
 //        businessArraylist.add(hairdresser);
-        TextView tv1 = findViewById(R.id.StudentMainEmptyText);
+        TextView tv1 = findViewById(R.id.voucherEmptyText);
         DBAccess dba = new DBAccess();
         businessArraylist = dba.getAllBusinesses();
 //        System.out.println(businessArraylist);
@@ -102,7 +101,7 @@ public class StudentMainFragment extends AppCompatActivity {
     }
 
     private void setUpList() {
-        listView = (ListView) findViewById(R.id.BusinessListView);
+        listView = (ListView) findViewById(R.id.voucherList);
 
         StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, businessArraylist);
         listView.setAdapter(adapter);
@@ -147,7 +146,7 @@ public class StudentMainFragment extends AppCompatActivity {
         }
         StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, filteredBusinesses);
         listView.setAdapter(adapter);
-        TextView tv1 = findViewById(R.id.StudentMainEmptyText);
+        TextView tv1 = findViewById(R.id.voucherEmptyText);
         if (!filteredBusinesses.isEmpty()){
             tv1.setText("");
         }
