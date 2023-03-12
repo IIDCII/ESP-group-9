@@ -11,7 +11,7 @@
         android:theme="@style/Theme.ESPG9app" >
 
     <activity
-        android:name=".ui.StudentMain.StudentMainFragment"
+        android:name=".BusinessLogin"
         android:exported="true"
         android:screenOrientation="portrait"
         android:label="@string/app_name">
@@ -22,6 +22,6 @@
         </intent-filter>
     </activity>
         <activity android:name=".BusinessMain"></activity>
-        <activity android:name=".BusinessLogin"></activity>
+        <activity android:name=".BusinessSignup"></activity>
     </application>
 </manifest>

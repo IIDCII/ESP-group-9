@@ -1,34 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
-<!--on below line we are creating edit text
-     for adding a new item to list-->
-    <EditText
-    android:id="@+id/voucherName"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:layout_toLeftOf="@id/btn_Add"
-    android:hint="Enter item name to add in ist" />
+    android:orientation="vertical">
 
-<!--button for adding item from edit text to list-->
     <Button
-    android:id="@+id/btn_Add"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:layout_margin="4dp"
-    android:text="Add"
-    android:textAllCaps="false" />
+        android:id="@+id/btn_myVouchers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="My Vouchers"/>
 
-<!--list view to display list of languages-->
-    <ListView
-    android:id="@+id/idLVLanguages"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@id/voucherName" />
+    <Button
+        android:id="@+id/btn_editBusiness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="Edit my Business"/>
 
-</RelativeLayout>
+
+
+</LinearLayout>

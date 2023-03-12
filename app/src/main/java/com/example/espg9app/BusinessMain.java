@@ -19,32 +19,8 @@ public class BusinessMain extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.businessmain);
-        Vouchers = findViewById(R.id.idLVLanguages);
-        addBtn = findViewById(R.id.btn_Add);
-        itemEdt = findViewById(R.id.voucherName);
-        lngList = new ArrayList<>();
-        lngList.add("voucher 1");
-        lngList.add("voucher 2");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lngList);
 
-        Vouchers.setAdapter(adapter);
-
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String item = itemEdt.getText().toString();
-
-                if (!item.isEmpty()) {
-                    lngList.add(item);
-                    adapter.notifyDataSetChanged();
-                }
-
-            }
-        });
-    }
-
-    }
+    }}
 
 

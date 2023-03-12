@@ -192,8 +192,8 @@ public class DBAccess {
                 numBusinesses++;
             }
 
-            float sumRatings;
-            float numRatings;
+            float sumRatings=0;
+            float numRatings =0;
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());

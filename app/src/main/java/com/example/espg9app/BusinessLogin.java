@@ -29,6 +29,8 @@ public class BusinessLogin extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DBAccess DB = new DBAccess();
+                //DB.CheckPassword(et_username.getText().toString(), et_password.getText().toString(), false)
                 if(et_username.getText().toString().equals("") && et_password.getText().toString().equals("")){
                     Toast.makeText(BusinessLogin.this, "Username and Password is correct", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(BusinessLogin.this, BusinessMain.class);
@@ -45,8 +47,8 @@ public class BusinessLogin extends AppCompatActivity {
         btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BusinessSignup dialog = new BusinessSignup();
-                dialog.show(getSupportFragmentManager(), "signup_dialog");
+                Intent intent = new Intent(BusinessLogin.this, BusinessSignup.class);
+                startActivity(intent);
                 }
             }
         );
