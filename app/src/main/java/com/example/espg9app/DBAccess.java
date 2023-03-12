@@ -231,7 +231,6 @@ public class DBAccess {
                 businessToAdd.setCoordinates(coordToAdd);
                 businessToAdd.setVoucherActive(rs.getInt("VoucherActive") != 0);
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
-                businessToAdd.setVoucherDescription(rs.getString("VoucherDescription"));
 
                 businessArray.add(businessToAdd);
                 numBusinesses++;
@@ -243,20 +242,12 @@ public class DBAccess {
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                if (!rs.next()) {
-                    businessArray.get(i).setUserRating(0);
-                    businessArray.get(i).setNumReviews(0);
+                while (rs.next()) {
+                    //sumRatings += rs.getInt("NumberOfStars");
+                    //numRatings += 1.0;
                 }
 
-                else {
-                    do {
-                        sumRatings += rs.getInt("NumberOfStars");
-                        numRatings += 1.0;
-                    } while (rs.next());
-                }
 
-                businessArray.get(i).setUserRating(sumRatings / numRatings);
-                businessArray.get(i).setNumReviews((int) numRatings);
             }
 
 
@@ -672,7 +663,7 @@ public class DBAccess {
      * Generates the salt that will be used in hashing passwords
      *
      * @return                          Salt
-
+     * @throws NoSuchAlgorithmException Sometimes lol idk alex wrote this
      */
     public static byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
@@ -680,34 +671,6 @@ public class DBAccess {
         secureRandom.nextBytes(salt);
 
         return salt;
-    }
-
-    /**
-     * fetches user's hash from the db
-     *
-     * @param username              Username of student/ string representation of businessID
-     * @param UserTrueBusinessFalse True if account is user account, false if it is a business
-     * @return                      hash as string if successful in retrieval, "error" otherwise.
-     */
-    public String getHash(String username, boolean UserTrueBusinessFalse){
-        ResultSet hash;
-        String hashStr;
-        openConnection();
-        try {
-            if(UserTrueBusinessFalse) {
-                hash = st.executeQuery("SELECT PasswordHash FROM `UserLogin` WHERE Username = '" + username + "'");
-            }else{
-                int businessID;
-                businessID = Integer.parseInt(username);
-                hash = st.executeQuery("SELECT PasswordHash FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
-            }
-            hash.next();
-            hashStr = hash.getString("PasswordHash");
-        }catch(SQLException e){
-            closeConnection();
-            return "error";
-        }
-        return hashStr;
     }
 
     public static void main(String[] args) {
