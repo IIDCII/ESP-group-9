@@ -13,10 +13,9 @@ public class DBAccess {
     public static String dbUsername = "sql8598438";
     public static String dbPassword = "mQ2acQ2I4h";
 
-    //
-    //helper functions ---- make sure each main function calls these once each at the start and end
-    //
-
+    /**
+     * Establishes a connection to the main database
+     */
     public void openConnection() {
         try {
             try {
@@ -34,6 +33,9 @@ public class DBAccess {
         }
     }
 
+    /**
+     * Closes the database connection if it exists
+     */
     public void closeConnection() {
         if (conn != null) {
             try {
@@ -44,10 +46,14 @@ public class DBAccess {
         }
     }
 
-    //
-    //helper functions for redeemVoucher ---- these will fail if run by themselves as they don't establish a DB connection
-    //
-
+    /**
+     * Increments the number of times a voucher instance has been redeemed in the database
+     * NOTE - this method will fail if not called with an already open DB connection as it does not
+     * itself open it
+     *
+     * @param voucherClaimID ID of the voucher instance in the database
+     * @return               Success of updating the database
+     */
     public boolean markVoucherRedeemed (int voucherClaimID) {
         try {
             st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
@@ -59,6 +65,15 @@ public class DBAccess {
         }
     }
 
+    /**
+     * Checks that the given voucher instance corresponds to a currently active voucher
+     * NOTE - this method will fail if not called with an already open DB connection as it does not
+     * itself open it
+     *
+     * @param voucherClaimID ID of the voucher instance in the database
+     * @return               Active status of the corresponding voucher, False if such a voucher
+     *                       does not exist
+     */
     public boolean checkVoucherInstanceExistsAndActive(int voucherClaimID) {
         ResultSet rs;
         int businessID;
@@ -82,6 +97,12 @@ public class DBAccess {
         }
     }
 
+    /**
+     * Given an active voucher, calculates the percentage discount the user will receive
+     *
+     * @param voucherClaimID ID of the voucher instance in the database
+     * @return               Percentage discount as an integer; 0 if the operation fails
+     */
     public int getDiscountPercent(int voucherClaimID) {
         int maxDiscountAchieved = 0;
 
@@ -118,10 +139,16 @@ public class DBAccess {
         }
     }
 
-    //
-    //main functions ---- add all the specific use cases under here
-    //
-
+    /**
+     * Checks if a username and email address have been used in the database already
+     * NOTE - this method will fail if not called with an already open DB connection as it does not
+     * itself open it
+     *
+     * @param email    Email address to check
+     * @param username Username to check
+     * @return         True if neither the username or email is currently in the database, false
+     *                 otherwise
+     */
     public boolean checkStudentAccountValid(String email, String username) {
         openConnection();
         ResultSet rs;
@@ -142,11 +169,21 @@ public class DBAccess {
             return true;
 
         } catch (SQLException e) {
+            closeConnection();
             return false;
         }
     }
 
-    public boolean addStudentAccount(String username, String firstName, String lastName, String email, String password) {
+    /**
+     * Adds a record to the User table containing all of their personal nonsensitive information
+     *
+     * @param username  User's chosen username
+     * @param firstName User's first name
+     * @param lastName  User's last name
+     * @param email     User's email address
+     * @return          True if record was created successfully, false if not
+     */
+    public boolean addStudentAccount(String username, String firstName, String lastName, String email) {
         openConnection();
 
         try {
@@ -158,11 +195,18 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
+            closeConnection();
             return false;
         }
 
     }
 
+    /**
+     * Fetches all of the public business information from each business, including vouchers and the
+     * average user ratings
+     *
+     * @return ArrayList of businesses
+     */
     public ArrayList<Business> getAllBusinesses() {
         openConnection();
         ResultSet rs;
@@ -212,11 +256,34 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
+            closeConnection();
             throw new RuntimeException(e);
         }
 
     }
 
+    /**
+     * Adds a record to the BusinessInfo table containing all of their a business' public information,
+     * and a record in the BusinessUser table which will generate a unique business ID with which the
+     * business will be referenced throughout
+     *
+     * @param email         Email address of the business
+     * @param name          Name of the business
+     * @param iconPath      File path of the icon that will be displayed alongside the business info
+     *                      to the user, relative to the assets folder
+     * @param tags          String of words that describe the business, with which a user will be able
+     *                      to filter businesses; separated by spaces
+     * @param description   Text description of the business that will be displayed to the user
+     * @param susRating     Sustainability rating decided by our bespoke algorithm, out of 5
+     * @param coordinates   Set of latitude/ longitude coordinates pointing to the location at which
+     *                      the voucher can be redeemed
+     * @param voucherActive Whether the voucher is currently available to be used
+     * @param discountTiers Discount that the voucher will grant the user;
+     *                      in the form T1 D1,T2 D2,...,Tn Dn, where Tk is the number of times a user
+     *                      must redeem this voucher to receive Dk% discount;
+     *                      T1 is always 0
+     * @return              True if record created successfully, false otherwise
+     */
     public boolean addBusiness(String email, String name, String iconPath, String tags, String description,
                                double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers) {
         openConnection();
@@ -237,10 +304,19 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
+            closeConnection();
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Adds a record to the VoucherClaims table which represents a user adding that voucher to their
+     * wallet; does nothing if a record for that user and business already exists
+     *
+     * @param businessID ID of the business that the voucher is for
+     * @param username   Username of the user that is adding the voucher to their wallet
+     * @return           True if instance was created, false if it already existed/ an SQL error occured
+     */
     public boolean createVoucherInstance (int businessID, String username) {
         openConnection();
         ResultSet rs;
@@ -256,27 +332,41 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            closeConnection();
+            return false;
         }
 
     }
 
+    /**
+     * Removes a voucher instance from the database, thus removing it from that user's wallet
+     *
+     * @param businessID ID of the business that the voucher is for
+     * @param username   Username of the user that is removing the voucher from their wallet
+     * @return           True if removed successfully, false otherwise
+     */
+    public boolean deleteVoucherInstance (int businessID, String username) {
+        openConnection();
 
-//    public boolean redeemVoucher (int voucherClaimID) {
-//        openConnection();
-//
-//        try {
-//            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
-//
-//            closeConnection();
-//            return true;
-//        }
-//
-//        catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+        try {
+            st.executeUpdate("DELETE FROM `VoucherClaims` WHERE Username = '" + username + "' AND BusinessID = " + businessID);
 
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            closeConnection();
+            return false;
+        }
+    }
+
+    /**
+     * Sets the voucher for a specified business to inactive
+     *
+     * @param businessID Business for which the voucher will be deactivated
+     * @return           True if deactivated successfully, false otherwise
+     */
     public boolean deactivateVoucher(int businessID) {
         openConnection();
 
@@ -288,10 +378,17 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            throw new RuntimeException(e);
+            closeConnection();
+            return false;
         }
     }
 
+    /**
+     * Sets the voucher for a specified business to active
+     *
+     * @param businessID Business for which the voucher will be activated
+     * @return           True if deactivated successfully, false otherwise
+     */
     public boolean activateVoucher(int businessID) {
         openConnection();
 
@@ -308,67 +405,12 @@ public class DBAccess {
         }
     }
 
-//    public boolean createVoucherInstance (int businessID, String username) {
-//        openConnection();
-//
-//        try {
-//            st.executeUpdate("INSERT INTO `VoucherClaims` (`BusinessID`, `Username`, `NumRedeemed`) VALUES (" + businessID + ", '" + username + "', 0)");
-//
-//            closeConnection();
-//            return true;
-//        }
-//
-//        catch (SQLException e) {
-//            return false;
-//        }
-//
-//    }
-
-//    public boolean redeemVoucher (int voucherClaimID) {
-//        openConnection();
-//
-//        try {
-//            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
-//
-//            closeConnection();
-//            return true;
-//        }
-//
-//        catch (SQLException e) {
-//            return false;
-//        }
-//    }
-
-//    public boolean deactivateVoucher(int businessID) {
-//        openConnection();
-//
-//        try {
-//            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 0 WHERE BusinessID = '" + businessID + "'");
-//
-//            closeConnection();
-//            return true;
-//        }
-//
-//        catch (SQLException e) {
-//            return false;
-//        }
-//    }
-
-//    public boolean activateVoucher(int businessID) {
-//        openConnection();
-//
-//        try {
-//            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 1 WHERE BusinessID = '" + businessID + "'");
-//
-//            closeConnection();
-//            return true;
-//        }
-//
-//        catch (SQLException e) {
-//            return false;
-//        }
-//    }
-
+    /**
+     * Checks if a user has a certain voucher in their wallet
+     * @param businessID ID of business that voucher is for
+     * @param username   Username
+     * @return           True if voucher is in wallet, false otherwise
+     */
     public boolean isVoucherInstance(int businessID, String username) {
         openConnection();
         ResultSet rs;
@@ -383,6 +425,16 @@ public class DBAccess {
         }
     }
 
+    /**
+     * Allows a business owner to edit the amount of discount their voucher will grant its users
+     *
+     * @param businessID       ID of the business for which the discount tiers will be changed
+     * @param newDiscountTiers Discount that the voucher will grant the user;
+     *      *                  in the form T1 D1,T2 D2,...,Tn Dn, where Tk is the number of times a user
+     *      *                  must redeem this voucher to receive Dk% discount;
+     *      *                  T1 is always 0
+     * @return                 True if updated successfully, false otherwise
+     */
     public boolean changeDiscountTiers(int businessID, String newDiscountTiers) {
         openConnection();
 
@@ -398,7 +450,17 @@ public class DBAccess {
         }
     }
 
+    /**
+     * Adds a record to the Reviews table which represents a user reviewing a certain business; if a
+     * review from that user for that business already exists, overwrites it
+     * @param username      User leaving the review
+     * @param businessID    ID of business which the user is reviewing
+     * @param numberOfStars Integer from 0 to 5
+     * @return              True if record was successfully created, false otherwise
+     */
     public boolean leaveReview(String username, int businessID, int numberOfStars) {
+        if (numberOfStars > 5 || numberOfStars < 0) return false;
+
         openConnection();
 
         try {
@@ -414,6 +476,14 @@ public class DBAccess {
         }
     }
 
+    /**
+     * Method to be run when a business owner scans a voucher; calls checkVoucherInstanceExistsAndActive,
+     * calculateDiscountPercent, and markVoucherRedeemed
+     *
+     * @param voucherClaimID Voucher instance to be redeemed
+     * @return               Integer representing percentage discount to be applied, 0 if voucher is
+     *                       inactive or an error occurs
+     */
     public int redeemVoucher(int voucherClaimID) {
         openConnection();
 
@@ -434,7 +504,14 @@ public class DBAccess {
         return discount;
     }
 
-    // Encrypts plaintext password into a hash. Takes username/businessID (as string), password, and a Bool to specify whether a user or business.
+    /**
+     * Encrypts plaintext password into a hash
+     *
+     * @param username              Username of student/ string representation of businessID
+     * @param plaintext             Password as entered by user
+     * @param UserTrueBusinessFalse True if account is user account, false if it is a business
+     * @return                      True if password hashed and stored successfully, false otherwise
+     */
     public boolean encrypt(String username,String plaintext, boolean UserTrueBusinessFalse) {
         String salt;
         MessageDigest sha;
@@ -471,6 +548,7 @@ public class DBAccess {
 
             sha = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException | SQLException e) {
+            closeConnection();
             return false;
         }
 
@@ -496,12 +574,22 @@ public class DBAccess {
             closeConnection();
             return true;
         } catch (SQLException e) {
+            closeConnection();
             return false;
         }
 
     }
 
-    //Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db for any user. Takes username/businessID (as string), password, and a Bool to specify whether a user or business.
+    /**
+     * Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db
+     * for any user
+     *
+     * @param username              Username of student/ string representation of businessID
+     * @param Password              Password as entered by user
+     * @param UserTrueBusinessFalse True if account is user account, false if it is a business
+     * @return                      True if password matches the information stored in the database,
+     *                              false otherwise
+     */
     public boolean CheckPassword(String username, String Password, boolean UserTrueBusinessFalse) {
         //Function to check whether entered password matches hash in database.
         String salt;
@@ -525,6 +613,7 @@ public class DBAccess {
                 SaltStr = arr.getBytes("PasswordSalt");
 
             } catch(SQLException e) {
+                closeConnection();
                 return false;
             }
 
@@ -535,6 +624,7 @@ public class DBAccess {
             Password += pepper;
             sha = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
+            closeConnection();
             throw new IllegalStateException(e.getMessage(), e);
         }
 
@@ -561,6 +651,7 @@ public class DBAccess {
             hash.next();
             hashStr = hash.getString("PasswordHash");
         }catch(SQLException e){
+            closeConnection();
             return false;
         }
 
@@ -568,6 +659,12 @@ public class DBAccess {
 
     }
 
+    /**
+     * Generates the salt that will be used in hashing passwords
+     *
+     * @return                          Salt
+     * @throws NoSuchAlgorithmException Sometimes lol idk alex wrote this
+     */
     public static byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
@@ -576,18 +673,8 @@ public class DBAccess {
         return salt;
     }
 
-    //
-    // ----
-    //
-
     public static void main(String[] args) {
-
-//        DBAccess dba2 = new DBAccess();
-//        dba2.openConnection();
-//        dba2.addBusiness("busi@gmail.com", "Hairdresser", "", "Beauty", "Hair", 5, new Coordinates((float) -64.59216, (float) 110.95493));
-//        dba2.closeConnection();
-
+        DBAccess dba = new DBAccess();
+        System.out.println(dba.deleteVoucherInstance(8, "alex456"));
     }
-
 }
-
