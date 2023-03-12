@@ -262,20 +262,20 @@ public class DBAccess {
     }
 
 
-    public boolean redeemVoucher (int voucherClaimID) {
-        openConnection();
-
-        try {
-            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
-
-            closeConnection();
-            return true;
-        }
-
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public boolean redeemVoucher (int voucherClaimID) {
+//        openConnection();
+//
+//        try {
+//            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
+//
+//            closeConnection();
+//            return true;
+//        }
+//
+//        catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public boolean deactivateVoucher(int businessID) {
         openConnection();

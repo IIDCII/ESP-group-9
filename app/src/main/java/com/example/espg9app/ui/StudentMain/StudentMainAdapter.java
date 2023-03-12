@@ -37,7 +37,7 @@ public class StudentMainAdapter extends ArrayAdapter<Business>
         RatingBar rb =(RatingBar) convertView.findViewById(R.id.SusRatingBar);
         RatingBar rb2 =(RatingBar) convertView.findViewById(R.id.UserRatingBar);
         TextView tv = (TextView) convertView.findViewById(R.id.text_main);
-        ImageView iv = (ImageView) convertView.findViewById(R.id.image_main);
+//        ImageView iv = (ImageView) convertView.findViewById(R.id.image_main);
 
         tv.setText(business.getName());
 //        iv.setImageResource(business.getIconPath());

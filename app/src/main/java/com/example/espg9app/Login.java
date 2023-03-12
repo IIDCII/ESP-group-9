@@ -7,11 +7,14 @@ import androidx.constraintlayout.widget.Group;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import com.example.espg9app.ui.StudentMain.BusinessDetail;
+import com.example.espg9app.ui.StudentMain.StudentMainFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -276,7 +279,8 @@ public class Login  extends AppCompatActivity{
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user.isEmailVerified()) {
-                            Log.d("App","WE GOT ONE!");
+                            Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
+                            startActivity(showDetail);
                         } else {
                             // User is signed in but email is not verified
                             AlertDialog.Builder builder = new AlertDialog.Builder(this);

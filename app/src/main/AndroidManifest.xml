@@ -20,5 +20,6 @@
         </intent-filter>
     </activity>
     <activity android:name=".ui.StudentMain.BusinessDetail"/>
+    <activity android:name=".ui.StudentMain.StudentMainFragment"/>
     </application>
 </manifest>

@@ -91,7 +91,7 @@ public class BusinessDetail extends AppCompatActivity
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
         ImageView iv = (ImageView) findViewById(R.id.businessImage);
 
-        rb.setRating(selectedBusiness.getSusRating());
+        rb.setRating(selectedBusiness.getUserRating());
         susrb.setRating(selectedBusiness.getSusRating());
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
