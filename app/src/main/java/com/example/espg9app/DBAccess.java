@@ -68,6 +68,8 @@ public class DBAccess {
 
     /**
      * Checks that the given voucher instance corresponds to a currently active voucher
+     * NOTE - this method will fail if not called with an already open DB connection as it does not
+     * itself open it
      *
      * @param voucherClaimID ID of the voucher instance in the database
      * @return               Active status of the corresponding voucher, False if such a voucher
@@ -140,6 +142,8 @@ public class DBAccess {
 
     /**
      * Checks if a username and email address have been used in the database already
+     * NOTE - this method will fail if not called with an already open DB connection as it does not
+     * itself open it
      *
      * @param email    Email address to check
      * @param username Username to check
@@ -682,6 +686,6 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        System.out.println(dba.deleteVoucherInstance(44, "sdf"));
+        System.out.println(dba.deleteVoucherInstance(8, "alex456"));
     }
 }
