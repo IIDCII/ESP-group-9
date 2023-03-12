@@ -256,9 +256,25 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            return false;
+            throw new RuntimeException(e);
         }
 
+    }
+
+
+    public boolean redeemVoucher (int voucherClaimID) {
+        openConnection();
+
+        try {
+            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
+
+            closeConnection();
+            return true;
+        }
+
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean deactivateVoucher(int businessID) {
@@ -272,7 +288,7 @@ public class DBAccess {
         }
 
         catch (SQLException e) {
-            return false;
+            throw new RuntimeException(e);
         }
     }
 
@@ -282,6 +298,7 @@ public class DBAccess {
         try {
             st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 1 WHERE BusinessID = '" + businessID + "'");
 
+
             closeConnection();
             return true;
         }
@@ -290,6 +307,67 @@ public class DBAccess {
             return false;
         }
     }
+
+//    public boolean createVoucherInstance (int businessID, String username) {
+//        openConnection();
+//
+//        try {
+//            st.executeUpdate("INSERT INTO `VoucherClaims` (`BusinessID`, `Username`, `NumRedeemed`) VALUES (" + businessID + ", '" + username + "', 0)");
+//
+//            closeConnection();
+//            return true;
+//        }
+//
+//        catch (SQLException e) {
+//            return false;
+//        }
+//
+//    }
+
+//    public boolean redeemVoucher (int voucherClaimID) {
+//        openConnection();
+//
+//        try {
+//            st.executeUpdate("UPDATE VoucherClaims SET NumRedeemed = NumRedeemed + 1 WHERE VoucherClaimID = " + voucherClaimID);
+//
+//            closeConnection();
+//            return true;
+//        }
+//
+//        catch (SQLException e) {
+//            return false;
+//        }
+//    }
+
+//    public boolean deactivateVoucher(int businessID) {
+//        openConnection();
+//
+//        try {
+//            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 0 WHERE BusinessID = '" + businessID + "'");
+//
+//            closeConnection();
+//            return true;
+//        }
+//
+//        catch (SQLException e) {
+//            return false;
+//        }
+//    }
+
+//    public boolean activateVoucher(int businessID) {
+//        openConnection();
+//
+//        try {
+//            st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 1 WHERE BusinessID = '" + businessID + "'");
+//
+//            closeConnection();
+//            return true;
+//        }
+//
+//        catch (SQLException e) {
+//            return false;
+//        }
+//    }
 
     public boolean isVoucherInstance(int businessID, String username) {
         openConnection();
@@ -503,9 +581,13 @@ public class DBAccess {
     //
 
     public static void main(String[] args) {
-        DBAccess dba = new DBAccess();
-        ArrayList<Business> a = dba.getAllBusinesses();
-        for (int i = 0; i < a.size(); i++) a.get(i).soutBusiness();
+
+//        DBAccess dba2 = new DBAccess();
+//        dba2.openConnection();
+//        dba2.addBusiness("busi@gmail.com", "Hairdresser", "", "Beauty", "Hair", 5, new Coordinates((float) -64.59216, (float) 110.95493));
+//        dba2.closeConnection();
+
     }
+
 }
 

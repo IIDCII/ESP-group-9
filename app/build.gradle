@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
 	id 'com.google.gms.google-services'
 }
-
 android {
     compileSdk 33
 
@@ -30,7 +29,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation files('libs/mysql-connector.jar')
     implementation 'com.google.firebase:firebase-auth:21.0.3'
@@ -46,4 +45,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
    // FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation 'com.github.xckevin:AndroidSmartRatingBar:d4467d590e'
 }
