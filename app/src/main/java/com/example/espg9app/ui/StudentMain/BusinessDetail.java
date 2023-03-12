@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class BusinessDetail extends AppCompatActivity
 {
     RatingBar rb;
+    RatingBar susrb;
     Business selectedBusiness;
     ArrayList<Voucher> voucherArrayList = new ArrayList<Voucher>();
 
@@ -52,7 +53,7 @@ public class BusinessDetail extends AppCompatActivity
         TextView emptyText = findViewById(R.id.voucherEmptyText);
 //        DBAccess dba = new DBAccess();
 //        dba.openConnection();
-//        voucherArrayList = dba.get();
+//        voucherArrayList = dba.vouc();
         System.out.println(voucherArrayList);
 //        dba.closeConnection();
         if (!voucherArrayList.isEmpty()) {
@@ -85,11 +86,13 @@ public class BusinessDetail extends AppCompatActivity
     private void setBusinessDetails()
     {
         rb = (RatingBar)findViewById(R.id.ratingBar);
+        susrb = (RatingBar)findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
         ImageView iv = (ImageView) findViewById(R.id.businessImage);
 
         rb.setRating(selectedBusiness.getSusRating());
+        susrb.setRating(selectedBusiness.getSusRating());
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
 //        iv.setImageResource(selectedBusiness.getIconPath());
