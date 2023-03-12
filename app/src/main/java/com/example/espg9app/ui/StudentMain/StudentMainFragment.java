@@ -1,14 +1,16 @@
 package com.example.espg9app.ui.StudentMain;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
@@ -34,7 +36,7 @@ public class StudentMainFragment extends AppCompatActivity {
         initSearchWidgets();
         setupData();
         setUpList();
-//        setUpOnclickListener();
+        setUpOnclickListener();
 
     }
 
@@ -88,10 +90,9 @@ public class StudentMainFragment extends AppCompatActivity {
 //        businessArraylist.add(hairdresser);
         TextView tv1 = findViewById(R.id.voucherEmptyText);
         DBAccess dba = new DBAccess();
-        dba.openConnection();
         businessArraylist = dba.getAllBusinesses();
-        System.out.println(businessArraylist);
-        dba.closeConnection();
+//        System.out.println(businessArraylist);
+//        for (int i = 0; i < businessArraylist.size(); i++) businessArraylist.get(i).soutBusiness();
         if (!businessArraylist.isEmpty()) {
         tv1.setText("");
         } else {
@@ -106,17 +107,18 @@ public class StudentMainFragment extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
-//    private void setUpOnclickListener() {
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                Business selectBusiness = (Business) (listView.getItemAtPosition(position));
-//                Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
-//                showDetail.putExtra("id", selectBusiness.get());
-//                startActivity(showDetail);
-//            }
-//        });
-//    }
+    private void setUpOnclickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Business selectBusiness = (Business) (listView.getItemAtPosition(position));
+                Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
+                showDetail.putExtra("id", (Integer.toString(selectBusiness.getId())));
+//                System.out.println(selectBusiness.getId());
+                startActivity(showDetail);
+            }
+        });
+    }
     private void filterList(String filter)
     {
         Animation aniFade = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in);

@@ -291,4 +291,3 @@ public class DBAccess {
         for (int i = 0; i < a.size(); i++) a.get(i).soutBusiness();
     }
 }
-

@@ -33,13 +33,16 @@ public class StudentMainAdapter extends ArrayAdapter<Business>
         {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.studentmainitem, parent, false);
         }
-        RatingBar rb =(RatingBar) convertView.findViewById(R.id.ratingBar2);
-        TextView tv = (TextView) convertView.findViewById(R.id.voucherName);
+        
+        RatingBar rb =(RatingBar) convertView.findViewById(R.id.SusRatingBar);
+        RatingBar rb2 =(RatingBar) convertView.findViewById(R.id.UserRatingBar);
+        TextView tv = (TextView) convertView.findViewById(R.id.text_main);
         ImageView iv = (ImageView) convertView.findViewById(R.id.image_main);
 
         tv.setText(business.getName());
 //        iv.setImageResource(business.getIconPath());
         rb.setRating(business.getSusRating());
+        rb2.setRating(business.getUserRating());
 
         return convertView;
     }

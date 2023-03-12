@@ -7,6 +7,7 @@
     android:layout_gravity="center_horizontal"
     android:clipToPadding="false">
 
+
     <androidx.cardview.widget.CardView
         android:layout_width="385dp"
         android:layout_height="match_parent"
@@ -58,16 +59,54 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RatingBar
-                android:id="@+id/ratingBar2"
-                android:layout_width="240dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="56dp"
-                android:numStars="5"
-                android:rating="3.5"
+                android:id="@+id/SusRatingBar"
+                style="@style/SusRatingBar"
+                android:layout_width="630dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
                 android:isIndicator="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:max="5"
+                android:numStars="5"
+                android:rating="4"
+                android:scaleX="0.2"
+                android:scaleY=".2"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp"
+                app:layout_constraintStart_toStartOf="@id/text_main"
+                app:layout_constraintTop_toBottomOf="@id/text_main" />
+
+            <RatingBar
+                android:id="@+id/UserRatingBar"
+                style="@style/Widget.AppCompat.RatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:isIndicator="true"
+                android:max="5"
+                android:rating="2.5"
+                android:scaleX=".5"
+                android:scaleY=".5"
+                android:layout_marginTop="-80dp"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp"
+                app:layout_constraintStart_toStartOf="@id/SusRatingBar"
+                app:layout_constraintTop_toBottomOf="@id/SusRatingBar" />
+
+<!--            <com.alibaba.library.SmartRatingBar-->
+<!--                android:id="@+id/smart_rating_bar"-->
+<!--                android:layout_width="127dp"-->
+<!--                android:layout_height="26dp"-->
+<!--                android:layout_marginStart="4dp"-->
+<!--                android:layout_marginTop="28dp"-->
+<!--                app:gap="10dp"-->
+<!--                app:backgroundDrawable="@drawable/fish"-->
+<!--                app:indicator="false"-->
+<!--                app:maxRating="5"-->
+<!--                app:orientation="horizontal"-->
+<!--                app:rating="3.5"-->
+<!--                app:layout_constraintStart_toStartOf="@id/text_main"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/text_main"/>-->
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
