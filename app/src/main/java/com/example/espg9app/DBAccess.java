@@ -357,7 +357,7 @@ public class DBAccess {
         openConnection();
 
         try {
-            st.executeUpdate("DELETE FROM `VoucherClaims WHERE Username = '" + username + "' AND BusinessID = " + businessID);
+            st.executeUpdate("DELETE FROM `VoucherClaims` WHERE Username = '" + username + "' AND BusinessID = " + businessID);
 
             closeConnection();
             return true;
@@ -682,5 +682,6 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
+        System.out.println(dba.deleteVoucherInstance(44, "sdf"));
     }
 }
