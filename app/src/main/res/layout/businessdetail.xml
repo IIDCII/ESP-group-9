@@ -36,21 +36,43 @@
     <ImageView
         android:id="@+id/businessImage"
         android:layout_width="242dp"
-        android:layout_height="232dp"
+        android:layout_height="202dp"
         android:layout_centerInParent="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RatingBar
+        android:id="@+id/susRatingBar"
+        style="@style/SusRatingBar"
+        android:layout_width="630dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:isIndicator="true"
+        android:max="5"
+        android:numStars="5"
+        android:rating="4"
+        android:scaleX="0.2"
+        android:scaleY=".2"
+        android:transformPivotX="0dp"
+        android:transformPivotY="0dp"
+        app:layout_constraintStart_toEndOf="@+id/businessDesc"
+        app:layout_constraintTop_toBottomOf="@+id/businessImage" />
+
+    <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="36dp"
         android:clickable="false"
         android:isIndicator="true"
         android:max="5"
         android:numStars="5"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleX=".55"
+        android:scaleY=".55"
+        android:translationX="-48dp"
+        app:layout_constraintStart_toEndOf="@+id/businessDesc"
         app:layout_constraintTop_toBottomOf="@+id/businessImage" />
 
     <FrameLayout
