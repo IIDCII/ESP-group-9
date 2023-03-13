@@ -1,5 +1,7 @@
 package com.example.espg9app.ui.StudentMain;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -15,7 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
+import com.example.espg9app.NavigationBar;
 import com.example.espg9app.R;
+import com.example.espg9app.VoucherPage;
+import com.example.espg9app.WalletList;
 
 import java.util.ArrayList;
 
@@ -39,7 +44,19 @@ public class StudentMainFragment extends AppCompatActivity {
         setUpList();
         setUpOnclickListener();
 
+        //adding the nav bar. Can put all of this in a single file. This works but it needs to be a bit more clean
+        TextView home = findViewById(R.id.home);
+        TextView account = findViewById(R.id.account);
+        TextView aboutUs = findViewById(R.id.about_us);
+
+        NavigationBar nav = new NavigationBar();
+
+        Intent i = new Intent(StudentMainFragment.this, WalletList.class);
+        home.setClickable(true);
+        home.setOnClickListener(v-> startActivity(i));
     }
+
+
 
     private void initSearchWidgets() {
         searchView = (SearchView) findViewById(R.id.StudentMainSearchView);
