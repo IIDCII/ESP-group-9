@@ -3,25 +3,32 @@ package com.example.espg9app.ui.StudentMain;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.espg9app.Business;
-import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 import com.example.espg9app.Voucher;
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
+import com.example.espg9app.ui.BusinessView.studentreviewpage;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.taufiqrahman.reviewratings.BarLabels;
+import com.taufiqrahman.reviewratings.RatingReviews;
 
 import android.widget.RatingBar;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BusinessDetail extends AppCompatActivity
 {
-    RatingBar rb;
     RatingBar susrb;
     Business selectedBusiness;
     ArrayList<Voucher> voucherArrayList = new ArrayList<Voucher>();
@@ -37,8 +44,9 @@ public class BusinessDetail extends AppCompatActivity
 
         getSelectedBusiness();
         setBusinessDetails();
-
+        setOverlay();
         getVoucherList();
+        setRatingBar();
         setVoucherList();
 
     }
@@ -62,6 +70,26 @@ public class BusinessDetail extends AppCompatActivity
             emptyText.setText("Nothing to see here today, check again later");
         }
     }
+    private void setRatingBar(){
+        RatingReviews ratingReviews = (RatingReviews) findViewById(R.id.ratingBar);
+
+        int colors[] = new int[]{
+                Color.parseColor("#0e9d58"),
+                Color.parseColor("#bfd047"),
+                Color.parseColor("#ffc105"),
+                Color.parseColor("#ef7e14"),
+                Color.parseColor("#d36259")};
+
+        int raters[] = new int[]{
+                new Random().nextInt(100),
+                new Random().nextInt(100),
+                new Random().nextInt(100),
+                new Random().nextInt(100),
+                new Random().nextInt(100)
+        };
+
+        ratingReviews.createRatingBars(100, BarLabels.STYPE1, colors, raters);
+    }
 
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
@@ -82,16 +110,34 @@ public class BusinessDetail extends AppCompatActivity
             };
         }
     }
+    /**
+     * Allows review overlay to appear and disappear
+     */
+    private void setOverlay() {
+        final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        layout.setDragView(findViewById(R.id.review_button));
+        layout.setAnchorPoint(0.3f);
+        findViewById(R.id.layout1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED){
+                    layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+            }
+        });
+        layout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
 
-    private void setBusinessDetails()
-    {
-        rb = (RatingBar)findViewById(R.id.ratingBar);
+    }
+    private void setBusinessDetails() {
         susrb = (RatingBar)findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
         ImageView iv = (ImageView) findViewById(R.id.businessImage);
-
-        rb.setRating(selectedBusiness.getUserRating());
         susrb.setRating(selectedBusiness.getSusRating());
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
