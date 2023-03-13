@@ -14,12 +14,19 @@
         android:exported="true"
         android:screenOrientation="portrait"
         android:label="">
+<!--        <intent-filter>-->
+<!--            <action android:name="android.intent.action.MAIN" />-->
+<!--            <category android:name="android.intent.category.LAUNCHER" />-->
+<!--        </intent-filter>-->
+    </activity>
+    <activity android:name=".ui.StudentMain.BusinessDetail"/>
+        <activity android:name=".ui.BusinessView.studentreviewpage"/>
+
+    <activity android:name=".ui.StudentMain.StudentMainFragment"
+        android:exported="true">
         <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
-    <activity android:name=".ui.StudentMain.BusinessDetail"/>
-    <activity android:name=".ui.StudentMain.StudentMainFragment"/>
     </application>
 </manifest>
