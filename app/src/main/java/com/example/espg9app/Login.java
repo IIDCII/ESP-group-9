@@ -280,6 +280,7 @@ public class Login  extends AppCompatActivity{
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user.isEmailVerified()) {
                             Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
+//                            showDetail.putExtra("username", (Integer.toString(selectBusiness.getId())));
                             startActivity(showDetail);
                         } else {
                             // User is signed in but email is not verified

@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.espg9app.Business;
+import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 import com.example.espg9app.Voucher;
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
@@ -70,6 +71,9 @@ public class BusinessDetail extends AppCompatActivity
             emptyText.setText("Nothing to see here today, check again later");
         }
     }
+    /**
+    *Sets random values for the rating bar
+     **/
     private void setRatingBar(){
         RatingReviews ratingReviews = (RatingReviews) findViewById(R.id.ratingBar);
 
@@ -112,11 +116,22 @@ public class BusinessDetail extends AppCompatActivity
     }
     /**
      * Allows review overlay to appear and disappear
+     * Also Allows user to leave a review
      */
     private void setOverlay() {
         final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         layout.setDragView(findViewById(R.id.review_button));
-        layout.setAnchorPoint(0.3f);
+        layout.setAnchorPoint(0.22f);
+        Button submit_button = (Button) findViewById(R.id.submit_button);
+        submit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DBAccess db = new DBAccess();
+                RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
+                System.out.println("CLICK");
+                submit_button.setText("value is " + bar.getRating());
+            }
+        });
         findViewById(R.id.layout1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +148,7 @@ public class BusinessDetail extends AppCompatActivity
         });
 
     }
+
     private void setBusinessDetails() {
         susrb = (RatingBar)findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
