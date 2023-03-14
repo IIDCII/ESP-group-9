@@ -231,6 +231,7 @@ public class DBAccess {
                 businessToAdd.setCoordinates(coordToAdd);
                 businessToAdd.setVoucherActive(rs.getInt("VoucherActive") != 0);
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
+                businessToAdd.setVoucherDescription(rs.getString("VoucherDescription"));
 
                 businessArray.add(businessToAdd);
                 numBusinesses++;
