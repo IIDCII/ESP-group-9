@@ -13,6 +13,7 @@ public class Business {
     private Coordinates coordinates;
     private boolean voucherActive;
     private String discountTiers;
+    private String voucherDescription;
 
 
     public int getId() {
@@ -103,6 +104,14 @@ public class Business {
         this.discountTiers = discountTiers;
     }
 
+    public String getVoucherDescription() {
+        return voucherDescription;
+    }
+
+    public void setVoucherDescription(String voucherDescription) {
+        this.voucherDescription = voucherDescription;
+    }
+
     public void soutBusiness() {
         System.out.println(this.getName());
         System.out.println(this.getTags());
@@ -115,6 +124,8 @@ public class Business {
         System.out.println(this.getCoordinates().getLatitude());
         System.out.println(this.getCoordinates().getLongitude());
         System.out.println(this.getDiscountTiers());
+        System.out.println(this.getVoucherDescription());
+        System.out.println(this.isVoucherActive());
         System.out.println();
         System.out.println();
     }
