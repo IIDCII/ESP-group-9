@@ -6,14 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.StudentMain.StudentMainFragment">
+    tools:context=".ui.StudentMain.StudentMainFragment"
+    style="@style/backgroundFeedView">
 
-    <SearchView
+    <android.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/StudentMainSearchView"
         android:iconifiedByDefault="false"
-        android:queryHint="Search Business"></SearchView>
+        android:queryHint="Search Business"
+        android:background="@color/white"/>
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,42 +26,45 @@
             android:orientation="horizontal">
 
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:text="All"
                 android:id="@+id/allFilter"
-                android:background="@color/colourPrimary"/>
-<!--                android:onClick="allFilterTapped"/>-->
+                android:background="@color/colourPrimary"
+                android:textSize="14sp"
+                android:onClick="allFilterTapped"/>
+
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Food And Drink"
+                android:id="@+id/FoodandDrinkFilter"
+                android:background="@color/colourPrimary"
+                android:textSize="12sp"
+                android:onClick="FoodandDrinkFilterTapped"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Retail"
+                android:id="@+id/RetailFilter"
+                android:background="@color/colourPrimary"
+                android:textSize="14sp"
+                android:onClick="RetailFilterTapped"/>
 
             <Button
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="Triangle"
-                android:id="@+id/triangleFilter"
-                android:background="@color/colourPrimary"/>
-<!--                android:onClick="triangleFilterTapped"/>-->
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="Square"
-                android:id="@+id/squareFilter"
-                android:background="@color/colourPrimary"/>
-<!--                android:onClick="squareFilterTapped"/>-->
-
-
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="Octagon"
-                android:id="@+id/octagonFilter"
-                android:background="@color/colourPrimary"/>
-<!--                android:onClick="octagonFilterTapped"/>-->
+                android:text="Beauty"
+                android:id="@+id/BeautyFilter"
+                android:background="@color/colourPrimary"
+                android:textSize="14sp"
+                android:onClick="BeautyFilterTapped"/>
 
             <Button
                 android:layout_width="0dp"
@@ -67,7 +72,8 @@
                 android:layout_height="match_parent"
                 android:text="Rectangle"
                 android:id="@+id/rectangleFilter"
-                android:background="@color/colourPrimary"/>
+                android:background="@color/colourPrimary"
+                android:textSize="14sp"/>
 <!--                android:onClick="rectangleFilterTapped"/>-->
 
             <Button
@@ -76,17 +82,31 @@
                 android:layout_height="match_parent"
                 android:text="Circle"
                 android:id="@+id/circleFilter"
-                android:background="@color/colourPrimary"/>
+                android:background="@color/colourPrimary"
+                android:textSize="14sp"/>
 <!--                android:onClick="circleFilterTapped"/>-->
 
         </LinearLayout>
 
     </HorizontalScrollView>
+    <FrameLayout android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    <TextView
+        android:id="@+id/voucherEmptyText"
+        android:layout_marginBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        android:layout_gravity="center"
+        android:text="Nothing to see here today, check again later"
+        android:textSize="18dp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/BusinessListView"
-        android:divider="@android:color/transparent" />
-
+        android:id="@+id/voucherList"
+        android:divider="@android:color/transparent"
+        android:text="Sorry No Results"/>
+    </FrameLayout>
 </LinearLayout>

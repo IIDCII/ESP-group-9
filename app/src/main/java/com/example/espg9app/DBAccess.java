@@ -13,7 +13,6 @@ public class DBAccess {
     public static String dbUsername = "sql8598438";
     public static String dbPassword = "mQ2acQ2I4h";
 
-
     /**
      * Establishes a connection to the main database
      */
@@ -238,29 +237,18 @@ public class DBAccess {
                 numBusinesses++;
             }
 
-            float sumRatings;
-            float numRatings;
+            float sumRatings = 0;
+            float numRatings = 0;
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                sumRatings = 0;
-                numRatings = 0;
-
                 while (rs.next()) {
-                    sumRatings += rs.getInt("NumberOfStars");
-                    numRatings += 1.0;
+                    //sumRatings += rs.getInt("NumberOfStars");
+                    //numRatings += 1.0;
                 }
 
-                if (numRatings == 0) {
-                    businessArray.get(i).setUserRating(0);
-                    businessArray.get(i).setNumReviews(0);
-                }
 
-                else {
-                    businessArray.get(i).setUserRating(sumRatings / numRatings);
-                    businessArray.get(i).setNumReviews((int) numRatings);
-                }
             }
 
 
@@ -407,6 +395,7 @@ public class DBAccess {
 
         try {
             st.executeUpdate("UPDATE BusinessInfo SET VoucherActive = 1 WHERE BusinessID = '" + businessID + "'");
+
 
             closeConnection();
             return true;
