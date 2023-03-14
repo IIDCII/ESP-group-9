@@ -243,14 +243,19 @@ public class DBAccess {
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                while (rs.next()) {
-                    //sumRatings += rs.getInt("NumberOfStars");
-                    //numRatings += 1.0;
+                if (!rs.next()) {
+                    businessArray.get(i).setUserRating(0);
+                    businessArray.get(i).setNumReviews(0);
                 }
 
+                do {
+                    sumRatings += rs.getInt("NumberOfStars");
+                    numRatings += 1.0;
+                } while (rs.next());
 
+                businessArray.get(i).setUserRating(sumRatings / numRatings);
+                businessArray.get(i).setNumReviews((int) numRatings);
             }
-
 
             closeConnection();
             return businessArray;
