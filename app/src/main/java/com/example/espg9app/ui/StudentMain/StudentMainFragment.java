@@ -44,16 +44,13 @@ public class StudentMainFragment extends AppCompatActivity {
         setUpList();
         setUpOnclickListener();
 
-        //adding the nav bar. Can put all of this in a single file. This works but it needs to be a bit more clean
+        //code for the navbar to function
         TextView home = findViewById(R.id.home);
         TextView account = findViewById(R.id.account);
         TextView aboutUs = findViewById(R.id.about_us);
 
-        NavigationBar nav = new NavigationBar();
-
-        Intent i = new Intent(StudentMainFragment.this, WalletList.class);
-        home.setClickable(true);
-        home.setOnClickListener(v-> startActivity(i));
+        NavigationBar nav = new NavigationBar(StudentMainFragment.this);
+        nav.setOnClickListener(home,account,aboutUs);
     }
 
 
