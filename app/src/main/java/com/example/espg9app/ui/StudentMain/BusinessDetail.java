@@ -75,14 +75,12 @@ public class BusinessDetail extends AppCompatActivity
         listView.setAdapter(adapter);
     }
 
-    private void setUpOnclickListener() {
+    private void voucherOnClick() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Business selectBusiness = (Business) (listView.getItemAtPosition(position));
                 Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
-                showDetail.putExtra("id", (Integer.toString(selectBusiness.getId())));
-//                System.out.println(selectBusiness.getId());
+                showDetail.putExtra("id", (Integer.toString(selectedBusiness.getId())));
                 startActivity(showDetail);
             }
         });

@@ -89,6 +89,7 @@ public class StudentMainFragment extends AppCompatActivity {
 //
 //        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
 //        businessArraylist.add(hairdresser);
+
         TextView tv1 = findViewById(R.id.voucherEmptyText);
         DBAccess dba = new DBAccess();
         businessArraylist = dba.getAllBusinesses();
