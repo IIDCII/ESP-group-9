@@ -53,19 +53,19 @@ public class BusinessDetail extends AppCompatActivity
     }
 
     private void getVoucherList(){
-        Voucher burger_deal = new Voucher("epic burger deal", "50% off burger");
-        voucherArrayList.add(burger_deal);
-
-        Voucher hair_deal = new Voucher("hair time", "20% off haircut on tuesday for bob only");
-        voucherArrayList.add(hair_deal);
+//        Voucher burger_deal = new Voucher("epic burger deal", "50% off burger");
+//        voucherArrayList.add(burger_deal);
+//
+//        Voucher hair_deal = new Voucher("hair time", "20% off haircut on tuesday for bob only");
+//        voucherArrayList.add(hair_deal);
 
         TextView emptyText = findViewById(R.id.voucherEmptyText);
 //        DBAccess dba = new DBAccess();
 //        dba.openConnection();
-//        voucherArrayList = dba.vouc();
-        System.out.println(voucherArrayList);
+//        voucherArrayList =
+//        System.out.println(voucherArrayList);
 //        dba.closeConnection();
-        if (!voucherArrayList.isEmpty()) {
+        if (selectedBusiness.isVoucherActive()) {
             emptyText.setText("");
         } else {
             emptyText.setText("Nothing to see here today, check again later");
@@ -98,7 +98,7 @@ public class BusinessDetail extends AppCompatActivity
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
 
-        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, voucherArrayList);
+        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, selectedBusiness);
         listView.setAdapter(adapter);
     }
 
