@@ -674,7 +674,8 @@ public class DBAccess {
     }
 
     public static void main(String[] args) {
-        DBAccess dba = new DBAccess();
-        System.out.println(dba.deleteVoucherInstance(8, "alex456"));
+//        DBAccess dba = new DBAccess();
+//        dba.addBusiness("busi@gmail.com","Los Pollos Hermanos", "@drawable/samplebusinessimage.png","FoodAndDrink","Los Pollos Hermanos is a fictional fast food restaurant chain specializing in chicken that was featured in the television series Breaking Bad and its spin-off Better Call Saul",5.0,new Coordinates((float) 35.0844, (float) 106.6504), true,"10,20,30");
+//        System.out.println(dba.deleteVoucherInstance(8, "alex456"));
     }
 }

@@ -5,30 +5,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 
 import com.example.espg9app.Business;
 import com.example.espg9app.R;
-import com.example.espg9app.Voucher;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class BusinessViewAdapter extends ArrayAdapter<Voucher>
+public class BusinessViewAdapter extends ArrayAdapter<Business>
 {
 
-    public BusinessViewAdapter(Context context, int resource, ArrayList<Voucher> voucherList)
+    public BusinessViewAdapter(Context context, int resource, Business Business)
     {
-        super(context, resource, voucherList);
+        super(context, resource, (List<Business>) Business);
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        Voucher voucher = getItem(position);
+        Business business = getItem(position);
 
         if(convertView == null)
         {
@@ -38,8 +36,8 @@ public class BusinessViewAdapter extends ArrayAdapter<Voucher>
         TextView voucherName = (TextView) convertView.findViewById(R.id.voucherName);
         TextView voucherDetail = (TextView) convertView.findViewById(R.id.voucherDetail);
 
-        voucherName.setText(voucher.getName());
-        voucherDetail.setText(voucher.getDescription());
+        voucherName.setText(business.getName());
+        voucherDetail.setText(business.getDiscountTiers());
 
         return convertView;
     }
