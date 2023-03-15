@@ -99,6 +99,7 @@
         android:clickable="false"
         android:scaleX="1.2"
         android:scaleY="1.2"/>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

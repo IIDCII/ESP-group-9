@@ -25,6 +25,7 @@ import com.taufiqrahman.reviewratings.RatingReviews;
 
 import android.widget.RatingBar;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -153,10 +154,12 @@ public class BusinessDetail extends AppCompatActivity
         susrb = (RatingBar)findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
+        TextView userRating = (TextView) findViewById(R.id.textView);
         ImageView iv = (ImageView) findViewById(R.id.businessImage);
         susrb.setRating(selectedBusiness.getSusRating());
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
-//        iv.setImageResource(selectedBusiness.getIconPath());
+        userRating.setText((int) selectedBusiness.getUserRating());
+        iv.setImageResource(Integer.parseInt(selectedBusiness.getIconPath()));
     }
 }
