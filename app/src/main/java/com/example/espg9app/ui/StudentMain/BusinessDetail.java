@@ -84,16 +84,16 @@ public class BusinessDetail extends AppCompatActivity
                 Color.parseColor("#ffc105"),
                 Color.parseColor("#ef7e14"),
                 Color.parseColor("#d36259")};
+        //  Generates random review numbers
+//        int raters[] = new int[]{
+//                new Random().nextInt(100),
+//                new Random().nextInt(100),
+//                new Random().nextInt(100),
+//                new Random().nextInt(100),
+//                new Random().nextInt(100)
+//        };
 
-        int raters[] = new int[]{
-                new Random().nextInt(100),
-                new Random().nextInt(100),
-                new Random().nextInt(100),
-                new Random().nextInt(100),
-                new Random().nextInt(100)
-        };
-
-        ratingReviews.createRatingBars(100, BarLabels.STYPE1, colors, raters);
+        ratingReviews.createRatingBars(100, BarLabels.STYPE1, colors, selectedBusiness.getNumRatingArr());
     }
 
     private void setVoucherList() {
@@ -155,11 +155,16 @@ public class BusinessDetail extends AppCompatActivity
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
         TextView userRating = (TextView) findViewById(R.id.textView);
+        TextView numRating = (TextView) findViewById(R.id.textView6);
         ImageView iv = (ImageView) findViewById(R.id.businessImage);
         susrb.setRating(selectedBusiness.getSusRating());
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
-        userRating.setText((int) selectedBusiness.getUserRating());
-        iv.setImageResource(Integer.parseInt(selectedBusiness.getIconPath()));
+        userRating.setText(String.valueOf(selectedBusiness.getUserRating()));
+        numRating.setText(selectedBusiness.getNumReviews());
+        // Tries to set an image as an icon else, set default image
+        try{
+        iv.setImageResource(Integer.parseInt(selectedBusiness.getIconPath()));}
+        catch (NullPointerException e){;}
     }
 }

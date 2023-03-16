@@ -239,6 +239,7 @@ public class DBAccess {
 
             float sumRatings = 0;
             float numRatings = 0;
+            int numRatingsArr[] = new int[5];
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
@@ -249,12 +250,13 @@ public class DBAccess {
                 }
 
                 do {
+                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
                     sumRatings += rs.getInt("NumberOfStars");
                     numRatings += 1.0;
                 } while (rs.next());
-
                 businessArray.get(i).setUserRating(sumRatings / numRatings);
                 businessArray.get(i).setNumReviews((int) numRatings);
+                businessArray.get(i).setNumRatingArr(numRatingsArr);
             }
 
             closeConnection();
