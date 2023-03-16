@@ -231,6 +231,7 @@ public class DBAccess {
                 businessToAdd.setCoordinates(coordToAdd);
                 businessToAdd.setVoucherActive(rs.getInt("VoucherActive") != 0);
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
+                businessToAdd.setVoucherDescription(rs.getString("VoucherDescription"));
 
                 businessArray.add(businessToAdd);
                 numBusinesses++;
@@ -238,18 +239,25 @@ public class DBAccess {
 
             float sumRatings = 0;
             float numRatings = 0;
+            int numRatingsArr[] = new int[5];
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                while (rs.next()) {
-                    //sumRatings += rs.getInt("NumberOfStars");
-                    //numRatings += 1.0;
+                if (!rs.next()) {
+                    businessArray.get(i).setUserRating(0);
+                    businessArray.get(i).setNumReviews(0);
                 }
 
-
+                do {
+                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
+                    sumRatings += rs.getInt("NumberOfStars");
+                    numRatings += 1.0;
+                } while (rs.next());
+                businessArray.get(i).setUserRating(sumRatings / numRatings);
+                businessArray.get(i).setNumReviews((int) numRatings);
+                businessArray.get(i).setNumRatingArr(numRatingsArr);
             }
-
 
             closeConnection();
             return businessArray;
