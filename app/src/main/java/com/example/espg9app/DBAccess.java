@@ -457,6 +457,27 @@ public class DBAccess {
             return false;
         }
     }
+    /**
+     * Gets current review for a business for a user, returns -1 if review does not exist
+     * @param username      User leaving the review
+     * @param businessID    ID of business which the user is reviewing
+     * @return              -1 if business does not exist, otherwise returns numberOfStars
+     */
+    public int getReview(String username, int businessID){
+        openConnection();
+        ResultSet rs;
+        try{
+            rs = st.executeQuery("SELECT (NumberOfStars) FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
+            while(!rs.next()){
+            closeConnection();
+            return rs.getInt("numberOfStars");}
+        }
+        catch (SQLException e) {
+            closeConnection();
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
 
     /**
      * Adds a record to the Reviews table which represents a user reviewing a certain business; if a

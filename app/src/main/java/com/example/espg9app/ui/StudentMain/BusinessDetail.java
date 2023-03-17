@@ -118,19 +118,32 @@ public class BusinessDetail extends AppCompatActivity
     /**
      * Allows review overlay to appear and disappear
      * Also Allows user to leave a review
+     * Will change review page appearance depending if a previous review exists.
      */
     private void setOverlay() {
         final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         layout.setDragView(findViewById(R.id.review_button));
         layout.setAnchorPoint(0.22f);
         Button submit_button = (Button) findViewById(R.id.submit_button);
+        Button review_button = (Button) findViewById(R.id.review_button);
+        String username = "bruh";
+        DBAccess db = new DBAccess();
+        RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
+        review_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int currReview = db.getReview(username,selectedBusiness.getId());
+                if (currReview != -1){
+                    submit_button.setText("Edit Review");
+                    bar.setRating(currReview);
+                }
+            }
+        });
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DBAccess db = new DBAccess();
-                RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
-                System.out.println("CLICK");
-                submit_button.setText("value is " + bar.getRating());
+                db.leaveReview(username,selectedBusiness.getId(), (int) bar.getRating());
+//                submit_button.setText("value is " + bar.getRating());
             }
         });
         findViewById(R.id.layout1).setOnClickListener(new View.OnClickListener() {
@@ -147,7 +160,6 @@ public class BusinessDetail extends AppCompatActivity
                 layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
-
     }
 
     private void setBusinessDetails() {
