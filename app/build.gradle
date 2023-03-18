@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
 	id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
 }
 android {
     compileSdk 33
@@ -49,4 +51,5 @@ dependencies {
     implementation ('com.github.Inconnu08:android-ratingreviews:1.2.0') { exclude group: 'org.jetbrains', module: 'annotations-java5' }
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 }
