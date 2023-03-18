@@ -15,6 +15,7 @@ public class Business {
     private String discountTiers;
     private String voucherDescription;
 
+    private int[] numRatingArr;
 
     public int getId() {
         return id;
@@ -71,6 +72,11 @@ public class Business {
     public void setUserRating(float userRating) {
         this.userRating = userRating;
     }
+    public int[] getNumRatingArr() {
+        return numRatingArr;
+    }
+
+    public void setNumRatingArr(int[] numRatingArr) {this.numRatingArr = numRatingArr;}
 
     public int getNumReviews() {
         return numReviews;

@@ -222,6 +222,7 @@ public class DBAccess {
                 Business businessToAdd = new Business();
 
                 businessToAdd.setId(rs.getInt("BusinessID"));
+                System.out.println(rs.getString("BusinessName"));
                 businessToAdd.setName(rs.getString("BusinessName"));
                 businessToAdd.setIconPath(rs.getString("Icon"));
                 businessToAdd.setTags(rs.getString("Tags"));
@@ -239,22 +240,26 @@ public class DBAccess {
 
             float sumRatings = 0;
             float numRatings = 0;
+            int numRatingsArr[] = {0,0,0,0,0};
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                if (!rs.next()) {
+                if (!rs.next() || rs == null) {
                     businessArray.get(i).setUserRating(0);
                     businessArray.get(i).setNumReviews(0);
+                    businessArray.get(i).setNumRatingArr(numRatingsArr);
                 }
-
+                else{
                 do {
+//                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
+                    int test = rs.getInt("NumberOfStars");
                     sumRatings += rs.getInt("NumberOfStars");
                     numRatings += 1.0;
-                } while (rs.next());
-
+                } while (rs.next() && rs != null);
                 businessArray.get(i).setUserRating(sumRatings / numRatings);
                 businessArray.get(i).setNumReviews((int) numRatings);
+                businessArray.get(i).setNumRatingArr(numRatingsArr);}
             }
 
             closeConnection();
@@ -292,6 +297,7 @@ public class DBAccess {
      * @return                   True if record created successfully, false otherwise
      */
     public boolean addBusiness(String email, String name, String iconPath, String tags, String description,
+
                                double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers, String voucherDescription) {
         openConnection();
         int x;
@@ -303,7 +309,9 @@ public class DBAccess {
             st.executeUpdate("INSERT INTO `BusinessUser` (`BusinessEmail`) VALUES ('" + email + "')");
             st.executeUpdate("INSERT INTO `BusinessInfo` VALUES ((SELECT BusinessID FROM `BusinessUser` WHERE BusinessEmail = '" + email + "'), '"
                     + name + "', '" + iconPath + "', '" + tags + "', '" + description + "', " + susRating + ", "
+
                     + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "', '" + voucherDescription + "')");
+
 
 
             closeConnection();
@@ -455,6 +463,27 @@ public class DBAccess {
         catch (SQLException e) {
             return false;
         }
+    }
+    /**
+     * Gets current review for a business for a user, returns -1 if review does not exist
+     * @param username      User leaving the review
+     * @param businessID    ID of business which the user is reviewing
+     * @return              -1 if business does not exist, otherwise returns numberOfStars
+     */
+    public int getReview(String username, int businessID){
+        openConnection();
+        ResultSet rs;
+        try{
+            rs = st.executeQuery("SELECT (NumberOfStars) FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
+            while(!rs.next()){
+            closeConnection();
+            return rs.getInt("NumberOfStars");}
+        }
+        catch (SQLException e) {
+            closeConnection();
+            throw new RuntimeException(e);
+        }
+        return -1;
     }
 
     /**
@@ -682,6 +711,6 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        System.out.println(dba.addBusiness("jamiebusiness@gmail.com", "Jamie's XXX Paradise", "handcuffs.jpg", "whips chains", "Need i say more???? Exquisite exquisite exquisite exquisite exquisite!", 4.69, new Coordinates((float) 32.4564, (float) 11.8595), true, "0 20, 15 25, 100 30", "This voucher is valid on all self pleasure accessories excluding beads"));
+
     }
 }
