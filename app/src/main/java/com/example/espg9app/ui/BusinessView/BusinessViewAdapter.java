@@ -17,9 +17,9 @@ import java.util.List;
 public class BusinessViewAdapter extends ArrayAdapter<Business>
 {
 
-    public BusinessViewAdapter(Context context, int resource, Business Business)
+    public BusinessViewAdapter(Context context, int resource, ArrayList<Business> Business)
     {
-        super(context, resource, (List<Business>) Business);
+        super(context, resource, Business);
     }
 
 
@@ -37,7 +37,7 @@ public class BusinessViewAdapter extends ArrayAdapter<Business>
         TextView voucherDetail = (TextView) convertView.findViewById(R.id.voucherDetail);
 
         voucherName.setText(business.getName());
-        voucherDetail.setText(business.getDiscountTiers());
+        voucherDetail.setText(business.getVoucherDescription());
 
         return convertView;
     }

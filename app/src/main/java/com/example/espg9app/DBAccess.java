@@ -222,6 +222,7 @@ public class DBAccess {
                 Business businessToAdd = new Business();
 
                 businessToAdd.setId(rs.getInt("BusinessID"));
+                System.out.println(rs.getString("BusinessName"));
                 businessToAdd.setName(rs.getString("BusinessName"));
                 businessToAdd.setIconPath(rs.getString("Icon"));
                 businessToAdd.setTags(rs.getString("Tags"));
@@ -239,24 +240,26 @@ public class DBAccess {
 
             float sumRatings = 0;
             float numRatings = 0;
-            int numRatingsArr[] = new int[5];
+            int numRatingsArr[] = {0,0,0,0,0};
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                if (!rs.next()) {
+                if (!rs.next() || rs == null) {
                     businessArray.get(i).setUserRating(0);
                     businessArray.get(i).setNumReviews(0);
+                    businessArray.get(i).setNumRatingArr(numRatingsArr);
                 }
-
+                else{
                 do {
-                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
+//                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
+                    int test = rs.getInt("NumberOfStars");
                     sumRatings += rs.getInt("NumberOfStars");
                     numRatings += 1.0;
-                } while (rs.next());
+                } while (rs.next() && rs != null);
                 businessArray.get(i).setUserRating(sumRatings / numRatings);
                 businessArray.get(i).setNumReviews((int) numRatings);
-                businessArray.get(i).setNumRatingArr(numRatingsArr);
+                businessArray.get(i).setNumRatingArr(numRatingsArr);}
             }
 
             closeConnection();
@@ -293,7 +296,7 @@ public class DBAccess {
      * @return              True if record created successfully, false otherwise
      */
     public boolean addBusiness(String email, String name, String iconPath, String tags, String description,
-                               double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers) {
+                               double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers, String voucherDesc) {
         openConnection();
         int x;
         if (voucherActive) x = 1;
@@ -304,7 +307,7 @@ public class DBAccess {
             st.executeUpdate("INSERT INTO `BusinessUser` (`BusinessEmail`) VALUES ('" + email + "')");
             st.executeUpdate("INSERT INTO `BusinessInfo` VALUES ((SELECT BusinessID FROM `BusinessUser` WHERE BusinessEmail = '" + email + "'), '"
                     + name + "', '" + iconPath + "', '" + tags + "', '" + description + "', " + susRating + ", "
-                    + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "')");
+                    + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "', '" + voucherDesc +"')");
 
 
             closeConnection();
@@ -470,7 +473,7 @@ public class DBAccess {
             rs = st.executeQuery("SELECT (NumberOfStars) FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
             while(!rs.next()){
             closeConnection();
-            return rs.getInt("numberOfStars");}
+            return rs.getInt("NumberOfStars");}
         }
         catch (SQLException e) {
             closeConnection();
@@ -703,8 +706,8 @@ public class DBAccess {
     }
 
     public static void main(String[] args) {
-//        DBAccess dba = new DBAccess();
-//        dba.addBusiness("busi@gmail.com","Los Pollos Hermanos", "@drawable/samplebusinessimage.png","FoodAndDrink","Los Pollos Hermanos is a fictional fast food restaurant chain specializing in chicken that was featured in the television series Breaking Bad and its spin-off Better Call Saul",5.0,new Coordinates((float) 35.0844, (float) 106.6504), true,"10,20,30");
+        DBAccess dba = new DBAccess();
+        dba.addBusiness("businiun@gmail.com","Los Pollos Hermanos", "@drawable/samplebusinessimage.png","FoodAndDrink","Los Pollos Hermanos is a fictional fast food restaurant chain specializing in chicken that was featured in the television series Breaking Bad and its spin-off Better Call Saul",5,new Coordinates((float) 35.0844, (float) 106.6504), true,"0 10, 5 20, 10 30", "This voucher will get you up to 30% off all chicken!");
 //        System.out.println(dba.deleteVoucherInstance(8, "alex456"));
     }
 }

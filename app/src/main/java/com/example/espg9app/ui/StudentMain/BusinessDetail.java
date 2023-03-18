@@ -1,49 +1,37 @@
 package com.example.espg9app.ui.StudentMain;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
-import com.example.espg9app.Voucher;
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
-import com.example.espg9app.ui.BusinessView.studentreviewpage;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.taufiqrahman.reviewratings.BarLabels;
 import com.taufiqrahman.reviewratings.RatingReviews;
-
-import android.widget.RatingBar;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class BusinessDetail extends AppCompatActivity
 {
     RatingBar susrb;
-    Business selectedBusiness;
-    ArrayList<Voucher> voucherArrayList = new ArrayList<Voucher>();
+    static Business selectedBusiness;
+    ArrayList<Business> BusinessArrayList = new ArrayList<Business>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.businessdetail);
-
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//        StrictMode.setThreadPolicy(policy);
-
         getSelectedBusiness();
         setBusinessDetails();
         setOverlay();
@@ -51,6 +39,11 @@ public class BusinessDetail extends AppCompatActivity
         setRatingBar();
         setVoucherList();
 
+        Fragment fragment= new MapFragment();
+        // Open fragment
+        getSupportFragmentManager()
+                .beginTransaction().replace(R.id.map_container,fragment)
+                .commit();
     }
 
     private void getVoucherList(){
@@ -98,8 +91,8 @@ public class BusinessDetail extends AppCompatActivity
 
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
-
-        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, selectedBusiness);
+        BusinessArrayList.add(selectedBusiness);
+        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, BusinessArrayList);
         listView.setAdapter(adapter);
     }
 
@@ -163,6 +156,7 @@ public class BusinessDetail extends AppCompatActivity
     }
 
     private void setBusinessDetails() {
+
         susrb = (RatingBar)findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
@@ -173,10 +167,10 @@ public class BusinessDetail extends AppCompatActivity
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
         userRating.setText(String.valueOf(selectedBusiness.getUserRating()));
-        numRating.setText(selectedBusiness.getNumReviews());
+        numRating.setText(Integer.toString(selectedBusiness.getNumReviews()) + " Reviews");
         // Tries to set an image as an icon else, set default image
-        try{
-        iv.setImageResource(Integer.parseInt(selectedBusiness.getIconPath()));}
-        catch (NullPointerException e){;}
+        int id = getResources().getIdentifier("com.example.espg9app:drawable/" + "samplebusinessimage", null, null);
+        iv.setImageResource(id);
+
     }
 }
