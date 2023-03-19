@@ -248,10 +248,12 @@ public class DBAccess {
                     businessArray.get(i).setNumReviews(0);
                 }
 
-                do {
-                    sumRatings += rs.getInt("NumberOfStars");
-                    numRatings += 1.0;
-                } while (rs.next());
+                else {
+                    do {
+                        sumRatings += rs.getInt("NumberOfStars");
+                        numRatings += 1.0;
+                    } while (rs.next());
+                }
 
                 businessArray.get(i).setUserRating(sumRatings / numRatings);
                 businessArray.get(i).setNumReviews((int) numRatings);
