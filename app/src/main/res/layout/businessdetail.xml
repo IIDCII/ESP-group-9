@@ -1,104 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp">
 
-    <TextView
-        android:id="@+id/businessName"
-        android:layout_width="160dp"
-        android:layout_height="110dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:text="business name"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/businessImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/businessDesc"
-        android:layout_width="162dp"
-        android:layout_height="178dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:text="business desc"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/businessImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/businessName" />
-
-    <ImageView
-        android:id="@+id/businessImage"
-        android:layout_width="242dp"
-        android:layout_height="202dp"
-        android:layout_centerInParent="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RatingBar
-        android:id="@+id/susRatingBar"
-        style="@style/SusRatingBar"
-        android:layout_width="630dp"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:isIndicator="true"
-        android:max="5"
-        android:numStars="5"
-        android:rating="4"
-        android:scaleX="0.2"
-        android:scaleY=".2"
-        android:transformPivotX="0dp"
-        android:transformPivotY="0dp"
-        app:layout_constraintStart_toEndOf="@+id/businessDesc"
-        app:layout_constraintTop_toBottomOf="@+id/businessImage" />
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:clickable="false"
-        android:isIndicator="true"
-        android:max="5"
-        android:numStars="5"
-        android:scaleX=".55"
-        android:scaleY=".55"
-        android:translationX="-48dp"
-        app:layout_constraintStart_toEndOf="@+id/businessDesc"
-        app:layout_constraintTop_toBottomOf="@+id/businessImage" />
-
-    <FrameLayout
+    <!--Sliding Up Screen-->
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar">
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="0dp"
+        sothree:umanoShadowHeight="0dp"
+        sothree:umanoOverlay="false"
+        sothree:umanoFadeColor="@color/shadow"
+        sothree:umanoDragView="@+id/title">
 
-        <TextView
-            android:id="@+id/voucherEmptyText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
-            android:foregroundGravity="center"
-            android:text="Nothing to see here today, check again later"
-            android:textSize="18dp" />
-
-        <ListView
-            android:id="@+id/voucherList"
+        <!--First Screen-->
+        <include
+            android:id="@+id/layout1"
+            layout="@layout/businessdetail_layout"
             android:layout_width="match_parent"
-            android:layout_height="423dp"
-            android:divider="@android:color/transparent"
-            android:text="Sorry No Results" />
-    </FrameLayout>
-    <!--        style="@style/SusRatingBar"-->
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent" />
+
+        <!--Second Screen-->
+        <include
+            android:id="@+id/title"
+            android:clickable="true"
+            layout="@layout/studentreviewpage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</RelativeLayout>

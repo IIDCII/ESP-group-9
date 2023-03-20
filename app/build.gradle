@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
 	id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
 }
 android {
     compileSdk 33
@@ -33,7 +35,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation files('libs/mysql-connector.jar')
-    implementation 'com.google.firebase:firebase-auth:21.0.3'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
@@ -53,6 +55,10 @@ dependencies {
     // FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation ('com.github.Inconnu08:android-ratingreviews:1.2.0') { exclude group: 'org.jetbrains', module: 'annotations-java5' }
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
 }
 tasks.withType(Test) {
@@ -61,3 +67,5 @@ tasks.withType(Test) {
         events("passed", "skipped", "failed")
     }
 }
+
+

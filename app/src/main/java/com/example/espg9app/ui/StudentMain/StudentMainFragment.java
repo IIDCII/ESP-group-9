@@ -1,12 +1,14 @@
 package com.example.espg9app.ui.StudentMain;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -172,6 +174,7 @@ public class StudentMainFragment extends AppCompatActivity {
         Animation aniFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out);
         listView.startAnimation(aniFadeOut);
         filterList("foodanddrink");
+
     }
 
     public void RetailFilterTapped(View view)
@@ -187,6 +190,7 @@ public class StudentMainFragment extends AppCompatActivity {
         listView.startAnimation(aniFadeOut);
         filterList("beauty");
     }
+
 
 //    public void rectangleFilterTapped(View view)
 //    {
