@@ -36,6 +36,9 @@ public class BusinessDetail extends AppCompatActivity
 
     private ListView listView;
 
+    // using a placeholder name for the time being
+    String username = "Bob637";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +113,13 @@ public class BusinessDetail extends AppCompatActivity
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                DBAccess db = new DBAccess();
+                if (db.isVoucherInstance(selectedBusiness.getId(),username)){
+
+                }else {
+                    db.createVoucherInstance(selectedBusiness.getId(), username);
+                }
+
                 Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
                 showDetail.putExtra("id", (Integer.toString(selectedBusiness.getId())));
                 startActivity(showDetail);

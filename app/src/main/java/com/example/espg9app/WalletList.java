@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.espg9app.databinding.WalletlistBinding;
+import com.example.espg9app.ui.StudentMain.StudentMainAdapter;
+import com.example.espg9app.ui.StudentMain.StudentMainFragment;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,12 @@ public class WalletList extends AppCompatActivity {
     WalletlistBinding binding;
     ListView listview;
 
+    int businessID;
+
+    Business selectedBusiness;
+
+    public static ArrayList<Business> businessArraylist = new ArrayList<Business>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
        super.onCreate(savedInstanceState);
@@ -26,6 +35,8 @@ public class WalletList extends AppCompatActivity {
        listview = findViewById(R.id.listview);
        setContentView(R.layout.walletlist);
        setContentView(binding.getRoot());
+
+       setupData();
 
 
 //     this will just get extracted from the the DB
@@ -37,7 +48,8 @@ public class WalletList extends AppCompatActivity {
        ArrayList<VoucherInfo> voucherInfoArrayList = new ArrayList<>();
 
        for (int i = 0; i< voucherID.length; i++){
-           VoucherInfo voucherInfo = new VoucherInfo(voucherName[i], liveCheck[i],voucherID[i], businessName[i]);
+           selectedBusiness = StudentMainFragment.businessArraylist.get(i);
+           VoucherInfo voucherInfo = new VoucherInfo(selectedBusiness.getVoucherDescription(), selectedBusiness.isVoucherActive(),voucherID[i], businessName[i]);
            voucherInfoArrayList.add(voucherInfo);
        }
 
@@ -56,10 +68,7 @@ public class WalletList extends AppCompatActivity {
                    @Override
                    public void onClick(DialogInterface dialogInterface, int j) {
                        Intent i = new Intent(WalletList.this,VoucherPage.class);
-                       i.putExtra("name",voucherName[position]);
-                       i.putExtra("voucherID",voucherID[position]);
-                       i.putExtra("liveCheck",liveCheck[position]);
-                       i.putExtra("businessName",businessName[position]);
+                       i.putExtra("id",voucherName[position]);
                        startActivity(i);
                    }
                });
@@ -84,5 +93,24 @@ public class WalletList extends AppCompatActivity {
                builder.show();
            }
        });
+    }
+
+    private void setupData(){
+//        Business fishandchip = new Business("0", "fishandchip", R.drawable.fish, "foodanddrink", 5.0F);
+//        businessArraylist.add(fishandchip);
+//
+//        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
+//        businessArraylist.add(hairdresser);
+
+        TextView tv1 = findViewById(R.id.voucherEmptyText);
+        DBAccess dba = new DBAccess();
+        businessArraylist = dba.getAllBusinesses();
+//        System.out.println(businessArraylist);
+//        for (int i = 0; i < businessArraylist.size(); i++) businessArraylist.get(i).soutBusiness();
+        if (!businessArraylist.isEmpty()) {
+            tv1.setText("");
+        } else {
+            tv1.setText("Nothing to see here today, check again later");
+        }
     }
 }
