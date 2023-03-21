@@ -222,6 +222,7 @@ public class DBAccess {
                 Business businessToAdd = new Business();
 
                 businessToAdd.setId(rs.getInt("BusinessID"));
+                System.out.println(rs.getString("BusinessName"));
                 businessToAdd.setName(rs.getString("BusinessName"));
                 businessToAdd.setIconPath(rs.getString("Icon"));
                 businessToAdd.setTags(rs.getString("Tags"));
@@ -239,18 +240,27 @@ public class DBAccess {
 
             float sumRatings = 0;
             float numRatings = 0;
+            int numRatingsArr[] = {0,0,0,0,0};
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                while (rs.next()) {
-                    //sumRatings += rs.getInt("NumberOfStars");
-                    //numRatings += 1.0;
+                if (!rs.next() || rs == null) {
+                    businessArray.get(i).setUserRating(0);
+                    businessArray.get(i).setNumReviews(0);
+                    businessArray.get(i).setNumRatingArr(numRatingsArr);
                 }
-
-
+                else{
+                do {
+//                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
+                    int test = rs.getInt("NumberOfStars");
+                    sumRatings += rs.getInt("NumberOfStars");
+                    numRatings += 1.0;
+                } while (rs.next() && rs != null);
+                businessArray.get(i).setUserRating(sumRatings / numRatings);
+                businessArray.get(i).setNumReviews((int) numRatings);
+                businessArray.get(i).setNumRatingArr(numRatingsArr);}
             }
-
 
             closeConnection();
             return businessArray;
@@ -299,8 +309,7 @@ public class DBAccess {
             st.executeUpdate("INSERT INTO `BusinessInfo` VALUES ((SELECT BusinessID FROM `BusinessUser` WHERE BusinessEmail = '" + email + "'), '"
                     + name + "', '" + iconPath + "', '" + tags + "', '" + description + "', " + susRating + ", "
                     + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "', '" + voucherDescription + "')");
-
-
+            
             closeConnection();
             return true;
         }
@@ -451,6 +460,27 @@ public class DBAccess {
             return false;
         }
     }
+    /**
+     * Gets current review for a business for a user, returns -1 if review does not exist
+     * @param username      User leaving the review
+     * @param businessID    ID of business which the user is reviewing
+     * @return              -1 if business does not exist, otherwise returns numberOfStars
+     */
+    public int getReview(String username, int businessID){
+        openConnection();
+        ResultSet rs;
+        try{
+            rs = st.executeQuery("SELECT (NumberOfStars) FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
+            while(!rs.next()){
+            closeConnection();
+            return rs.getInt("NumberOfStars");}
+        }
+        catch (SQLException e) {
+            closeConnection();
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
 
     /**
      * Adds a record to the Reviews table which represents a user reviewing a certain business; if a
@@ -583,6 +613,60 @@ public class DBAccess {
     }
 
     /**
+     * fetches user's hash from the db
+     *
+     * @param username              Username of student/ string representation of businessID
+     * @param UserTrueBusinessFalse True if account is user account, false if it is a business
+     * @return                      hash as string if successful in retrieval, "error" otherwise.
+     */
+    public String getHash(String username, boolean UserTrueBusinessFalse){
+        ResultSet hash;
+        String hashStr;
+        openConnection();
+        try {
+            if(UserTrueBusinessFalse) {
+                hash = st.executeQuery("SELECT PasswordHash FROM `UserLogin` WHERE Username = '" + username + "'");
+            }else{
+                int businessID;
+                businessID = Integer.parseInt(username);
+                hash = st.executeQuery("SELECT PasswordHash FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+            }
+            hash.next();
+            hashStr = hash.getString("PasswordHash");
+        }catch(SQLException e){
+            closeConnection();
+            return "error";
+        }
+        return hashStr;
+    }
+
+
+
+    /**
+     * fetches user's username from the db
+     *
+     * @param email             Email of student
+     * @return                      hash as string if successful in retrieval, "error" otherwise.
+     */
+    public String getUsername(String email){
+        ResultSet username;
+        String usernameStr;
+        openConnection();
+        try {
+            username = st.executeQuery("SELECT Username FROM User WHERE Email = '" + email + "'");
+            username.next();
+            usernameStr = username.getString("Username");
+        }catch(SQLException e){
+            closeConnection();
+            //throw new RuntimeException(e);
+            return "error";
+        }
+        return usernameStr;
+
+    }
+
+
+    /**
      * Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db
      * for any user
      *
@@ -677,6 +761,5 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        System.out.println(dba.addBusiness("jamiebusiness@gmail.com", "Jamie's XXX Paradise", "handcuffs.jpg", "whips chains", "Need i say more???? Exquisite exquisite exquisite exquisite exquisite!", 4.69, new Coordinates((float) 32.4564, (float) 11.8595), true, "0 20, 15 25, 100 30", "This voucher is valid on all self pleasure accessories excluding beads"));
     }
 }

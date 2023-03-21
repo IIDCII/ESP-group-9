@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.Group;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -35,22 +36,35 @@ public class Login  extends AppCompatActivity{
     private Button signInReturn;
 
     //Sign Up Screen
+
+    private EditText signUpUsername;
+    private TextView signUpUsernameText;
+
+    private EditText signUpFirstName;
+    private EditText signUpLastName;
+    private TextView signUpFirstNameText;
+    private TextView signUpLastNameText;
+
     private EditText signInConfirmPassword;
     private TextView signUpConfirmText;
     private Button signUpSubmit;
     private Button signUpReturn;
 
-
+    DBAccess db = new DBAccess();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         mAuth = FirebaseAuth.getInstance();
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         //FIND BUTTONS
 
@@ -67,8 +81,21 @@ public class Login  extends AppCompatActivity{
         signInConfirmPassword = findViewById(R.id.confirmPasswordType);
         signUpConfirmText = findViewById(R.id.confirmPasswordText);
 
+        signUpFirstName = findViewById(R.id.firstNameType);
+        signUpLastName = findViewById(R.id.lastNameType);
+        signUpFirstNameText = findViewById(R.id.firstNameText);
+        signUpLastNameText = findViewById(R.id.lastNameText);
+
+        signUpUsername = findViewById(R.id.usernameType);
+        signUpUsernameText = findViewById(R.id.usernameText);
+
         signUpSubmit = findViewById(R.id.signUpButton);
         signUpReturn = findViewById(R.id.signUpReturn);
+
+        //Show username text field
+        signUpUsername.setVisibility(View.INVISIBLE);
+        signUpUsernameText.setVisibility(View.INVISIBLE);
+
 
         //
 
@@ -98,6 +125,15 @@ public class Login  extends AppCompatActivity{
                 signInSubmit.setVisibility(View.INVISIBLE);
                 signInReturn.setVisibility(View.INVISIBLE);
 
+                //Show first name last name fields
+                signUpFirstName.setVisibility(View.VISIBLE);
+                signUpFirstNameText.setVisibility(View.VISIBLE);
+                signUpLastName.setVisibility(View.VISIBLE);
+                signUpLastNameText.setVisibility(View.VISIBLE);
+
+                //Show username text field
+                signUpUsername.setVisibility(View.VISIBLE);
+                signUpUsernameText.setVisibility(View.VISIBLE);
 
             }
         });
@@ -123,6 +159,16 @@ public class Login  extends AppCompatActivity{
                 signInReturn.setVisibility(View.VISIBLE);
                 signUpSubmit.setVisibility(View.INVISIBLE);
                 signUpReturn.setVisibility(View.INVISIBLE);
+
+                //Hide first name last name fields
+                signUpFirstName.setVisibility(View.INVISIBLE);
+                signUpFirstNameText.setVisibility(View.INVISIBLE);
+                signUpLastName.setVisibility(View.INVISIBLE);
+                signUpLastNameText.setVisibility(View.INVISIBLE);
+
+                //Hide username text field
+                signUpUsername.setVisibility(View.INVISIBLE);
+                signUpUsernameText.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -155,14 +201,17 @@ public class Login  extends AppCompatActivity{
                 String email = signInEmail.getText().toString();
                 String password = signInPassword.getText().toString();
                 String password2 = signInConfirmPassword.getText().toString();
+                String firstName = signUpFirstName.getText().toString();
+                String lastName = signUpLastName.getText().toString();
+                String username = signUpUsername.getText().toString();
 
                 //Use this to check if the registration has met conditions
                 boolean validRegister = CheckEmail(email) &&
                         CheckPasswords(password, password2);
 
                 if(validRegister){
-                    //Sign up the account via Firebase
-                    signUp(email, password);
+                    //Sign up the account via Firebase and connect to database
+                    signUp(email, password, firstName, lastName, username);
                     //Tell the user there is a email verification sent
                     sendVerificationDialog();
 
@@ -246,12 +295,43 @@ public class Login  extends AppCompatActivity{
 
     //FIREBASE
 
-    private void signUp(String email, String password) {
+    private void signUp(String email, String password, String firstName, String lastName, String username) {
+        //GO TO THE DATABASE AND MAKE ACCOUNT
+        boolean accountCreated = db.addStudentAccount(username, firstName, lastName, email);
+
+        if(!accountCreated){
+            OkDialog("Error creating account, try again later. 11");
+            return;
+        }
+
+        //PASSWORD
+        boolean passwordEncrypted = db.encrypt(username, password, true);
+
+        if(!passwordEncrypted){
+            OkDialog("Error creating account, try again later. 22");
+            return;
+        }
+
+        String hashedPassword = db.getHash(username,true);
+        Log.d("hash",hashedPassword);
+
+        String usernameAgain = db.getUsername(email);
+        Log.d("username",usernameAgain);
+
+        boolean checkPassword = db.CheckPassword(username, password, true);
+
+        if(!checkPassword){
+            OkDialog("Error creating account, try again later. 33");
+            return;
+        }
+
+        //FIREBASE STUFF
+
         mAuth.fetchSignInMethodsForEmail(email)
                 .addOnCompleteListener(task -> {
                     boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
                     if (isNewUser) {
-                        mAuth.createUserWithEmailAndPassword(email, password)
+                        mAuth.createUserWithEmailAndPassword(email, hashedPassword)
                                 .addOnCompleteListener(task2 -> {
                                     if (task2.isSuccessful()) {
                                         // Sign up success
@@ -271,9 +351,12 @@ public class Login  extends AppCompatActivity{
                         return;
                     }
                 });
+
+
     }
 
     private void signIn(String email, String password) {
+<<<<<<< HEAD
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -310,6 +393,50 @@ public class Login  extends AppCompatActivity{
                         // Do something with the exception
                     }
                 });
+=======
+        String username = db.getUsername(email);
+        String hashPassword = db.getHash(username, true);
+
+        //Log.d("username",username);
+
+        boolean passwordValid = db.CheckPassword(username,password,true);
+
+        if(passwordValid) {
+
+            mAuth.signInWithEmailAndPassword(email, hashPassword)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user.isEmailVerified() || true) {
+                                Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
+                                startActivity(showDetail);
+                            } else {
+                                // User is signed in but email is not verified
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setMessage("Your account is not verified. Resend verification email?");
+                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        sendEmailVerification(user);
+                                    }
+                                });
+                                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // User clicked "No" button
+                                        // Perform the action you want to do when the user cancels
+                                    }
+                                });
+                                builder.create().show();
+                                mAuth.signOut();
+                                // Do something to handle this case
+                            }
+                    });
+        }else{
+            OkDialog("Error logging in. Nightmare.");
+
+        }
+>>>>>>> 9e2c6a1514bde1184355460d7ff3836f9a726840
     }
     private void sendEmailVerification(FirebaseUser user) {
         user.sendEmailVerification()
