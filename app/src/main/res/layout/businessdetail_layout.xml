@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/businessImage"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:src="@drawable/samplebusinessimage"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_marginLeft="0dp"
+            android:id="@+id/businessNameCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:contentPadding="1dp"
+            android:layout_marginTop="-20dp"
+            app:layout_constraintTop_toBottomOf="@+id/businessImage"
+            app:layout_constraintStart_toStartOf="@+id/businessImage">
+
+            <TextView
+                android:id="@+id/businessName"
+                android:textAppearance="@android:style/TextAppearance.Material.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:gravity="center_vertical"
+                android:text="business name"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toStartOf="@+id/businessImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/businessDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="business desc"
+        android:padding="6dp"
+        style="@style/backgroundFeedView"
+        android:textColor="@color/secondarytext"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/businessNameCard" />
+
+
+    <!--Button for click-->
+
+    <RatingBar
+        android:id="@+id/susRatingBar"
+        style="@style/SusRatingBar"
+        android:layout_width="630dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:isIndicator="true"
+        android:max="5"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="8dp"
+        android:numStars="5"
+        android:rating="4"
+        android:scaleX="0.22"
+        android:scaleY=".22"
+        android:transformPivotX="0dp"
+        android:transformPivotY="0dp"
+        app:layout_constraintStart_toStartOf="@+id/businessDesc"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <com.taufiqrahman.reviewratings.RatingReviews xmlns:bar="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ratingBar"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="-50dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.499"
+        app:animation="true"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@id/susRatingBar"
+        app:max_value="100"
+        app:show_label="true"
+        app:spaces="0dp"
+        app:text_color="#333333"
+        app:text_size="10sp"
+        app:width="15dp"
+        android:clickable="false"
+        android:scaleX="1.2"
+        android:scaleY="1.2"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4.9"
+        android:textColor="#333333"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:clickable="false"
+        android:isIndicator="true"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/ratingBar"
+        app:layout_constraintVertical_bias="0.28" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-15dp"
+        android:layout_marginBottom="8dp"
+        android:text="Out of 5"
+        android:textStyle="bold"
+        android:clickable="false"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-150dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="false"
+        android:text="1000 Reviews"
+        android:gravity="left"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/frame_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/review_button" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Ratings &amp; Reviews"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline"
+        android:textStyle="bold"
+        android:textSize="22dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/businessDesc"
+        app:layout_constraintTop_toBottomOf="@id/businessDesc"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/review_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/susRatingBar"
+        app:layout_constraintStart_toStartOf="@+id/susRatingBar"
+        android:text="Leave a review" />
+
+    <FrameLayout
+        android:id="@+id/frame_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/review_button">
+
+        <TextView
+            android:id="@+id/voucherEmptyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:foregroundGravity="center"
+            android:text="Nothing to see here today, check again later"
+            android:textSize="18dp" />
+
+        <ListView
+            android:id="@+id/voucherList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:divider="@android:color/transparent"
+            android:text="Sorry No Results" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/map_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/frame_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/review_button"
+        tools:context=".ui.StudentMain.BusinessDetail" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -1,72 +1,98 @@
 package com.example.espg9app.ui.StudentMain;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
-import com.example.espg9app.Voucher;
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
-
-import android.widget.RatingBar;
-
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.taufiqrahman.reviewratings.BarLabels;
+import com.taufiqrahman.reviewratings.RatingReviews;
 import java.util.ArrayList;
 
 public class BusinessDetail extends AppCompatActivity
 {
-    RatingBar rb;
     RatingBar susrb;
-    Business selectedBusiness;
-    ArrayList<Voucher> voucherArrayList = new ArrayList<Voucher>();
+    static Business selectedBusiness;
+    ArrayList<Business> BusinessArrayList = new ArrayList<Business>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.businessdetail);
-
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//        StrictMode.setThreadPolicy(policy);
-
         getSelectedBusiness();
         setBusinessDetails();
-
+        setOverlay();
         getVoucherList();
+        setRatingBar();
         setVoucherList();
 
+        Fragment fragment= new MapFragment();
+        // Open fragment
+        getSupportFragmentManager()
+                .beginTransaction().replace(R.id.map_container,fragment)
+                .commit();
     }
 
     private void getVoucherList(){
-        Voucher burger_deal = new Voucher("epic burger deal", "50% off burger");
-        voucherArrayList.add(burger_deal);
-
-        Voucher hair_deal = new Voucher("hair time", "20% off haircut on tuesday for bob only");
-        voucherArrayList.add(hair_deal);
+//        Voucher burger_deal = new Voucher("epic burger deal", "50% off burger");
+//        voucherArrayList.add(burger_deal);
+//
+//        Voucher hair_deal = new Voucher("hair time", "20% off haircut on tuesday for bob only");
+//        voucherArrayList.add(hair_deal);
 
         TextView emptyText = findViewById(R.id.voucherEmptyText);
 //        DBAccess dba = new DBAccess();
 //        dba.openConnection();
-//        voucherArrayList = dba.vouc();
-        System.out.println(voucherArrayList);
+//        voucherArrayList =
+//        System.out.println(voucherArrayList);
 //        dba.closeConnection();
-        if (!voucherArrayList.isEmpty()) {
+        if (selectedBusiness.isVoucherActive()) {
             emptyText.setText("");
         } else {
             emptyText.setText("Nothing to see here today, check again later");
         }
     }
+    /**
+    *Sets random values for the rating bar
+     **/
+    private void setRatingBar(){
+        RatingReviews ratingReviews = (RatingReviews) findViewById(R.id.ratingBar);
+
+        int colors[] = new int[]{
+                Color.parseColor("#0e9d58"),
+                Color.parseColor("#bfd047"),
+                Color.parseColor("#ffc105"),
+                Color.parseColor("#ef7e14"),
+                Color.parseColor("#d36259")};
+        //  Generates random review numbers
+//        int raters[] = new int[]{
+//                new Random().nextInt(100),
+//                new Random().nextInt(100),
+//                new Random().nextInt(100),
+//                new Random().nextInt(100),
+//                new Random().nextInt(100)
+//        };
+
+        ratingReviews.createRatingBars(100, BarLabels.STYPE1, colors, selectedBusiness.getNumRatingArr());
+    }
 
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
-
-        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, voucherArrayList);
+        BusinessArrayList.add(selectedBusiness);
+        BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, BusinessArrayList);
         listView.setAdapter(adapter);
     }
 
@@ -82,19 +108,69 @@ public class BusinessDetail extends AppCompatActivity
             };
         }
     }
+    /**
+     * Allows review overlay to appear and disappear
+     * Also Allows user to leave a review
+     * Will change review page appearance depending if a previous review exists.
+     */
+    private void setOverlay() {
+        final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        layout.setDragView(findViewById(R.id.review_button));
+        layout.setAnchorPoint(0.22f);
+        Button submit_button = (Button) findViewById(R.id.submit_button);
+        Button review_button = (Button) findViewById(R.id.review_button);
+        String username = "bruh";
+        DBAccess db = new DBAccess();
+        RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
+        review_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int currReview = db.getReview(username,selectedBusiness.getId());
+                if (currReview != -1){
+                    submit_button.setText("Edit Review");
+                    bar.setRating(currReview);
+                }
+            }
+        });
+        submit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.leaveReview(username,selectedBusiness.getId(), (int) bar.getRating());
+//                submit_button.setText("value is " + bar.getRating());
+            }
+        });
+        findViewById(R.id.layout1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED){
+                    layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+            }
+        });
+        layout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+    }
 
-    private void setBusinessDetails()
-    {
-        rb = (RatingBar)findViewById(R.id.ratingBar);
+    private void setBusinessDetails() {
+
         susrb = (RatingBar)findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
+        TextView userRating = (TextView) findViewById(R.id.textView);
+        TextView numRating = (TextView) findViewById(R.id.textView6);
         ImageView iv = (ImageView) findViewById(R.id.businessImage);
-
-        rb.setRating(selectedBusiness.getUserRating());
         susrb.setRating(selectedBusiness.getSusRating());
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
-//        iv.setImageResource(selectedBusiness.getIconPath());
+        userRating.setText(String.valueOf(selectedBusiness.getUserRating()));
+        numRating.setText(Integer.toString(selectedBusiness.getNumReviews()) + " Reviews");
+        // Tries to set an image as an icon else, set default image
+        int id = getResources().getIdentifier("com.example.espg9app:drawable/" + "samplebusinessimage", null, null);
+        iv.setImageResource(id);
+
     }
 }

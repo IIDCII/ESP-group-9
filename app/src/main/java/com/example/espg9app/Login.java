@@ -356,12 +356,10 @@ public class Login  extends AppCompatActivity{
     }
 
     private void signIn(String email, String password) {
-
-
         String username = db.getUsername(email);
         String hashPassword = db.getHash(username, true);
 
-        Log.d("username",username);
+        //Log.d("username",username);
 
         boolean passwordValid = db.CheckPassword(username,password,true);
 
@@ -395,12 +393,6 @@ public class Login  extends AppCompatActivity{
                                 mAuth.signOut();
                                 // Do something to handle this case
                             }
-                        } else {
-                            // Sign in failed
-                            Exception exception = task.getException();
-                            OkDialog("Failed to sign in. Please check your email and password.");
-                            // Do something with the exception
-                        }
                     });
         }else{
             OkDialog("Error logging in. Nightmare.");
