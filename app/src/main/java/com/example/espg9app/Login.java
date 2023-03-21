@@ -356,44 +356,6 @@ public class Login  extends AppCompatActivity{
     }
 
     private void signIn(String email, String password) {
-<<<<<<< HEAD
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user.isEmailVerified()) {
-                            Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
-//                            showDetail.putExtra("username", (Integer.toString(selectBusiness.getId())));
-                            startActivity(showDetail);
-                        } else {
-                            // User is signed in but email is not verified
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                            builder.setMessage("Your account is not verified. Resend verification email?");
-                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    sendEmailVerification(user);
-                                }
-                            });
-                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // User clicked "No" button
-                                    // Perform the action you want to do when the user cancels
-                                }
-                            });
-                            builder.create().show();
-                            mAuth.signOut();
-                            // Do something to handle this case
-                        }
-                    } else {
-                        // Sign in failed
-                        Exception exception = task.getException();
-                        OkDialog("Failed to sign in. Please check your email and password.");
-                        // Do something with the exception
-                    }
-                });
-=======
         String username = db.getUsername(email);
         String hashPassword = db.getHash(username, true);
 
@@ -431,13 +393,13 @@ public class Login  extends AppCompatActivity{
                                 mAuth.signOut();
                                 // Do something to handle this case
                             }
-                    });
-        }else{
-            OkDialog("Error logging in. Nightmare.");
+                        }
+                        });
+                    }else{
+                OkDialog("Error logging in. Nightmare.");
 
+            }
         }
->>>>>>> 9e2c6a1514bde1184355460d7ff3836f9a726840
-    }
     private void sendEmailVerification(FirebaseUser user) {
         user.sendEmailVerification()
                 .addOnCompleteListener(task -> {
