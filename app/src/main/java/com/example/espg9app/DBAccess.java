@@ -587,6 +587,60 @@ public class DBAccess {
     }
 
     /**
+     * fetches user's hash from the db
+     *
+     * @param username              Username of student/ string representation of businessID
+     * @param UserTrueBusinessFalse True if account is user account, false if it is a business
+     * @return                      hash as string if successful in retrieval, "error" otherwise.
+     */
+    public String getHash(String username, boolean UserTrueBusinessFalse){
+        ResultSet hash;
+        String hashStr;
+        openConnection();
+        try {
+            if(UserTrueBusinessFalse) {
+                hash = st.executeQuery("SELECT PasswordHash FROM `UserLogin` WHERE Username = '" + username + "'");
+            }else{
+                int businessID;
+                businessID = Integer.parseInt(username);
+                hash = st.executeQuery("SELECT PasswordHash FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+            }
+            hash.next();
+            hashStr = hash.getString("PasswordHash");
+        }catch(SQLException e){
+            closeConnection();
+            return "error";
+        }
+        return hashStr;
+    }
+
+
+
+    /**
+     * fetches user's username from the db
+     *
+     * @param email             Email of student
+     * @return                      hash as string if successful in retrieval, "error" otherwise.
+     */
+    public String getUsername(String email){
+        ResultSet username;
+        String usernameStr;
+        openConnection();
+        try {
+            username = st.executeQuery("SELECT Username FROM User WHERE Email = '" + email + "'");
+            username.next();
+            usernameStr = username.getString("Username");
+        }catch(SQLException e){
+            closeConnection();
+            //throw new RuntimeException(e);
+            return "error";
+        }
+        return usernameStr;
+
+    }
+
+
+    /**
      * Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db
      * for any user
      *
@@ -664,6 +718,7 @@ public class DBAccess {
         return hashtext.equals(hashStr);
 
     }
+
 
     /**
      * Generates the salt that will be used in hashing passwords
