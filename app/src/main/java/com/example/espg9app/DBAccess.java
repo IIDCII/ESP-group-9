@@ -222,6 +222,7 @@ public class DBAccess {
                 Business businessToAdd = new Business();
 
                 businessToAdd.setId(rs.getInt("BusinessID"));
+                System.out.println(rs.getString("BusinessName"));
                 businessToAdd.setName(rs.getString("BusinessName"));
                 businessToAdd.setIconPath(rs.getString("Icon"));
                 businessToAdd.setTags(rs.getString("Tags"));
@@ -231,6 +232,7 @@ public class DBAccess {
                 businessToAdd.setCoordinates(coordToAdd);
                 businessToAdd.setVoucherActive(rs.getInt("VoucherActive") != 0);
                 businessToAdd.setDiscountTiers(rs.getString("DiscountTiers"));
+                businessToAdd.setVoucherDescription(rs.getString("VoucherDescription"));
 
                 businessArray.add(businessToAdd);
                 numBusinesses++;
@@ -238,18 +240,27 @@ public class DBAccess {
 
             float sumRatings = 0;
             float numRatings = 0;
+            int numRatingsArr[] = {0,0,0,0,0};
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
 
-                while (rs.next()) {
-                    //sumRatings += rs.getInt("NumberOfStars");
-                    //numRatings += 1.0;
+                if (!rs.next() || rs == null) {
+                    businessArray.get(i).setUserRating(0);
+                    businessArray.get(i).setNumReviews(0);
+                    businessArray.get(i).setNumRatingArr(numRatingsArr);
                 }
-
-
+                else{
+                do {
+//                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
+                    int test = rs.getInt("NumberOfStars");
+                    sumRatings += rs.getInt("NumberOfStars");
+                    numRatings += 1.0;
+                } while (rs.next() && rs != null);
+                businessArray.get(i).setUserRating(sumRatings / numRatings);
+                businessArray.get(i).setNumReviews((int) numRatings);
+                businessArray.get(i).setNumRatingArr(numRatingsArr);}
             }
-
 
             closeConnection();
             return businessArray;
@@ -267,25 +278,26 @@ public class DBAccess {
      * and a record in the BusinessUser table which will generate a unique business ID with which the
      * business will be referenced throughout
      *
-     * @param email         Email address of the business
-     * @param name          Name of the business
-     * @param iconPath      File path of the icon that will be displayed alongside the business info
-     *                      to the user, relative to the assets folder
-     * @param tags          String of words that describe the business, with which a user will be able
-     *                      to filter businesses; separated by spaces
-     * @param description   Text description of the business that will be displayed to the user
-     * @param susRating     Sustainability rating decided by our bespoke algorithm, out of 5
-     * @param coordinates   Set of latitude/ longitude coordinates pointing to the location at which
-     *                      the voucher can be redeemed
-     * @param voucherActive Whether the voucher is currently available to be used
-     * @param discountTiers Discount that the voucher will grant the user;
-     *                      in the form T1 D1,T2 D2,...,Tn Dn, where Tk is the number of times a user
-     *                      must redeem this voucher to receive Dk% discount;
-     *                      T1 is always 0
-     * @return              True if record created successfully, false otherwise
+     * @param email              Email address of the business
+     * @param name               Name of the business
+     * @param iconPath           File path of the icon that will be displayed alongside the business info
+     *                           to the user, relative to the assets folder
+     * @param tags               String of words that describe the business, with which a user will be able
+     *                           to filter businesses; separated by spaces
+     * @param description        Text description of the business that will be displayed to the user
+     * @param susRating          Sustainability rating decided by our bespoke algorithm, out of 5
+     * @param coordinates        Set of latitude/ longitude coordinates pointing to the location at which
+     *                           the voucher can be redeemed
+     * @param voucherActive      Whether the voucher is currently available to be used
+     * @param discountTiers      Discount that the voucher will grant the user;
+     *                           in the form T1 D1,T2 D2,...,Tn Dn, where Tk is the number of times a user
+     *                           must redeem this voucher to receive Dk% discount;
+     *                           T1 is always 0
+     * @param voucherDescription Text description of what the voucher can be used for
+     * @return                   True if record created successfully, false otherwise
      */
     public boolean addBusiness(String email, String name, String iconPath, String tags, String description,
-                               double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers) {
+                               double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers, String voucherDescription) {
         openConnection();
         int x;
         if (voucherActive) x = 1;
@@ -296,8 +308,7 @@ public class DBAccess {
             st.executeUpdate("INSERT INTO `BusinessUser` (`BusinessEmail`) VALUES ('" + email + "')");
             st.executeUpdate("INSERT INTO `BusinessInfo` VALUES ((SELECT BusinessID FROM `BusinessUser` WHERE BusinessEmail = '" + email + "'), '"
                     + name + "', '" + iconPath + "', '" + tags + "', '" + description + "', " + susRating + ", "
-                    + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "')");
-
+                    + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "', '" + voucherDescription + "')");
 
             closeConnection();
             return true;
@@ -449,6 +460,27 @@ public class DBAccess {
             return false;
         }
     }
+    /**
+     * Gets current review for a business for a user, returns -1 if review does not exist
+     * @param username      User leaving the review
+     * @param businessID    ID of business which the user is reviewing
+     * @return              -1 if business does not exist, otherwise returns numberOfStars
+     */
+    public int getReview(String username, int businessID){
+        openConnection();
+        ResultSet rs;
+        try{
+            rs = st.executeQuery("SELECT (NumberOfStars) FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
+            while(!rs.next()){
+            closeConnection();
+            return rs.getInt("NumberOfStars");}
+        }
+        catch (SQLException e) {
+            closeConnection();
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
 
     /**
      * Adds a record to the Reviews table which represents a user reviewing a certain business; if a
@@ -581,6 +613,58 @@ public class DBAccess {
     }
 
     /**
+     * fetches user's hash from the db
+     *
+     * @param username              Username of student/ string representation of businessID
+     * @param UserTrueBusinessFalse True if account is user account, false if it is a business
+     * @return                      hash as string if successful in retrieval, "error" otherwise.
+     */
+    public String getHash(String username, boolean UserTrueBusinessFalse){
+        ResultSet hash;
+        String hashStr;
+        openConnection();
+        try {
+            if(UserTrueBusinessFalse) {
+                hash = st.executeQuery("SELECT PasswordHash FROM `UserLogin` WHERE Username = '" + username + "'");
+            }else{
+                int businessID;
+                businessID = Integer.parseInt(username);
+                hash = st.executeQuery("SELECT PasswordHash FROM `BusinessLogin` WHERE BusinessID = '" + businessID + "'");
+            }
+            hash.next();
+            hashStr = hash.getString("PasswordHash");
+        }catch(SQLException e){
+            closeConnection();
+            return "error";
+        }
+        return hashStr;
+    }
+
+    /**
+     * fetches user's username from the db
+     *
+     * @param email             Email of student
+     * @return                      hash as string if successful in retrieval, "error" otherwise.
+     */
+    public String getUsername(String email){
+        ResultSet username;
+        String usernameStr;
+        openConnection();
+        try {
+            username = st.executeQuery("SELECT Username FROM User WHERE Email = '" + email + "'");
+            username.next();
+            usernameStr = username.getString("Username");
+        }catch(SQLException e){
+            closeConnection();
+            //throw new RuntimeException(e);
+            return "error";
+        }
+        return usernameStr;
+
+    }
+
+
+    /**
      * Checks whether an entered password + salt (stored in db) + pepper, matches that stored in db
      * for any user
      *
@@ -659,6 +743,25 @@ public class DBAccess {
 
     }
 
+    public int getVoucherInstanceID(String username, int businessID) {
+        if (!isVoucherInstance(businessID, username)) return -1;
+
+        ResultSet rs;
+        int viid;
+        openConnection();
+
+        try {
+            rs = st.executeQuery("SELECT VoucherClaimID FROM VoucherClaims WHERE Username = '" + username + "' AND BusinessID = " + businessID);
+            rs.next();
+            viid = rs.getInt("VoucherClaimID");
+        }
+        catch(SQLException e){
+            closeConnection();
+            return -1;
+        }
+        return viid;
+    }
+
     /**
      * Generates the salt that will be used in hashing passwords
      *
@@ -675,6 +778,6 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-        System.out.println(dba.deleteVoucherInstance(8, "alex456"));
+        System.out.println(dba.getVoucherInstanceID("Bob637", 3));
     }
 }
