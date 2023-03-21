@@ -297,7 +297,6 @@ public class DBAccess {
      * @return                   True if record created successfully, false otherwise
      */
     public boolean addBusiness(String email, String name, String iconPath, String tags, String description,
-
                                double susRating, Coordinates coordinates, boolean voucherActive, String discountTiers, String voucherDescription) {
         openConnection();
         int x;
@@ -309,10 +308,7 @@ public class DBAccess {
             st.executeUpdate("INSERT INTO `BusinessUser` (`BusinessEmail`) VALUES ('" + email + "')");
             st.executeUpdate("INSERT INTO `BusinessInfo` VALUES ((SELECT BusinessID FROM `BusinessUser` WHERE BusinessEmail = '" + email + "'), '"
                     + name + "', '" + iconPath + "', '" + tags + "', '" + description + "', " + susRating + ", "
-
                     + coordinates.getLatitude() + ", " + coordinates.getLongitude() + ", " + x + ", '" + discountTiers + "', '" + voucherDescription + "')");
-
-
 
             closeConnection();
             return true;
@@ -644,8 +640,6 @@ public class DBAccess {
         return hashStr;
     }
 
-
-
     /**
      * fetches user's username from the db
      *
@@ -749,6 +743,24 @@ public class DBAccess {
 
     }
 
+    public int getVoucherInstanceID(String username, int businessID) {
+        if (!isVoucherInstance(businessID, username)) return -1;
+
+        ResultSet rs;
+        int viid;
+        openConnection();
+
+        try {
+            rs = st.executeQuery("SELECT VoucherClaimID FROM VoucherClaims WHERE Username = '" + username + "' AND BusinessID = " + businessID);
+            rs.next();
+            viid = rs.getInt("VoucherClaimID");
+        }
+        catch(SQLException e){
+            closeConnection();
+            return -1;
+        }
+        return viid;
+    }
 
     /**
      * Generates the salt that will be used in hashing passwords
@@ -766,6 +778,6 @@ public class DBAccess {
 
     public static void main(String[] args) {
         DBAccess dba = new DBAccess();
-
+        System.out.println(dba.getVoucherInstanceID("Bob637", 3));
     }
 }

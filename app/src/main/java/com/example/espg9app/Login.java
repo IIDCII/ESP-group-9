@@ -393,12 +393,13 @@ public class Login  extends AppCompatActivity{
                                 mAuth.signOut();
                                 // Do something to handle this case
                             }
-                    });
-        }else{
-            OkDialog("Error logging in. Nightmare.");
+                        }
+                        });
+                    }else{
+                OkDialog("Error logging in. Nightmare.");
 
+            }
         }
-    }
     private void sendEmailVerification(FirebaseUser user) {
         user.sendEmailVerification()
                 .addOnCompleteListener(task -> {
