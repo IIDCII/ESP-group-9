@@ -114,14 +114,17 @@ public class BusinessDetail extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 DBAccess db = new DBAccess();
-                if (db.isVoucherInstance(selectedBusiness.getId(),username)){
+                Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
+                int businessID = selectedBusiness.getId();
 
+                if (db.isVoucherInstance(selectedBusiness.getId(),username)){
+                    showDetail.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username, businessID)));
                 }else {
                     db.createVoucherInstance(selectedBusiness.getId(), username);
+                    showDetail.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username, businessID)));
                 }
 
-                Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
-                showDetail.putExtra("id", (Integer.toString(selectedBusiness.getId())));
+                showDetail.putExtra("business_id", (Integer.toString(selectedBusiness.getId())));
                 startActivity(showDetail);
             }
         });

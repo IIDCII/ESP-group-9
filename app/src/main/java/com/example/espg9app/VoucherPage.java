@@ -16,6 +16,8 @@ public class VoucherPage extends AppCompatActivity {
     String voucherName;
     int businessID;
 
+    int discount;
+
     String businessName;
     TextView live;
     Boolean liveCheck;
@@ -44,23 +46,29 @@ public class VoucherPage extends AppCompatActivity {
         });
     }
 
-    private void getSelectedBusiness()
-    {
+    private void getSelectedBusiness() {
+        DBAccess db = new DBAccess();
         Intent previousIntent = getIntent();
         if (previousIntent != null) {
-            String parsedStringID = previousIntent.getStringExtra("id");
+            String parsedStringID = previousIntent.getStringExtra("business_id");
+            String instanceID = previousIntent.getStringExtra("business_id");
 
             for (int i = 0; i < StudentMainFragment.businessArraylist.size(); i++){
                 if(Integer.valueOf(parsedStringID) == Integer.valueOf(StudentMainFragment.businessArraylist.get(i).getId())){
                     selectedBusiness = StudentMainFragment.businessArraylist.get(i);
                 };
             }
+            discount = db.redeemVoucher(Integer.parseInt(instanceID));
         }
     }
 
     private void setValues(){
-        description.setText(selectedBusiness.getVoucherDescription());
+        String briefDesc = selectedBusiness.getVoucherDescription();
+        String discountNo = Integer.toString(discount);
+        String fullDesc = discountNo + "% off " + briefDesc;
+        description.setText(fullDesc);
         businessID = selectedBusiness.getId();
+
         if(selectedBusiness.isVoucherActive()){
             live.setText("active");
         }
