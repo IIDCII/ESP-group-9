@@ -51,7 +51,7 @@ public class Login  extends AppCompatActivity{
     private Button signUpReturn;
 
     DBAccess db = new DBAccess();
-
+    static String username_stat;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -366,7 +366,9 @@ public class Login  extends AppCompatActivity{
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user.isEmailVerified()) {
                                 Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
+                                showDetail.putExtra("username", db.getUsername(email));
                                 startActivity(showDetail);
+
                             } else {
                                 // User is signed in but email is not verified
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -17,10 +17,13 @@ import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.taufiqrahman.reviewratings.BarLabels;
 import com.taufiqrahman.reviewratings.RatingReviews;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class BusinessDetail extends AppCompatActivity
 {
@@ -68,7 +71,7 @@ public class BusinessDetail extends AppCompatActivity
     /**
     *Sets random values for the rating bar
      **/
-    private void setRatingBar(){
+    private void setRatingBar() {
         RatingReviews ratingReviews = (RatingReviews) findViewById(R.id.ratingBar);
 
         int colors[] = new int[]{
@@ -89,6 +92,7 @@ public class BusinessDetail extends AppCompatActivity
         ratingReviews.createRatingBars(100, BarLabels.STYPE1, colors, selectedBusiness.getNumRatingArr());
     }
 
+
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
         BusinessArrayList.add(selectedBusiness);
@@ -108,40 +112,64 @@ public class BusinessDetail extends AppCompatActivity
             };
         }
     }
+
+    private void updateBusinessArr(){
+
+        DBAccess dba = new DBAccess();
+        StudentMainFragment.businessArraylist = dba.getAllBusinesses();
+        getSelectedBusiness();
+        setBusinessDetails();
+        setRatingBar();
+    }
     /**
      * Allows review overlay to appear and disappear
      * Also Allows user to leave a review
      * Will change review page appearance depending if a previous review exists.
      */
     private void setOverlay() {
-        final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        layout.setDragView(findViewById(R.id.review_button));
-        layout.setAnchorPoint(0.22f);
         Button submit_button = (Button) findViewById(R.id.submit_button);
         Button review_button = (Button) findViewById(R.id.review_button);
-        String username = "bruh";
+//        String username = StudentMainFragment.username;
+        String username="ethanwcit";
         DBAccess db = new DBAccess();
         RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
-        review_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int currReview = db.getReview(username,selectedBusiness.getId());
-                if (currReview != -1){
-                    submit_button.setText("Edit Review");
-                    bar.setRating(currReview);
-                }
-            }
-        });
+        final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        int currReview = db.getReview(username, selectedBusiness.getId());
+        if (currReview != 0) {
+            bar.setRating(currReview);
+        }
+//        review_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                int currReview = db.getReview(username,selectedBusiness.getId());
+//
+//                if (currReview != -1){
+//                    submit_button.setText("Edit Review");
+//                    bar.setRating(currReview);
+//                }
+//                else{
+//                    submit_button.setText("Submit Review");
+//                }
+//            }
+//        });
+        layout.setDragView(findViewById(R.id.review_button));
+        layout.setAnchorPoint(0.22f);
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 db.leaveReview(username,selectedBusiness.getId(), (int) bar.getRating());
-//                submit_button.setText("value is " + bar.getRating());
+                updateBusinessArr();
+                if(layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED){
+                    layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+                submit_button.setText("Edit Review");
             }
         });
         findViewById(R.id.layout1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateBusinessArr();
                 if(layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED){
                     layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
@@ -150,6 +178,7 @@ public class BusinessDetail extends AppCompatActivity
         layout.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateBusinessArr();
                 layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
@@ -167,7 +196,7 @@ public class BusinessDetail extends AppCompatActivity
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
         userRating.setText(String.valueOf(selectedBusiness.getUserRating()));
-        numRating.setText(Integer.toString(selectedBusiness.getNumReviews()) + " Reviews");
+        numRating.setText(Integer.toString(selectedBusiness.getNumReviews()) + " Review(s)");
         // Tries to set an image as an icon else, set default image
         int id = getResources().getIdentifier("com.example.espg9app:drawable/" + "samplebusinessimage", null, null);
         iv.setImageResource(id);

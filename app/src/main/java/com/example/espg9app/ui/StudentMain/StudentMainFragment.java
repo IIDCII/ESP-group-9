@@ -29,6 +29,7 @@ public class StudentMainFragment extends AppCompatActivity {
     private String selectedFilter = "all";
     private String currentSearchText = "";
     private SearchView searchView;
+    public static String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class StudentMainFragment extends AppCompatActivity {
         setContentView(R.layout.studentmainfragment);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        Intent previousIntent = getIntent();
+        username = previousIntent.getStringExtra("username");
         initSearchWidgets();
         setupData();
         setUpList();
