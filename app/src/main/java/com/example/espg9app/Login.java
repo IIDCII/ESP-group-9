@@ -212,8 +212,6 @@ public class Login  extends AppCompatActivity{
                 if(validRegister){
                     //Sign up the account via Firebase and connect to database
                     signUp(email, password, firstName, lastName, username);
-                    //Tell the user there is a email verification sent
-                    sendVerificationDialog();
 
                     //Hide the options and show the sign in screen
                     signOptions.setVisibility(Group.VISIBLE);
@@ -288,9 +286,6 @@ public class Login  extends AppCompatActivity{
         OkDialog("This email is already registered with an account.");
     }
 
-    private void sendVerificationDialog(){
-        OkDialog("A verification link has been sent to your email.");
-    }
 
 
     //FIREBASE
