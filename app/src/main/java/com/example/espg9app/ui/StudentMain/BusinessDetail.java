@@ -129,8 +129,8 @@ public class BusinessDetail extends AppCompatActivity
     private void setOverlay() {
         Button submit_button = (Button) findViewById(R.id.submit_button);
         Button review_button = (Button) findViewById(R.id.review_button);
-//        String username = StudentMainFragment.username;
-        String username="ethanwcit";
+        String username = StudentMainFragment.username;
+//        String username="ethanwcit";
         DBAccess db = new DBAccess();
         RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
         final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
