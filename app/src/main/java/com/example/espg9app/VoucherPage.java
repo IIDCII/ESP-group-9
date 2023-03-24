@@ -16,6 +16,7 @@ public class VoucherPage extends AppCompatActivity {
     String voucherName;
     int businessID;
 
+    int royalty;
     int discount;
 
     String businessName;
@@ -58,14 +59,15 @@ public class VoucherPage extends AppCompatActivity {
                     selectedBusiness = StudentMainFragment.businessArraylist.get(i);
                 };
             }
-            discount = db.redeemVoucher(Integer.parseInt(instanceID));
+            royalty = db.redeemVoucher(Integer.parseInt(instanceID));
+            discount = db.getDiscountPercent(Integer.parseInt(instanceID));
         }
     }
 
     private void setValues(){
         String briefDesc = selectedBusiness.getVoucherDescription();
-        String discountNo = Integer.toString(discount);
-        String fullDesc = discountNo + "% off " + briefDesc;
+        int totalDiscount = royalty + discount;
+        String fullDesc = totalDiscount + "% off " + briefDesc;
         description.setText(fullDesc);
         businessID = selectedBusiness.getId();
 

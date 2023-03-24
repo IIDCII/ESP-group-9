@@ -369,7 +369,7 @@ public class Login  extends AppCompatActivity{
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            if (user.isEmailVerified() || true) {
+                            if (user.isEmailVerified()) {
                                 Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
                                 startActivity(showDetail);
                             } else {
