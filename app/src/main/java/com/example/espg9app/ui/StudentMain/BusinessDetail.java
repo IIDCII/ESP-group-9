@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class BusinessDetail extends AppCompatActivity
-{
+public class BusinessDetail extends AppCompatActivity {
     RatingBar susrb;
     static Business selectedBusiness;
     ArrayList<Business> BusinessArrayList = new ArrayList<Business>();
@@ -42,14 +41,14 @@ public class BusinessDetail extends AppCompatActivity
         setRatingBar();
         setVoucherList();
 
-        Fragment fragment= new MapFragment();
+        Fragment fragment = new MapFragment();
         // Open fragment
         getSupportFragmentManager()
-                .beginTransaction().replace(R.id.map_container,fragment)
+                .beginTransaction().replace(R.id.map_container, fragment)
                 .commit();
     }
 
-    private void getVoucherList(){
+    private void getVoucherList() {
 //        Voucher burger_deal = new Voucher("epic burger deal", "50% off burger");
 //        voucherArrayList.add(burger_deal);
 //
@@ -68,8 +67,9 @@ public class BusinessDetail extends AppCompatActivity
             emptyText.setText("Nothing to see here today, check again later");
         }
     }
+
     /**
-    *Sets random values for the rating bar
+     * Sets random values for the rating bar
      **/
     private void setRatingBar() {
         RatingReviews ratingReviews = (RatingReviews) findViewById(R.id.ratingBar);
@@ -100,20 +100,20 @@ public class BusinessDetail extends AppCompatActivity
         listView.setAdapter(adapter);
     }
 
-    private void getSelectedBusiness()
-    {
+    private void getSelectedBusiness() {
         Intent previousIntent = getIntent();
         String parsedStringID = previousIntent.getStringExtra("id");
 
         // Bug fix!!! This gets the correct business from the businessArraylist using the id
-        for (int i = 0; i < StudentMainFragment.businessArraylist.size(); i++){
-            if(Integer.valueOf(parsedStringID) == Integer.valueOf(StudentMainFragment.businessArraylist.get(i).getId())){
+        for (int i = 0; i < StudentMainFragment.businessArraylist.size(); i++) {
+            if (Integer.valueOf(parsedStringID) == Integer.valueOf(StudentMainFragment.businessArraylist.get(i).getId())) {
                 selectedBusiness = StudentMainFragment.businessArraylist.get(i);
-            };
+            }
+            ;
         }
     }
 
-    private void updateBusinessArr(){
+    private void updateBusinessArr() {
 
         DBAccess dba = new DBAccess();
         StudentMainFragment.businessArraylist = dba.getAllBusinesses();
@@ -121,6 +121,7 @@ public class BusinessDetail extends AppCompatActivity
         setBusinessDetails();
         setRatingBar();
     }
+
     /**
      * Allows review overlay to appear and disappear
      * Also Allows user to leave a review
@@ -135,32 +136,19 @@ public class BusinessDetail extends AppCompatActivity
         RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
         final SlidingUpPanelLayout layout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         int currReview = db.getReview(username, selectedBusiness.getId());
-        if (currReview != 0) {
+        if (currReview > 0) {
             bar.setRating(currReview);
+            submit_button.setText("Edit Review");
+
         }
-//        review_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                int currReview = db.getReview(username,selectedBusiness.getId());
-//
-//                if (currReview != -1){
-//                    submit_button.setText("Edit Review");
-//                    bar.setRating(currReview);
-//                }
-//                else{
-//                    submit_button.setText("Submit Review");
-//                }
-//            }
-//        });
         layout.setDragView(findViewById(R.id.review_button));
         layout.setAnchorPoint(0.22f);
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.leaveReview(username,selectedBusiness.getId(), (int) bar.getRating());
+                db.leaveReview(username, selectedBusiness.getId(), (int) bar.getRating());
                 updateBusinessArr();
-                if(layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED){
+                if (layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
                 submit_button.setText("Edit Review");
@@ -170,7 +158,7 @@ public class BusinessDetail extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 updateBusinessArr();
-                if(layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED){
+                if (layout.getPanelState() != SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
             }
@@ -186,7 +174,7 @@ public class BusinessDetail extends AppCompatActivity
 
     private void setBusinessDetails() {
 
-        susrb = (RatingBar)findViewById(R.id.susRatingBar);
+        susrb = (RatingBar) findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);
         TextView userRating = (TextView) findViewById(R.id.textView);
@@ -195,11 +183,15 @@ public class BusinessDetail extends AppCompatActivity
         susrb.setRating(selectedBusiness.getSusRating());
         businessName.setText(selectedBusiness.getName());
         businessDesc.setText(selectedBusiness.getDescription());
-        userRating.setText(String.valueOf(selectedBusiness.getUserRating()));
+        userRating.setText(String.valueOf(round(selectedBusiness.getUserRating(),1)));
         numRating.setText(Integer.toString(selectedBusiness.getNumReviews()) + " Review(s)");
         // Tries to set an image as an icon else, set default image
         int id = getResources().getIdentifier("com.example.espg9app:drawable/" + "samplebusinessimage", null, null);
         iv.setImageResource(id);
 
+    }
+    private static double round(double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 }
