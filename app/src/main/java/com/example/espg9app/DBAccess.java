@@ -107,32 +107,23 @@ public class DBAccess {
         int maxDiscountAchieved = 0;
 
         try {
-            System.out.println("1");
             ResultSet rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
             rs.next();
-            System.out.println("2");
             int businessID = rs.getInt("BusinessID");
             int numRedeemed = rs.getInt("NumRedeemed");
-            System.out.println("3");
             rs = st.executeQuery("SELECT DiscountTiers FROM `BusinessInfo` WHERE BusinessID = " + businessID);
             rs.next();
-            System.out.println("4");
             String discountTiers = rs.getString("DiscountTiers");
-            String[] tiersArray = discountTiers.split(",");
-            System.out.println("5");
-            for (String s : tiersArray) {
-                System.out.println("6");
-                //converts string representation of discount tiers into integer arraylists
-                Scanner scanner = new Scanner(s);
-                List<Integer> tierArrayList = new ArrayList<>();
-                while (scanner.hasNextInt()) {
-                    tierArrayList.add(scanner.nextInt());
-                }
-                System.out.println("7");
-                if (numRedeemed >= tierArrayList.get(0)) maxDiscountAchieved = tierArrayList.get(1);
-                System.out.println("8");
+
+            if (numRedeemed > 2){
+                numRedeemed = 2;
             }
-            return maxDiscountAchieved;
+
+            List<String> tiersArrayList = new ArrayList<String>(Arrays.asList(discountTiers.split(",")));
+
+            // works, just make sure that the discount format is okay
+            int discount = Integer.parseInt(tiersArrayList.get(numRedeemed));
+            return discount;
         }
 
         catch (SQLException e) {
