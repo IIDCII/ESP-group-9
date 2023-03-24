@@ -14,27 +14,33 @@ public class LoginOverride extends AppCompatActivity {
         super.onCreate(savedInstanceBundle);
 
         //adding new instance of a business like so
-        addNewBusiness();
+//        addNewBusiness();
 
         //starting the student main fragment
+        startUp();
+    }
+
+    private void startUp(){
+        DBAccess db = new DBAccess();
         Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
+        showDetail.putExtra("username", db.getUsername("sz2075@bath.ac.uk"));
         startActivity(showDetail);
     }
 
     private void addNewBusiness(){
         DBAccess db = new DBAccess();
-        Coordinates coordinates = new Coordinates((float)51.372323, (float)-2.387209);
+        Coordinates coordinates = new Coordinates((float)52.372323, (float)-3.387209);
         db.addBusiness(
-                "BensButchers@gmail.com",
-                "Ben's Butchers",
-                "samplebusinessimage.png",
+                "kumran225@gmail.com",
+                "Kumran",
+                "@drawable/samplebusinessimage.png",
                 "FoodAndDrink",
-                "we are Ben's butchers that have the finest cuts of meat in Bath. Please make sure to look at our vast",
-                3.5,
+                "Man just work ffs",
+                1.5,
                 coordinates,
                 true,
                 "60,70,80",
-                "Discount on all of the oxtail we sell"
+                "Kumran do nice offer"
         );
     }
 }

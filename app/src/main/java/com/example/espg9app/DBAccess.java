@@ -107,30 +107,31 @@ public class DBAccess {
         int maxDiscountAchieved = 0;
 
         try {
+            System.out.println("1");
             ResultSet rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
             rs.next();
-
+            System.out.println("2");
             int businessID = rs.getInt("BusinessID");
             int numRedeemed = rs.getInt("NumRedeemed");
-
+            System.out.println("3");
             rs = st.executeQuery("SELECT DiscountTiers FROM `BusinessInfo` WHERE BusinessID = " + businessID);
             rs.next();
-
+            System.out.println("4");
             String discountTiers = rs.getString("DiscountTiers");
             String[] tiersArray = discountTiers.split(",");
-
+            System.out.println("5");
             for (String s : tiersArray) {
-
+                System.out.println("6");
                 //converts string representation of discount tiers into integer arraylists
                 Scanner scanner = new Scanner(s);
                 List<Integer> tierArrayList = new ArrayList<>();
                 while (scanner.hasNextInt()) {
                     tierArrayList.add(scanner.nextInt());
                 }
-
+                System.out.println("7");
                 if (numRedeemed >= tierArrayList.get(0)) maxDiscountAchieved = tierArrayList.get(1);
+                System.out.println("8");
             }
-
             return maxDiscountAchieved;
         }
 
@@ -240,7 +241,7 @@ public class DBAccess {
 
             float sumRatings = 0;
             float numRatings = 0;
-            int numRatingsArr[] = {0,0,0,0,0};
+            int numRatingsArr[] = {0,0,0,0,0,0};
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
@@ -252,7 +253,7 @@ public class DBAccess {
                 }
                 else{
                 do {
-//                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
+                    numRatingsArr[rs.getInt("NumberOfStars")] = numRatingsArr[rs.getInt("NumberOfStars")] + 1 ;
                     int test = rs.getInt("NumberOfStars");
                     sumRatings += rs.getInt("NumberOfStars");
                     numRatings += 1.0;
@@ -470,16 +471,16 @@ public class DBAccess {
         openConnection();
         ResultSet rs;
         try{
-            rs = st.executeQuery("SELECT (NumberOfStars) FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
-            while(!rs.next()){
+            rs = st.executeQuery("SELECT NumberOfStars FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
+            rs.next();
+            int rev = rs.getInt("NumberOfStars");
             closeConnection();
-            return rs.getInt("NumberOfStars");}
+            return rev;
         }
         catch (SQLException e) {
             closeConnection();
             throw new RuntimeException(e);
         }
-        return -1;
     }
 
     /**

@@ -15,8 +15,6 @@ public class VoucherPage extends AppCompatActivity {
     ImageView qr_viewer;
     String voucherName;
     int businessID;
-
-    int royalty;
     int discount;
 
     String businessName;
@@ -43,6 +41,7 @@ public class VoucherPage extends AppCompatActivity {
 //      just add to DB, don't need to open the page
         add_to_wallet.setOnClickListener(v-> {
             System.out.println("Going to add this voucher id to the wallet");
+
 //            change colour to confirm that it's been added
         });
     }
@@ -52,22 +51,21 @@ public class VoucherPage extends AppCompatActivity {
         Intent previousIntent = getIntent();
         if (previousIntent != null) {
             String parsedStringID = previousIntent.getStringExtra("business_id");
-            String instanceID = previousIntent.getStringExtra("business_id");
+            String instanceID = previousIntent.getStringExtra("instance_id");
 
             for (int i = 0; i < StudentMainFragment.businessArraylist.size(); i++){
                 if(Integer.valueOf(parsedStringID) == Integer.valueOf(StudentMainFragment.businessArraylist.get(i).getId())){
                     selectedBusiness = StudentMainFragment.businessArraylist.get(i);
                 };
             }
-            royalty = db.redeemVoucher(Integer.parseInt(instanceID));
-            discount = db.getDiscountPercent(Integer.parseInt(instanceID));
+            discount = db.redeemVoucher(Integer.parseInt(instanceID));
         }
     }
 
     private void setValues(){
         String briefDesc = selectedBusiness.getVoucherDescription();
-        int totalDiscount = royalty + discount;
-        String fullDesc = totalDiscount + "% off " + briefDesc;
+        int totalDiscount = discount;
+        String fullDesc = totalDiscount + "% off\n" + briefDesc;
         description.setText(fullDesc);
         businessID = selectedBusiness.getId();
 

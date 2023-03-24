@@ -73,6 +73,12 @@ public class Business {
         this.userRating = userRating;
     }
     public int[] getNumRatingArr() {
+        for(int i = 0; i < numRatingArr.length / 2; i++)
+        {
+            int temp = numRatingArr[i];
+            numRatingArr[i] = numRatingArr[numRatingArr.length - i - 1];
+            numRatingArr[numRatingArr.length - i - 1] = temp;
+        }
         return numRatingArr;
     }
 

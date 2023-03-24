@@ -159,6 +159,7 @@
         android:textAppearance="@android:style/TextAppearance.Material.Headline"
         android:textStyle="bold"
         android:textSize="22dp"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/businessDesc"
@@ -190,8 +191,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
-            android:foregroundGravity="center"
+            android:layout_marginBottom="70dp"
+            android:foregroundGravity=""
             android:text="Nothing to see here today, check again later"
             android:textSize="18dp" />
 
