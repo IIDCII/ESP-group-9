@@ -1,5 +1,7 @@
 package com.example.espg9app.ui.StudentMain;
 
+import static com.example.espg9app.ui.StudentMain.StudentMainFragment.username;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -39,8 +41,6 @@ public class BusinessDetail extends AppCompatActivity
 
     private ListView listView;
 
-    // using a placeholder name for the time being
-    String username = "Bob637";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +120,8 @@ public class BusinessDetail extends AppCompatActivity
                 DBAccess db = new DBAccess();
                 Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
                 int businessID = selectedBusiness.getId();
-
+                System.out.println("-----------/////------------/////-------/////-----/-/-/-/-/----/");
+                System.out.println(username);
                 if (db.isVoucherInstance(selectedBusiness.getId(),username)){
                     showDetail.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username, businessID)));
                 }else {

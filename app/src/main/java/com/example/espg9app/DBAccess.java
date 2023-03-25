@@ -104,8 +104,7 @@ public class DBAccess {
      * @return               Percentage discount as an integer; 0 if the operation fails
      */
     public int getDiscountPercent(int voucherClaimID) {
-        int maxDiscountAchieved = 0;
-
+        openConnection();
         try {
             ResultSet rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
             rs.next();
@@ -121,12 +120,13 @@ public class DBAccess {
 
             List<String> tiersArrayList = new ArrayList<String>(Arrays.asList(discountTiers.split(",")));
 
-            // works, just make sure that the discount format is okay
             int discount = Integer.parseInt(tiersArrayList.get(numRedeemed));
+            closeConnection();
             return discount;
         }
 
         catch (SQLException e) {
+            closeConnection();
             return 0;
         }
     }
@@ -510,12 +510,34 @@ public class DBAccess {
      */
     public int redeemVoucher(int voucherClaimID) {
         openConnection();
-
+        int discount;
         if (!checkVoucherInstanceExistsAndActive(voucherClaimID)) {
             closeConnection();
             return 0;
         }
-        int discount = getDiscountPercent(voucherClaimID);
+
+        try {
+            ResultSet rs = st.executeQuery("SELECT * FROM `VoucherClaims` WHERE VoucherClaimID = " + voucherClaimID);
+            rs.next();
+            int businessID = rs.getInt("BusinessID");
+            int numRedeemed = rs.getInt("NumRedeemed");
+            rs = st.executeQuery("SELECT DiscountTiers FROM `BusinessInfo` WHERE BusinessID = " + businessID);
+            rs.next();
+            String discountTiers = rs.getString("DiscountTiers");
+
+            if (numRedeemed > 2){
+                numRedeemed = 2;
+            }
+
+            List<String> tiersArrayList = new ArrayList<String>(Arrays.asList(discountTiers.split(",")));
+
+            discount = Integer.parseInt(tiersArrayList.get(numRedeemed));
+        }
+
+        catch (SQLException e) {
+             discount = 0;
+        }
+
         if (discount > 0) {
             boolean redeemedSuccessfully = markVoucherRedeemed(voucherClaimID);
             if (!redeemedSuccessfully) {

@@ -1,8 +1,11 @@
 package com.example.espg9app;
+import static com.example.espg9app.ui.StudentMain.StudentMainFragment.username;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,39 +25,28 @@ public class WalletList extends AppCompatActivity {
     WalletlistBinding binding;
     ListView listview;
 
-    int businessID;
-
     Business selectedBusiness;
 
-    public static ArrayList<Business> businessArraylist = new ArrayList<Business>();
+    String username;
+
+    private static ArrayList<Business> businessArraylist = new ArrayList<Business>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-       super.onCreate(savedInstanceState);
-       binding = WalletlistBinding.inflate(getLayoutInflater());
-       listview = findViewById(R.id.listview);
-       setContentView(R.layout.walletlist);
-       setContentView(binding.getRoot());
+        super.onCreate(savedInstanceState);
+        binding = WalletlistBinding.inflate(getLayoutInflater());
+        listview = findViewById(R.id.listview);
+        setContentView(R.layout.walletlist);
+        setContentView(binding.getRoot());
 
-       setupData();
+        //so you don't get a connection error in the first place
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
+        ArrayList<VoucherInfo> voucherInfoArrayList = new ArrayList<>();
+        setupData(voucherInfoArrayList);
+        WalletListAdapter walletListAdapter = new WalletListAdapter(WalletList.this,voucherInfoArrayList);
 
-//     this will just get extracted from the the DB
-       String [] businessName = {"Barry's","Bath town maidens", "cranberry stew","misogynist tailors", "komo ifi yabare"};
-       String [] voucherName = {"50% off all products","100% off mega munch sale!","Navi discount","Bee Movie","Vin Diesel family discount"};
-       String [] voucherID = {"50% off all products","100% off mega munch sale!","Navi discount","Bee Movie","Vin Diesel family discount"};
-       Boolean [] liveCheck = {true,false,true,true,false};
-
-       ArrayList<VoucherInfo> voucherInfoArrayList = new ArrayList<>();
-
-       for (int i = 0; i< voucherID.length; i++){
-           selectedBusiness = StudentMainFragment.businessArraylist.get(i);
-           VoucherInfo voucherInfo = new VoucherInfo(selectedBusiness.getVoucherDescription(), selectedBusiness.isVoucherActive(),voucherID[i], businessName[i]);
-           voucherInfoArrayList.add(voucherInfo);
-       }
-
-       WalletListAdapter walletListAdapter = new WalletListAdapter(WalletList.this,voucherInfoArrayList);
-       
        binding.listview.setAdapter(walletListAdapter);
        binding.listview.setClickable(true);
        binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,13 +54,19 @@ public class WalletList extends AppCompatActivity {
            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                AlertDialog.Builder builder = new AlertDialog.Builder(WalletList.this);
+               Business business = businessArraylist.get(position);
+               builder.setTitle(business.getVoucherDescription());
 
-               builder.setTitle(voucherName[position]);
+               DBAccess db = new DBAccess();
+               String instanceID = Integer.toString(db.getVoucherInstanceID(username, business.getId()));
                builder.setPositiveButton("View Discount", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialogInterface, int j) {
                        Intent i = new Intent(WalletList.this,VoucherPage.class);
-                       i.putExtra("id",voucherName[position]);
+                       i.putExtra("business_id",Integer.toString(business.getId()));
+                       i.putExtra("instance_id","5");
+                       System.out.println("-----------/////------------/////-------/////-----/-/-/-/-/----/");
+                       System.out.println(business.getId() +"  " + instanceID);
                        startActivity(i);
                    }
                });
@@ -80,11 +78,13 @@ public class WalletList extends AppCompatActivity {
                        builder2.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialogInterface, int j) {
+                               //fill in
                            }
                        });
                        builder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialogInterface, int j) {
+                               //fill in
                            }
                        });
                        builder2.show();
@@ -95,22 +95,25 @@ public class WalletList extends AppCompatActivity {
        });
     }
 
-    private void setupData(){
-//        Business fishandchip = new Business("0", "fishandchip", R.drawable.fish, "foodanddrink", 5.0F);
-//        businessArraylist.add(fishandchip);
-//
-//        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
-//        businessArraylist.add(hairdresser);
-
-        TextView tv1 = findViewById(R.id.voucherEmptyText);
-        DBAccess dba = new DBAccess();
-        businessArraylist = dba.getAllBusinesses();
-//        System.out.println(businessArraylist);
-//        for (int i = 0; i < businessArraylist.size(); i++) businessArraylist.get(i).soutBusiness();
-        if (!businessArraylist.isEmpty()) {
-            tv1.setText("");
-        } else {
-            tv1.setText("Nothing to see here today, check again later");
+    private void setupData(ArrayList<VoucherInfo> voucherInfoArrayList){
+        DBAccess db = new DBAccess();
+        username = db.getUsername("sz2075@bath.ac.uk");
+        ArrayList<Business> fullBusinessArraylist = new ArrayList<Business>();
+        fullBusinessArraylist = db.getAllBusinesses();
+        for (int i = 0; i < fullBusinessArraylist.size(); i++){
+            selectedBusiness = fullBusinessArraylist.get(i);
+            if (db.isVoucherInstance(selectedBusiness.getId(),username)){
+                VoucherInfo voucherInfo = new VoucherInfo(
+                        selectedBusiness.getVoucherDescription(),
+                        selectedBusiness.isVoucherActive(),
+                        selectedBusiness.getName());
+                voucherInfoArrayList.add(voucherInfo);
+                businessArraylist.add(selectedBusiness);
+            }
         }
+        System.out.println("------------------------------------------------------------");
+        System.out.println(username);
+        System.out.println(businessArraylist);
+        System.out.println(voucherInfoArrayList);
     }
 }

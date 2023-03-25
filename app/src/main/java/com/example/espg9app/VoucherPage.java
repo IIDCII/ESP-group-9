@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.espg9app.QRcode.QRPage;
 import com.example.espg9app.ui.StudentMain.StudentMainFragment;
 
+import java.util.ArrayList;
+
 public class VoucherPage extends AppCompatActivity {
     Button add_to_wallet;
     TextView description;
@@ -22,7 +24,7 @@ public class VoucherPage extends AppCompatActivity {
     Boolean liveCheck;
     Business selectedBusiness;
 
-
+    private static ArrayList<Business> businessArraylist = new ArrayList<Business>();
     @Override
     protected void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
@@ -41,24 +43,23 @@ public class VoucherPage extends AppCompatActivity {
 //      just add to DB, don't need to open the page
         add_to_wallet.setOnClickListener(v-> {
             System.out.println("Going to add this voucher id to the wallet");
-
 //            change colour to confirm that it's been added
         });
     }
 
     private void getSelectedBusiness() {
         DBAccess db = new DBAccess();
+        businessArraylist = db.getAllBusinesses();
         Intent previousIntent = getIntent();
         if (previousIntent != null) {
             String parsedStringID = previousIntent.getStringExtra("business_id");
             String instanceID = previousIntent.getStringExtra("instance_id");
-
-            for (int i = 0; i < StudentMainFragment.businessArraylist.size(); i++){
-                if(Integer.valueOf(parsedStringID) == Integer.valueOf(StudentMainFragment.businessArraylist.get(i).getId())){
-                    selectedBusiness = StudentMainFragment.businessArraylist.get(i);
+            for (int i = 0; i < businessArraylist.size(); i++){
+                if(Integer.valueOf(parsedStringID) == Integer.valueOf(businessArraylist.get(i).getId())){
+                    selectedBusiness = businessArraylist.get(i);
                 };
             }
-            discount = db.redeemVoucher(Integer.parseInt(instanceID));
+            discount = db.getDiscountPercent(Integer.parseInt(instanceID));
         }
     }
 
