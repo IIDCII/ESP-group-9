@@ -96,8 +96,11 @@ public class WalletList extends AppCompatActivity {
     }
 
     private void setupData(ArrayList<VoucherInfo> voucherInfoArrayList){
+        StudentUser su = new StudentUser();
+        username = su.getUsername();
+
         DBAccess db = new DBAccess();
-        username = db.getUsername("sz2075@bath.ac.uk");
+
         ArrayList<Business> fullBusinessArraylist = new ArrayList<Business>();
         fullBusinessArraylist = db.getAllBusinesses();
         for (int i = 0; i < fullBusinessArraylist.size(); i++){
