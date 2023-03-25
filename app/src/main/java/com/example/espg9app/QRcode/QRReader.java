@@ -58,6 +58,8 @@ public class QRReader extends AppCompatActivity {
             List<String> businessIDAndUsername = new ArrayList<String>(Arrays.asList(intentResult.getContents().split(",")));
             String username = businessIDAndUsername.get(1);
             String businessID = businessIDAndUsername.get(0);
+
+            //currently doesn't check what business is using it since business profiles still need to be made
             if (db.isVoucherInstance(Integer.parseInt(businessID),username)){
                 Intent openVoucher = new Intent(QRReader.this,VoucherPage.class);
                 openVoucher.putExtra("businessID",businessID);
