@@ -38,8 +38,6 @@ public class WalletList extends AppCompatActivity {
         listview = findViewById(R.id.listview);
         setContentView(R.layout.walletlist);
         setContentView(binding.getRoot());
-
-        //so you don't get a connection error in the first place
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 

@@ -11,8 +11,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class QRPage{
 
-    public void generateQR(ImageView iv_qr, int id) {
-        String text = Integer.toString(id);
+    public void generateQR(ImageView iv_qr, String id) {
+        String text = id;
         MultiFormatWriter writer = new MultiFormatWriter();
         try {
             BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, 1000, 1000);

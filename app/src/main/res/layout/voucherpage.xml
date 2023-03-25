@@ -27,13 +27,6 @@
         android:scaleType="fitCenter"
         />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/add_to_wallet"
-        android:text="Add to wallet"
-        />
-
 
 
 </LinearLayout>

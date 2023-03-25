@@ -16,6 +16,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.espg9app.Business;
@@ -26,6 +28,7 @@ import com.example.espg9app.VoucherPage;
 
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
 import com.google.android.gms.common.util.ArrayUtils;
+import com.google.firebase.installations.Utils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.taufiqrahman.reviewratings.BarLabels;
 import com.taufiqrahman.reviewratings.RatingReviews;
@@ -120,8 +123,7 @@ public class BusinessDetail extends AppCompatActivity
                 DBAccess db = new DBAccess();
                 Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
                 int businessID = selectedBusiness.getId();
-                System.out.println("-----------/////------------/////-------/////-----/-/-/-/-/----/");
-                System.out.println(username);
+
                 if (db.isVoucherInstance(selectedBusiness.getId(),username)){
                     showDetail.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username, businessID)));
                 }else {
@@ -130,6 +132,9 @@ public class BusinessDetail extends AppCompatActivity
                 }
 
                 showDetail.putExtra("business_id", (Integer.toString(selectedBusiness.getId())));
+
+
+
                 startActivity(showDetail);
             }
         });
