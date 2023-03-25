@@ -230,13 +230,14 @@ public class DBAccess {
                 numBusinesses++;
             }
 
-            float sumRatings = 0;
-            float numRatings = 0;
-            int numRatingsArr[] = {0,0,0,0,0,0};
+
+
 
             for (int i = 0; i < numBusinesses; i++) {
                 rs = st.executeQuery("SELECT (NumberOfStars) from `Ratings` WHERE BusinessID = " + businessArray.get(i).getId());
-
+                int numRatingsArr[] = {0,0,0,0,0,0};
+                float sumRatings = 0;
+                float numRatings = 0;
                 if (!rs.next() || rs == null) {
                     businessArray.get(i).setUserRating(0);
                     businessArray.get(i).setNumReviews(0);
@@ -463,10 +464,14 @@ public class DBAccess {
         ResultSet rs;
         try{
             rs = st.executeQuery("SELECT NumberOfStars FROM `Ratings` WHERE BusinessID = " + businessID + " AND Username = '" + username + "'");
-            rs.next();
-            int rev = rs.getInt("NumberOfStars");
-            closeConnection();
-            return rev;
+            if (rs.next()) {
+                int rev = rs.getInt("NumberOfStars");
+                closeConnection();
+                return rev;
+            }
+            else{
+                return -1;
+            }
         }
         catch (SQLException e) {
             closeConnection();
