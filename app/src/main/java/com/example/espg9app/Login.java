@@ -366,7 +366,8 @@ public class Login  extends AppCompatActivity{
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user.isEmailVerified()) {
                                 Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
-                                showDetail.putExtra("username", db.getUsername(email));
+                                StudentUser su = new StudentUser();
+                                su.setUsername(username);
                                 startActivity(showDetail);
 
                             } else {

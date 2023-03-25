@@ -10,10 +10,16 @@
         <entry key="app/src/main/res/layout/aboutus.xml" value="0.2776268115942029" />
         <entry key="app/src/main/res/layout/account.xml" value="0.2776268115942029" />
         <entry key="app/src/main/res/layout/businessmain.xml" value="0.2776268115942029" />
+        <entry key="app/src/main/res/layout/businessvoucherlist.xml" value="0.4088541666666667" />
+        <entry key="app/src/main/res/layout/editprofilebusiness.xml" value="0.25" />
         <entry key="app/src/main/res/layout/login.xml" value="0.2776268115942029" />
         <entry key="app/src/main/res/layout/mainactivity.xml" value="0.2776268115942029" />
-        <entry key="app/src/main/res/layout/qrpage.xml" value="0.2776268115942029" />
+        <entry key="app/src/main/res/layout/qrpage.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/qrreader.xml" value="0.1" />
         <entry key="app/src/main/res/layout/studentmain.xml" value="0.2776268115942029" />
+        <entry key="app/src/main/res/layout/voucherlistitem.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/voucherpage.xml" value="0.1887031408308004" />
+        <entry key="app/src/main/res/layout/webview.xml" value="0.1" />
       </map>
     </option>
   </component>

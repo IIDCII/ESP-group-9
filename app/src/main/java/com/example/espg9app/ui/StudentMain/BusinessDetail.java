@@ -1,8 +1,13 @@
 package com.example.espg9app.ui.StudentMain;
 
+import static com.example.espg9app.ui.StudentMain.StudentMainFragment.username;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.view.View;
+import android.widget.AdapterView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,13 +16,19 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
+import com.example.espg9app.Voucher;
+import com.example.espg9app.VoucherPage;
+
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
 import com.google.android.gms.common.util.ArrayUtils;
+import com.google.firebase.installations.Utils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.taufiqrahman.reviewratings.BarLabels;
 import com.taufiqrahman.reviewratings.RatingReviews;
@@ -30,6 +41,9 @@ public class BusinessDetail extends AppCompatActivity {
     static Business selectedBusiness;
     ArrayList<Business> BusinessArrayList = new ArrayList<Business>();
 
+    private ListView listView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +54,7 @@ public class BusinessDetail extends AppCompatActivity {
         getVoucherList();
         setRatingBar();
         setVoucherList();
-
-        Fragment fragment = new MapFragment();
+        Fragment fragment= new MapFragment();
         // Open fragment
         getSupportFragmentManager()
                 .beginTransaction().replace(R.id.map_container, fragment)
@@ -98,6 +111,33 @@ public class BusinessDetail extends AppCompatActivity {
         BusinessArrayList.add(selectedBusiness);
         BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, BusinessArrayList);
         listView.setAdapter(adapter);
+
+        //set up the on-click listener
+        voucherOnClick(listView);
+    }
+
+    private void voucherOnClick(ListView listView) {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                DBAccess db = new DBAccess();
+                Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
+                int businessID = selectedBusiness.getId();
+
+                if (db.isVoucherInstance(selectedBusiness.getId(),username)){
+                    showDetail.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username, businessID)));
+                }else {
+                    db.createVoucherInstance(selectedBusiness.getId(), username);
+                    showDetail.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username, businessID)));
+                }
+
+                showDetail.putExtra("business_id", (Integer.toString(selectedBusiness.getId())));
+
+
+
+                startActivity(showDetail);
+            }
+        });
     }
 
     private void getSelectedBusiness() {
@@ -141,6 +181,7 @@ public class BusinessDetail extends AppCompatActivity {
             submit_button.setText("Edit Review");
 
         }
+
         layout.setDragView(findViewById(R.id.review_button));
         layout.setAnchorPoint(0.22f);
         submit_button.setOnClickListener(new View.OnClickListener() {
@@ -188,8 +229,8 @@ public class BusinessDetail extends AppCompatActivity {
         // Tries to set an image as an icon else, set default image
         int id = getResources().getIdentifier("com.example.espg9app:drawable/" + "samplebusinessimage", null, null);
         iv.setImageResource(id);
-
     }
+
     private static double round(double value, int precision) {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;

@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
+import com.example.espg9app.StudentUser;
 
 import java.util.ArrayList;
 
@@ -37,8 +38,8 @@ public class StudentMainFragment extends AppCompatActivity {
         setContentView(R.layout.studentmainfragment);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        Intent previousIntent = getIntent();
-        username = previousIntent.getStringExtra("username");
+        StudentUser su = new StudentUser();
+        username = su.getUsername();
         initSearchWidgets();
         setupData();
         setUpList();
@@ -94,6 +95,7 @@ public class StudentMainFragment extends AppCompatActivity {
 //
 //        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
 //        businessArraylist.add(hairdresser);
+
         TextView tv1 = findViewById(R.id.voucherEmptyText);
         DBAccess dba = new DBAccess();
         businessArraylist = dba.getAllBusinesses();
