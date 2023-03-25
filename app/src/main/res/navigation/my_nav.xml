@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/studentMainFragment">
+
+    <activity
+        android:id="@+id/studentMainFragment"
+        android:name="com.example.espg9app.ui.StudentMain.StudentMainFragment"
+        android:label="studentmainfragment"
+        tools:layout="@layout/studentmainfragment" />
+    <activity
+        android:id="@+id/walletList"
+        android:name="com.example.espg9app.WalletList"
+        android:label="walletlist"
+        tools:layout="@layout/walletlist" />
+    <activity
+        android:id="@+id/aboutUs"
+        android:name="com.example.espg9app.AboutUs"
+        android:label="AboutUs"
+        android:layout="@layout/aboutus"/>
+</navigation>

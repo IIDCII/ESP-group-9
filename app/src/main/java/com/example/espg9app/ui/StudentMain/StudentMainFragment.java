@@ -1,7 +1,5 @@
 package com.example.espg9app.ui.StudentMain;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -17,10 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
-import com.example.espg9app.NavigationBar;
 import com.example.espg9app.R;
-import com.example.espg9app.VoucherPage;
-import com.example.espg9app.WalletList;
+import com.example.espg9app.StudentUser;
 
 import java.util.ArrayList;
 
@@ -32,6 +28,7 @@ public class StudentMainFragment extends AppCompatActivity {
     private String selectedFilter = "all";
     private String currentSearchText = "";
     private SearchView searchView;
+    public static String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +36,13 @@ public class StudentMainFragment extends AppCompatActivity {
         setContentView(R.layout.studentmainfragment);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        StudentUser su = new StudentUser();
+        username = su.getUsername();
         initSearchWidgets();
         setupData();
         setUpList();
         setUpOnclickListener();
 
-        //code for the navbar to function
-        TextView home = findViewById(R.id.home);
-        TextView account = findViewById(R.id.account);
-        TextView aboutUs = findViewById(R.id.about_us);
-
-        NavigationBar nav = new NavigationBar(StudentMainFragment.this);
-        nav.setOnClickListener(home,account,aboutUs);
     }
 
 
@@ -103,6 +95,7 @@ public class StudentMainFragment extends AppCompatActivity {
 //
 //        Business hairdresser = new Business("1", "hairdresser", R.drawable.fish, "beauty",3.5F);
 //        businessArraylist.add(hairdresser);
+
         TextView tv1 = findViewById(R.id.voucherEmptyText);
         DBAccess dba = new DBAccess();
         businessArraylist = dba.getAllBusinesses();
@@ -185,6 +178,7 @@ public class StudentMainFragment extends AppCompatActivity {
         Animation aniFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out);
         listView.startAnimation(aniFadeOut);
         filterList("foodanddrink");
+
     }
 
     public void RetailFilterTapped(View view)
@@ -200,6 +194,7 @@ public class StudentMainFragment extends AppCompatActivity {
         listView.startAnimation(aniFadeOut);
         filterList("beauty");
     }
+
 
 //    public void rectangleFilterTapped(View view)
 //    {

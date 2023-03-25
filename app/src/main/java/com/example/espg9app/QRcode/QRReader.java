@@ -4,16 +4,22 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 import com.example.espg9app.VoucherPage;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class QRReader extends AppCompatActivity {
 
@@ -23,6 +29,8 @@ public class QRReader extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qrreader);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         btn_scan = findViewById(R.id.btn_scan);
         btn_scan.setOnClickListener(v->{
@@ -39,27 +47,26 @@ public class QRReader extends AppCompatActivity {
         options.setCaptureActivity(CaptureAct.class);
         options.initiateScan();
     }
-// check this part of the code again
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-
-//      when implementing, you need to change the code inside here for it to open up the voucher
         if (intentResult.getContents() != null) {
-//          decrypt the qr code to get the voucher id and show the contents of it and that's all
-            AlertDialog.Builder builder = new AlertDialog.Builder(QRReader.this);
+            DBAccess db = new DBAccess();
+            List<String> businessIDAndUsername = new ArrayList<String>(Arrays.asList(intentResult.getContents().split(",")));
+            String username = businessIDAndUsername.get(1);
+            String businessID = businessIDAndUsername.get(0);
 
-            builder.setTitle("voucher");
-            builder.setMessage(intentResult.getContents());
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            builder.show();
+            //currently doesn't check what business is using it since business profiles still need to be made
+            if (db.isVoucherInstance(Integer.parseInt(businessID),username)){
+                Intent openVoucher = new Intent(QRReader.this,VoucherPage.class);
+                openVoucher.putExtra("businessID",businessID);
+                openVoucher.putExtra("instanceID",Integer.toString(db.getVoucherInstanceID(username,Integer.parseInt(businessID))));
+                db.redeemVoucher(db.getVoucherInstanceID(username, Integer.parseInt(businessID)));
+                startActivity(openVoucher);
+            }
         } else {
             Toast.makeText(this, "this qr code is not available", Toast.LENGTH_SHORT).show();
         }

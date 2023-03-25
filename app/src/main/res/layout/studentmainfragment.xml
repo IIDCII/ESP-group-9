@@ -26,15 +26,15 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/allFilter"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="All"
-                android:id="@+id/allFilter"
+                android:layout_weight="1"
                 android:background="@color/colourPrimary"
-                android:textSize="14sp"
-                android:onClick="allFilterTapped"/>
+                android:onClick="allFilterTapped"
+                android:text="All"
+                android:textSize="14sp" />
 
             <Button
                 style="@style/Widget.AppCompat.Button.Colored"
@@ -108,12 +108,6 @@
             android:id="@+id/voucherList"
             android:divider="@android:color/transparent"
             android:text="Sorry No Results"/>
-
-        <include
-            layout="@layout/navigationbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
     </FrameLayout>
 
 </LinearLayout>
