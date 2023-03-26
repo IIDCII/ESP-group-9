@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
-import com.example.espg9app.ui.StudentMain.BusinessDetail;
 import com.example.espg9app.ui.StudentMain.StudentMainFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -365,7 +364,7 @@ public class Login  extends AppCompatActivity{
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user.isEmailVerified()) {
-                                Intent showDetail = new Intent(getApplicationContext(), Main.class);
+                                Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
                                 StudentUser su = new StudentUser();
                                 su.setUsername(username);
                                 startActivity(showDetail);

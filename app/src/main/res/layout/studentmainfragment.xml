@@ -108,6 +108,8 @@
             android:id="@+id/voucherList"
             android:divider="@android:color/transparent"
             android:text="Sorry No Results"/>
+
+        <include layout="@layout/navigationbar"/>
     </FrameLayout>
 
 </LinearLayout>

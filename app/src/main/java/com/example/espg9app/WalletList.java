@@ -114,9 +114,7 @@ public class WalletList extends AppCompatActivity {
                 businessArraylist.add(selectedBusiness);
             }
         }
-        System.out.println("------------------------------------------------------------");
-        System.out.println(username);
-        System.out.println(businessArraylist);
-        System.out.println(voucherInfoArrayList);
     }
+
+
 }

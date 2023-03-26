@@ -24,7 +24,7 @@ public class LoginOverride extends AppCompatActivity {
         DBAccess db = new DBAccess();
         StudentUser su = new StudentUser();
         su.setUsername(db.getUsername("sz2075@bath.ac.uk"));
-        Intent showDetail = new Intent(getApplicationContext(), Main.class);
+        Intent showDetail = new Intent(getApplicationContext(), AboutUs.class);
         startActivity(showDetail);
     }
 
