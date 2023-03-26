@@ -92,21 +92,24 @@
     <FrameLayout android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-    <TextView
-        android:id="@+id/voucherEmptyText"
-        android:layout_marginBottom="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:foregroundGravity="center"
-        android:layout_gravity="center"
-        android:text="Nothing to see here today, check again later"
-        android:textSize="18dp" />
+        <TextView
+            android:id="@+id/voucherEmptyText"
+            android:layout_marginBottom="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:layout_gravity="center"
+            android:text="Nothing to see here today, check again later"
+            android:textSize="18dp" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/voucherList"
-        android:divider="@android:color/transparent"
-        android:text="Sorry No Results"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/voucherList"
+            android:divider="@android:color/transparent"
+            android:text="Sorry No Results"/>
+
+        <include layout="@layout/navigationbar"/>
     </FrameLayout>
+
 </LinearLayout>

@@ -1,24 +1,27 @@
 package com.example.espg9app.ui.StudentMain;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.espg9app.AboutUs;
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 import com.example.espg9app.StudentUser;
+import com.example.espg9app.WalletList;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -43,9 +46,11 @@ public class StudentMainFragment extends AppCompatActivity {
         initSearchWidgets();
         setupData();
         setUpList();
+        navbar();
         setUpOnclickListener();
-
     }
+
+
 
     private void initSearchWidgets() {
         searchView = (SearchView) findViewById(R.id.StudentMainSearchView);
@@ -193,6 +198,28 @@ public class StudentMainFragment extends AppCompatActivity {
         Animation aniFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out);
         listView.startAnimation(aniFadeOut);
         filterList("beauty");
+    }
+
+    private void navbar(){
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.aboutUs:
+                        Intent i = new Intent(StudentMainFragment.this, AboutUs.class);
+                        startActivity(i);
+                        return true;
+                    case R.id.studentMainFragment:
+                        return true;
+                    case R.id.walletList:
+                        Intent j = new Intent(StudentMainFragment.this, WalletList.class);
+                        startActivity(j);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
 

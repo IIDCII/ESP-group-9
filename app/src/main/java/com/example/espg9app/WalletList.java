@@ -45,6 +45,7 @@ public class WalletList extends AppCompatActivity {
         setupData(voucherInfoArrayList);
         WalletListAdapter walletListAdapter = new WalletListAdapter(WalletList.this,voucherInfoArrayList);
 
+
        binding.listview.setAdapter(walletListAdapter);
        binding.listview.setClickable(true);
        binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -76,13 +77,14 @@ public class WalletList extends AppCompatActivity {
                        builder2.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialogInterface, int j) {
-                               //fill in
+                               db.deleteVoucherInstance(business.getId(), username);
+                               finish();
+                               startActivity(getIntent());
                            }
                        });
                        builder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialogInterface, int j) {
-                               //fill in
                            }
                        });
                        builder2.show();
@@ -112,9 +114,7 @@ public class WalletList extends AppCompatActivity {
                 businessArraylist.add(selectedBusiness);
             }
         }
-        System.out.println("------------------------------------------------------------");
-        System.out.println(username);
-        System.out.println(businessArraylist);
-        System.out.println(voucherInfoArrayList);
     }
+
+
 }
