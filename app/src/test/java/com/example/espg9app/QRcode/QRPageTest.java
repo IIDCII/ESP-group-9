@@ -2,9 +2,12 @@ package com.example.espg9app.QRcode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.widget.ImageView;
 
+import com.example.espg9app.VoucherPage;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -31,6 +34,7 @@ class QRPageTest {
     String content = "example";
     int width = 1000;
     int height = 1000;
+
 
     @BeforeAll
     static void setUpBeforeClass() throws Exception{
@@ -62,6 +66,7 @@ class QRPageTest {
         assertEquals(height, bitMatrix.getHeight());
     }
 
+
     @Test
     public void testQROutput() throws Exception {
         MultiFormatWriter writer = new MultiFormatWriter();
@@ -74,8 +79,6 @@ class QRPageTest {
         int height = bitMatrix.getHeight();
         int[] pixels = new int[width * height];
 
-// Iterate over each pixel in the BitMatrix and set the corresponding
-// pixel in the pixels array to black or white
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (bitMatrix.get(x, y)) {
@@ -86,14 +89,11 @@ class QRPageTest {
             }
         }
 
-// Create a binary bitmap from the pixels array
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 
-// Decode the binary bitmap using QRCodeReader
         RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
 
-// Decode the RGBLuminanceSource using QRCodeReader
         String result = reader.decode(new BinaryBitmap(new HybridBinarizer(source))).getText();
 
         assertEquals(content, result);

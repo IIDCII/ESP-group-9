@@ -65,6 +65,9 @@ public class QRReader extends AppCompatActivity {
                 db.redeemVoucher(db.getVoucherInstanceID(username, Integer.parseInt(businessID)));
                 startActivity(openVoucher);
             }
+            else{
+                Toast.makeText(this, intentResult.getContents(), Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "this qr code is not available", Toast.LENGTH_SHORT).show();
         }
