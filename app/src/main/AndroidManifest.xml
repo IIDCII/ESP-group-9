@@ -31,6 +31,14 @@
         />
 
     <activity
+        android:name=".Account"
+        android:exported="true"/>
+
+    <activity
+        android:name=".Support"
+        android:exported="true"/>
+
+    <activity
         android:name=".VoucherPage"
         />
 

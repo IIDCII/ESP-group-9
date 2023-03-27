@@ -19,6 +19,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/switchUser"
+        android:layout_width="163dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="8dp"
+        android:text="SWITCH TO BUSINESS LOGIN"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordType" />
+
+    <Button
         android:id="@+id/GoToSignIn"
         android:layout_width="163dp"
         android:layout_height="69dp"
@@ -46,7 +57,7 @@
         android:layout_marginStart="215dp"
         android:layout_marginTop="389dp"
         android:visibility="visible"
-        app:constraint_referenced_ids="GoToSignUp,GoToSignIn"
+        app:constraint_referenced_ids="GoToSignUp,GoToSignIn,switchUser"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
