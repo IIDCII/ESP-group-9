@@ -31,11 +31,7 @@ public class QRReader extends AppCompatActivity {
         setContentView(R.layout.qrreader);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        btn_scan = findViewById(R.id.btn_scan);
-        btn_scan.setOnClickListener(v->{
-            scanCode();
-        });
+        scanCode();
 
     }
 
@@ -51,6 +47,8 @@ public class QRReader extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if (intentResult.getContents() != null) {

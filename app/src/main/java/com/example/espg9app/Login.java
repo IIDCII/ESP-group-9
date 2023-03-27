@@ -444,7 +444,9 @@ public class Login  extends AppCompatActivity{
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user.isEmailVerified()) {
                                 //EDIT THIS TO GO TO BUSINESS PAGE
-                                Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
+                                Intent showDetail = new Intent(getApplicationContext(), BusinessMain.class);
+                                Business business = new Business();
+                                business.setEmail(email);
                                 startActivity(showDetail);
 
                             } else {

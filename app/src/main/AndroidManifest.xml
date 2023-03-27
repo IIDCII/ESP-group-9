@@ -14,6 +14,10 @@
         >
 
     <activity
+        android:name=".EditProfileBusiness"
+        android:exported="true"
+        />
+    <activity
         android:name=".QRcode.QRReader"
         android:exported="true"
         />
@@ -21,7 +25,9 @@
     <activity
         android:name=".LoginOverride"
         android:exported="true"/>
-
+    <activity
+        android:name=".BusinessMain"
+        android:exported="true"/>
     <activity
         android:name=".AboutUs"
         android:exported="true"/>

@@ -15,7 +15,13 @@ public class Business {
     private String discountTiers;
     private String voucherDescription;
 
+    private String email;
+
     private int[] numRatingArr;
+
+    public String setEmail(String email){ return this.email = email;}
+
+    public String returnEmail(){return email;}
 
     public int getId() {
         return id;
