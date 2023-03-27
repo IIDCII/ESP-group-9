@@ -150,4 +150,5 @@ At X discounts used the discounts will be Y%.       At X discounts used the disc
 
 
     </LinearLayout>
+    <include layout="@layout/navigationbar"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

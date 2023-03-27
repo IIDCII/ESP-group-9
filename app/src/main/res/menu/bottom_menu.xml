@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="AboutUs"
+        android:title="About us"
         android:id="@+id/aboutUs"
         android:icon="@drawable/baseline_grass_24"/>
     <item
@@ -11,6 +11,6 @@
         android:icon="@drawable/baseline_home_24"/>
     <item
         android:title="Account"
-        android:id="@+id/walletList"
+        android:id="@+id/account"
         android:icon="@drawable/baseline_person_24"/>
 </menu>

@@ -1,6 +1,7 @@
 package com.example.espg9app;
 import android.app.Notification;
 import android.text.Layout;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Button;
@@ -8,11 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.espg9app.ui.StudentMain.StudentMainFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Account extends AppCompatActivity{
     public boolean allowNotifications;
@@ -39,6 +42,7 @@ public class Account extends AppCompatActivity{
         allowNotifications = false;
 
         setContentView(R.layout.account);
+        navbar();
 
         notificationTxt = (TextView) findViewById(R.id.notificationText);
         notificationSwitch = (Switch) findViewById(R.id.notificationSwitch);
@@ -147,11 +151,8 @@ public class Account extends AppCompatActivity{
     }
 
     public void goWallet(){
-        /*Intent intent = new Intent(this, WalletList.class);
-        startActivity(intent);
-
-         */
-
+        Intent i = new Intent(Account.this,WalletList.class);
+        startActivity(i);
     }
 
     public void goSupport(){
@@ -180,10 +181,30 @@ public class Account extends AppCompatActivity{
     }
 
     public void goLogin() {
-        /*Intent intent = new Intent(this, Login.class);
-        startActivity(intent);*/
+        Intent i = new Intent(Account.this,Login.class);
+        startActivity(i);
     }
 
-
+    private void navbar(){
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.aboutUs:
+                        Intent i = new Intent(Account.this, AboutUs.class);
+                        startActivity(i);
+                        return true;
+                    case R.id.account:
+                        return true;
+                    case R.id.studentMainFragment:
+                        Intent j = new Intent(Account.this, StudentMainFragment.class);
+                        startActivity(j);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
 
 }

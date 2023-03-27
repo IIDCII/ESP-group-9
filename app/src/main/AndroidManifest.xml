@@ -31,11 +31,15 @@
         />
 
     <activity
-        android:name=".VoucherPage"
-        />
+        android:name=".Account"
+        android:exported="true"/>
+
     <activity
-        android:name=".NavigationBar"
-        android:enabled="true"
+        android:name=".Support"
+        android:exported="true"/>
+
+    <activity
+        android:name=".VoucherPage"
         />
 
         <activity android:name=".QRcode.CaptureAct"
