@@ -61,7 +61,7 @@ public class QRReader extends AppCompatActivity {
             if (db.isVoucherInstance(Integer.parseInt(businessID),username)){
                 Intent openVoucher = new Intent(QRReader.this,VoucherPage.class);
                 openVoucher.putExtra("business_id",businessID);
-                openVoucher.putExtra("instance_id",db.getVoucherInstanceID(username,Integer.parseInt(businessID)));
+                openVoucher.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username,Integer.parseInt(businessID))));
                 db.redeemVoucher(db.getVoucherInstanceID(username, Integer.parseInt(businessID)));
                 startActivity(openVoucher);
             }

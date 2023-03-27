@@ -2,6 +2,7 @@ package com.example.espg9app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,8 @@ public class VoucherPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
         setContentView(R.layout.voucherpage);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         QRPage qr = new QRPage();
         description = findViewById(R.id.description);
         qr_viewer = findViewById(R.id.qr_viewer);
