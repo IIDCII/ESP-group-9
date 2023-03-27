@@ -33,10 +33,6 @@
     <activity
         android:name=".VoucherPage"
         />
-    <activity
-        android:name=".NavigationBar"
-        android:enabled="true"
-        />
 
         <activity android:name=".QRcode.CaptureAct"
         android:screenOrientation="portrait"

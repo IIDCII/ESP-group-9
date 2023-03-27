@@ -12,16 +12,15 @@ import com.example.espg9app.ui.StudentMain.StudentMainFragment;
 import java.util.ArrayList;
 
 public class VoucherPage extends AppCompatActivity {
-    Button add_to_wallet;
     TextView description;
     ImageView qr_viewer;
-    String voucherName;
+
     int businessID;
     int discount;
 
-    String businessName;
+
     TextView live;
-    Boolean liveCheck;
+
     Business selectedBusiness;
 
     String username;

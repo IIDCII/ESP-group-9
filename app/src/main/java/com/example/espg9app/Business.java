@@ -72,6 +72,7 @@ public class Business {
     public void setUserRating(float userRating) {
         this.userRating = userRating;
     }
+
     public int[] getNumRatingArr() {
         for(int i = 0; i < numRatingArr.length / 2; i++)
         {
