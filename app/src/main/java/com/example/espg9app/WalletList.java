@@ -63,7 +63,7 @@ public class WalletList extends AppCompatActivity {
                    public void onClick(DialogInterface dialogInterface, int j) {
                        Intent i = new Intent(WalletList.this,VoucherPage.class);
                        i.putExtra("business_id",Integer.toString(business.getId()));
-                       i.putExtra("instance_id","5");
+                       i.putExtra("instance_id",instanceID);
                        System.out.println("-----------/////------------/////-------/////-----/-/-/-/-/----/");
                        System.out.println(business.getId() +"  " + instanceID);
                        startActivity(i);
