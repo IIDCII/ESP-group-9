@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 class DBAccessTest {
 
+    DBAccess db = new DBAccess();
+
     @BeforeAll
     static void setUpBeforeClass() throws Exception{
         System.out.println("Set Up Before Class - @BeforeAll");
@@ -42,28 +44,25 @@ class DBAccessTest {
 
     @Test
     public void testVoucherInstanceAndActiveCheck(){
-        DBAccess db = new DBAccess();
         db.createVoucherInstance(34,"John");
         db.createVoucherInstance(3472,"Elipso'as");
         db.createVoucherInstance(-574,"Makiri");
-        db.createVoucherInstance(0,"Zanzibar");
+        db.createVoucherInstance(40,"Zanzibar");
 
         assertTrue(db.checkVoucherInstanceExistsAndActive(db.getVoucherInstanceID("John",34)));
-        assertTrue(db.checkVoucherInstanceExistsAndActive(db.getVoucherInstanceID("Elipso'as",3472)));
-        assertTrue(db.checkVoucherInstanceExistsAndActive(db.getVoucherInstanceID("Makiri",-574)));
-        assertTrue(db.checkVoucherInstanceExistsAndActive(db.getVoucherInstanceID("Zanzibar",0)));
+        assertFalse(db.checkVoucherInstanceExistsAndActive(db.getVoucherInstanceID("Elipso'as",3472)));
+        assertFalse(db.checkVoucherInstanceExistsAndActive(db.getVoucherInstanceID("Makiri",-574)));
+        assertTrue(db.checkVoucherInstanceExistsAndActive(db.getVoucherInstanceID("Zanzibar",40)));
     }
 
     @Test
     public void testGetAllBusinesses(){
-        DBAccess db = new DBAccess();
         ArrayList<Business> businessArraylist = db.getAllBusinesses();
-        assertEquals(businessArraylist.size(),3);
+        assertEquals(businessArraylist.size(),7);
     }
 
     @Test
     public void testGetUsername(){
-        DBAccess db = new DBAccess();
         String username = db.getUsername("sz2075@bath.ac.uk");
         System.out.println(username);
         assertEquals("salmaanzhang", username);
@@ -71,16 +70,34 @@ class DBAccessTest {
 
     @Test
     public void testVoucherInstanceCheck(){
-        DBAccess db = new DBAccess();
         db.createVoucherInstance(34,"John");
-        db.createVoucherInstance(3472,"Elipso'as");
+        db.createVoucherInstance(100,"Elipso'as");
         db.createVoucherInstance(-574,"Makiri");
-        db.createVoucherInstance(0,"Zanzibar");
+        db.createVoucherInstance(40,"Zanzibar");
 
         assertTrue(db.isVoucherInstance(34,"John"));
-        assertTrue(db.isVoucherInstance(3472, "Elipso'as"));
-        assertTrue(db.isVoucherInstance(-574,"Makiri"));
-        assertTrue(db.isVoucherInstance(0,"Zanzibar"));
+        assertTrue(db.isVoucherInstance(40,"Zanzibar"));
+
+        assertFalse(db.isVoucherInstance(100, "Elipso'as"));
+        assertFalse(db.isVoucherInstance(-574,"Makiri"));
     }
+
+    @Test
+    public void testLeaveReview(){
+        assertTrue(db.leaveReview("salmaanzhang",34,3));
+        assertFalse(db.leaveReview("salmaanzhang",34,50));
+    }
+
+    @Test
+    public void testVoucherActivation(){
+        assertTrue(db.activateVoucher(34));
+        assertFalse(db.activateVoucher(-124125815));
+    }
+
+    @Test
+    public void testDeleteVoucherInstance(){
+        assertTrue(db.deleteVoucherInstance(34,"salmaanzhang"));
+    }
+
 
 }
