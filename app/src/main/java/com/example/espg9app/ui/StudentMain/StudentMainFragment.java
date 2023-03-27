@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.espg9app.AboutUs;
+import com.example.espg9app.Account;
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
@@ -212,8 +213,8 @@ public class StudentMainFragment extends AppCompatActivity {
                         return true;
                     case R.id.studentMainFragment:
                         return true;
-                    case R.id.walletList:
-                        Intent j = new Intent(StudentMainFragment.this, WalletList.class);
+                    case R.id.account:
+                        Intent j = new Intent(StudentMainFragment.this, Account.class);
                         startActivity(j);
                         return true;
                 }

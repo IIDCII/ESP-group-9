@@ -32,8 +32,8 @@ public class AboutUs extends AppCompatActivity {
                         return true;
                     case R.id.aboutUs:
                         return true;
-                    case R.id.walletList:
-                        Intent j = new Intent(AboutUs.this, WalletList.class);
+                    case R.id.account:
+                        Intent j = new Intent(AboutUs.this, Account.class);
                         startActivity(j);
                         return true;
                 }
