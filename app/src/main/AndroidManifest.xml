@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.espg9app">
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,10 +13,67 @@
         android:hardwareAccelerated="true"
         >
 
+    <activity
+        android:name=".EditProfileBusiness"
+        android:exported="true"
+        />
+    <activity
+        android:name=".QRcode.QRReader"
+        android:exported="true"
+        />
+
+    <activity
+        android:name=".LoginOverride"
+        android:exported="true"/>
+    <activity
+        android:name=".BusinessMain"
+        android:exported="true"/>
+    <activity
+        android:name=".AboutUs"
+        android:exported="true"/>
+
+    <activity
+        android:name=".WalletList"
+        />
+
+    <activity
+        android:name=".Account"
+        android:exported="true"/>
+
+    <activity
+        android:name=".Support"
+        android:exported="true"/>
+
+    <activity
+        android:name=".VoucherPage"
+        />
+
+        <activity android:name=".QRcode.CaptureAct"
+        android:screenOrientation="portrait"
+        android:stateNotNeeded="true"
+        android:theme="@style/zxing_CaptureTheme"/>
+
         <activity
-            android:name=".EditProfileBusiness"
+            android:name="Login"
             android:exported="true"
-            />
+            android:screenOrientation="portrait"
+            android:label="">
+    <!--        <intent-filter>-->
+    <!--            <action android:name="android.intent.action.MAIN" />-->
+    <!--            <category android:name="android.intent.category.LAUNCHER" />-->
+    <!--        </intent-filter>-->
+        </activity>
+        <activity android:name=".ui.StudentMain.BusinessDetail"/>
+        <activity android:name=".ui.BusinessView.studentreviewpage"/>
+        <activity android:name=".ui.StudentMain.StudentMainFragment"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAKqvb0AVhBAjIgxR1PvMTMkrsnBFZYhoQ" />
     </application>
 
 </manifest>

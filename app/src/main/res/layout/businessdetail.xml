@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp">
+
+    <!--Sliding Up Screen-->
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="0dp"
+        sothree:umanoShadowHeight="0dp"
+        sothree:umanoOverlay="false"
+        sothree:umanoFadeColor="@color/shadow"
+        sothree:umanoDragView="@+id/title">
+
+        <!--First Screen-->
+        <include
+            android:id="@+id/layout1"
+            layout="@layout/businessdetail_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!--Second Screen-->
+        <include
+            android:id="@+id/title"
+            android:clickable="true"
+            layout="@layout/studentreviewpage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</RelativeLayout>

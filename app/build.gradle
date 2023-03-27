@@ -1,10 +1,14 @@
 plugins {
     id 'com.android.application'
-}
+	id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
+}
 android {
     compileSdk 33
-
+    dataBinding{
+        enabled = true
+    }
     defaultConfig {
         applicationId "com.example.espg9app"
         minSdk 21
@@ -25,13 +29,46 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.example.espg9app'
 }
 
 dependencies {
-
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
+    implementation files('libs/mysql-connector.jar')
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+    implementation 'androidx.navigation:navigation-ui:2.5.3'
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:31.2.3')
+
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    // FirebaseUI for Firebase Auth
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation ('com.github.Inconnu08:android-ratingreviews:1.2.0') { exclude group: 'org.jetbrains', module: 'annotations-java5' }
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
 }
+tasks.withType(Test) {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
+
