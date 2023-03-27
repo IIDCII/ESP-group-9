@@ -25,6 +25,8 @@ public class Login  extends AppCompatActivity{
     //Sign In Options
     private Button goToSignUp;
     private Button goToSignIn;
+    private Button businessToggle;
+    private boolean isBusiness; //are we on business or student login?
     private Group signOptions;
     private Group signScreen;
 
@@ -69,6 +71,7 @@ public class Login  extends AppCompatActivity{
 
         goToSignUp = findViewById(R.id.GoToSignUp);
         goToSignIn = findViewById(R.id.GoToSignIn);
+        businessToggle = findViewById(R.id.switchUser);
         signOptions = findViewById(R.id.SignOptions);
         signScreen =  findViewById(R.id.SignScreen);
 
@@ -125,11 +128,19 @@ public class Login  extends AppCompatActivity{
                 signInReturn.setVisibility(View.INVISIBLE);
 
                 //Show first name last name fields
-                signUpFirstName.setVisibility(View.VISIBLE);
-                signUpFirstNameText.setVisibility(View.VISIBLE);
-                signUpLastName.setVisibility(View.VISIBLE);
-                signUpLastNameText.setVisibility(View.VISIBLE);
-
+                if(isBusiness == false) {
+                    signUpFirstName.setVisibility(View.VISIBLE);
+                    signUpFirstNameText.setVisibility(View.VISIBLE);
+                    signUpLastName.setVisibility(View.VISIBLE);
+                    signUpLastNameText.setVisibility(View.VISIBLE);
+                }
+                else{
+                    //Hide first name last name fields
+                    signUpFirstName.setVisibility(View.INVISIBLE);
+                    signUpFirstNameText.setVisibility(View.INVISIBLE);
+                    signUpLastName.setVisibility(View.INVISIBLE);
+                    signUpLastNameText.setVisibility(View.INVISIBLE);
+                }
                 //Show username text field
                 signUpUsername.setVisibility(View.VISIBLE);
                 signUpUsernameText.setVisibility(View.VISIBLE);
@@ -171,6 +182,19 @@ public class Login  extends AppCompatActivity{
             }
         });
 
+        businessToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isBusiness = !isBusiness;
+                if(isBusiness){
+                    businessToggle.setText("SWITCH TO STUDENT LOGIN");
+                }else{
+                    businessToggle.setText("SWITCH TO BUSINESS LOGIN");
+                }
+            }
+        });
+
+
         // Sign In Screen
 
         signInReturn.setOnClickListener(new View.OnClickListener() {
@@ -210,8 +234,11 @@ public class Login  extends AppCompatActivity{
 
                 if(validRegister){
                     //Sign up the account via Firebase and connect to database
-                    signUp(email, password, firstName, lastName, username);
-
+                    if(!isBusiness) {
+                        signUp(email, password, firstName, lastName, username);
+                    }else{
+                        businessSignUp(email, password, username);
+                    }
                     //Hide the options and show the sign in screen
                     signOptions.setVisibility(Group.VISIBLE);
                     signScreen.setVisibility((Group.INVISIBLE));
@@ -227,7 +254,12 @@ public class Login  extends AppCompatActivity{
                 String email = signInEmail.getText().toString();
                 String password = signInPassword.getText().toString();
 
-                signIn(email, password);
+                if(!isBusiness) {
+                    signIn(email, password);
+                }else{
+                    businessSignIn(email, password);
+
+                }
             }
         });
     }
@@ -289,6 +321,52 @@ public class Login  extends AppCompatActivity{
 
     //FIREBASE
 
+    //BUSINESS EDITION
+
+    private void businessSignUp(String email, String username, String password){
+        boolean passwordEncrypted = db.encrypt(username,password,false);
+        if(!passwordEncrypted){
+            OkDialog("Error creating account, try again later.");
+            return;
+        }
+
+        String hashedPassword = db.getHash(username,true);
+        Log.d("hash",hashedPassword);
+
+        boolean checkPassword = db.CheckPassword(username, password, true);
+
+        if(!checkPassword){
+            OkDialog("Error creating account, try again later. 33");
+            return;
+        }
+
+
+        mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(task -> {
+                    boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+                    if (isNewUser) {
+                        mAuth.createUserWithEmailAndPassword(email, hashedPassword)
+                                .addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful()) {
+                                        // Sign up success
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        sendEmailVerification(user);
+                                        // Do something with the user object
+                                    } else {
+                                        // Sign up failed
+                                        Exception exception = task2.getException();
+                                        OkDialog("Failed to sign-up, please try again.");
+                                        // Do something with the exception
+                                    }
+                                });
+                    } else {
+                        // Email already exists
+                        OkDialog("This email already exists. Please choose a different one.");
+                        return;
+                    }
+                });
+    }
+
     private void signUp(String email, String password, String firstName, String lastName, String username) {
         //GO TO THE DATABASE AND MAKE ACCOUNT
         boolean accountCreated = db.addStudentAccount(username, firstName, lastName, email);
@@ -347,6 +425,55 @@ public class Login  extends AppCompatActivity{
                 });
 
 
+    }
+
+
+    private void businessSignIn(String email, String password) {
+        String username = db.getUsername(email);
+        String hashPassword = db.getHash(username, false);
+
+        //Log.d("username",username);
+
+        boolean passwordValid = db.CheckPassword(username,password,false);
+
+        if(passwordValid) {
+
+            mAuth.signInWithEmailAndPassword(email, hashPassword)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user.isEmailVerified()) {
+                                //EDIT THIS TO GO TO BUSINESS PAGE
+                                Intent showDetail = new Intent(getApplicationContext(), StudentMainFragment.class);
+                                startActivity(showDetail);
+
+                            } else {
+                                // User is signed in but email is not verified
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setMessage("Your account is not verified. Resend verification email?");
+                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        sendEmailVerification(user);
+                                    }
+                                });
+                                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // User clicked "No" button
+                                        // Perform the action you want to do when the user cancels
+                                    }
+                                });
+                                builder.create().show();
+                                mAuth.signOut();
+                                // Do something to handle this case
+                            }
+                        }
+                    });
+        }else{
+            OkDialog("Error logging in. Nightmare.");
+
+        }
     }
 
     private void signIn(String email, String password) {
