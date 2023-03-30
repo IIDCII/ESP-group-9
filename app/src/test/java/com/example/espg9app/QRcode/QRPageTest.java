@@ -74,7 +74,6 @@ class QRPageTest {
 
         BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, width, height);
 
-        // Verify that the QR code content is correct
         int width = bitMatrix.getWidth();
         int height = bitMatrix.getHeight();
         int[] pixels = new int[width * height];
