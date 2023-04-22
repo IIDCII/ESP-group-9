@@ -35,6 +35,8 @@
     <activity
         android:name=".WalletList"
         />
+    <activity android:name=".WelcomePage"
+        android:exported="true"/>
 
     <activity
         android:name=".Account"
