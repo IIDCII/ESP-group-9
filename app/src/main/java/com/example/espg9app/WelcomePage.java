@@ -45,6 +45,7 @@ public class WelcomePage extends AppCompatActivity {
 
         welcome_user.setText("Welcome " + username);
         setUpList();
+        setUpButtons();
     }
 
 
