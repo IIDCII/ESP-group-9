@@ -143,14 +143,15 @@ public class BusinessDetail extends AppCompatActivity {
     private void getSelectedBusiness() {
         Intent previousIntent = getIntent();
         String parsedStringID = previousIntent.getStringExtra("id");
-
+        System.out.println("The passed string id to busniess detail -------------------------");
+        System.out.println(parsedStringID);
         // Bug fix!!! This gets the correct business from the businessArraylist using the id
         for (int i = 0; i < StudentMainFragment.businessArraylist.size(); i++) {
             if (Integer.valueOf(parsedStringID) == Integer.valueOf(StudentMainFragment.businessArraylist.get(i).getId())) {
                 selectedBusiness = StudentMainFragment.businessArraylist.get(i);
-            }
-            ;
+            };
         }
+        System.out.println(selectedBusiness);
     }
 
     private void updateBusinessArr() {

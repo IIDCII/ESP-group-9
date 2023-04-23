@@ -58,6 +58,27 @@
         android:padding="10sp"
         />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="122dp"
+        android:src="@drawable/shopping2"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="About Us"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:padding="10sp"
+        android:text="We are an app dedicated to helping students shop sustainably easily. We help by providing discounts to students to incentivise shopping locally more often, and increase customers to local businesses with a low online precense."
+        android:textSize="15sp"/>
 
 
 

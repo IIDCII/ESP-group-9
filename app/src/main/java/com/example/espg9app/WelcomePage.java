@@ -45,10 +45,10 @@ public class WelcomePage extends AppCompatActivity {
         account = findViewById(R.id.account);
 
         welcome_user.setText("Welcome " + username);
-        setUpList();
-        setUpButtons();
         setUpData();
+        setUpList();
         setUpOnclickListener();
+        setUpButtons();
     }
 
 
@@ -87,7 +87,6 @@ public class WelcomePage extends AppCompatActivity {
 
     private void setUpList() {
         voucher_list = (ListView) findViewById(R.id.voucher_list);
-
         StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, businessArraylist);
         voucher_list.setAdapter(adapter);
     }
@@ -125,9 +124,9 @@ public class WelcomePage extends AppCompatActivity {
         voucher_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Business selectBusiness = (Business) (voucher_list.getItemAtPosition(position));
                 Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
-                System.out.println(Integer.toString(selectedBusiness.getId()));
-                showDetail.putExtra("id", (Integer.toString(selectedBusiness.getId())));
+                showDetail.putExtra("id", (Integer.toString(selectBusiness.getId())));
                 startActivity(showDetail);
             }
         });

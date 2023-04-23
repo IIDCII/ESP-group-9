@@ -22,6 +22,7 @@ import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
 import com.example.espg9app.StudentUser;
 import com.example.espg9app.WalletList;
+import com.example.espg9app.WelcomePage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ public class StudentMainFragment extends AppCompatActivity {
         setUpList();
         navbar();
         setUpOnclickListener();
+
+        Intent i = new Intent(StudentMainFragment.this, WelcomePage.class);
+        startActivity(i);
     }
 
 
@@ -128,7 +132,8 @@ public class StudentMainFragment extends AppCompatActivity {
                 Business selectBusiness = (Business) (listView.getItemAtPosition(position));
                 Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
                 showDetail.putExtra("id", (Integer.toString(selectBusiness.getId())));
-//                System.out.println(selectBusiness.getId());
+                System.out.println("This should be 29 for student main fragment -=----------=-==-=-==-=-=-==-=-=-=-=--=");
+                System.out.println(selectBusiness.getId());
                 startActivity(showDetail);
             }
         });
