@@ -3,6 +3,7 @@ package com.example.espg9app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.espg9app.ui.BusinessView.BusinessViewAdapter;
+import com.example.espg9app.ui.StudentMain.BusinessDetail;
 import com.example.espg9app.ui.StudentMain.StudentMainAdapter;
 import com.example.espg9app.ui.StudentMain.StudentMainFragment;
 
@@ -35,7 +37,6 @@ public class WelcomePage extends AppCompatActivity {
         setContentView(R.layout.welcomepage);
         getUsername();
         selectBusiness(getFilter());
-        setUpData();
 
         welcome_user = findViewById(R.id.welcome_user);
         voucher_list = findViewById(R.id.voucher_list);
@@ -46,6 +47,8 @@ public class WelcomePage extends AppCompatActivity {
         welcome_user.setText("Welcome " + username);
         setUpList();
         setUpButtons();
+        setUpData();
+        setUpOnclickListener();
     }
 
 
@@ -116,5 +119,17 @@ public class WelcomePage extends AppCompatActivity {
             }
         }
         return "all";
+    }
+
+    private void setUpOnclickListener() {
+        voucher_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent showDetail = new Intent(getApplicationContext(), BusinessDetail.class);
+                System.out.println(Integer.toString(selectedBusiness.getId()));
+                showDetail.putExtra("id", (Integer.toString(selectedBusiness.getId())));
+                startActivity(showDetail);
+            }
+        });
     }
 }
