@@ -109,7 +109,7 @@ public class BusinessDetail extends AppCompatActivity {
 
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
-        businessArrayList.add(selectedBusiness);
+        BusinessArrayList.add(selectedBusiness);
         BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, BusinessArrayList);
         listView.setAdapter(adapter);
 

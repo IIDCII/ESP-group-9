@@ -90,7 +90,9 @@ public class WelcomePage extends AppCompatActivity {
 
     private void setUpList() {
         voucher_list = (ListView) findViewById(R.id.voucher_list);
-        StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, businessArraylist);
+        ArrayList<Business> bal = new ArrayList<Business>();
+        bal.add(selectedBusiness);
+        StudentMainAdapter adapter = new StudentMainAdapter(getApplicationContext(), 0, bal);
         voucher_list.setAdapter(adapter);
     }
 
@@ -109,9 +111,9 @@ public class WelcomePage extends AppCompatActivity {
     private String getFilter(){
         StudentUser su = new StudentUser();
         username = su.getUsername();
-
+        Business selectedBusiness;
         DBAccess db = new DBAccess();
-
+        businessArraylist = db.getAllBusinesses();
         ArrayList<Business> fullBusinessArraylist = new ArrayList<Business>();
         fullBusinessArraylist = db.getAllBusinesses();
         for (int i = 0; i < fullBusinessArraylist.size(); i++){
