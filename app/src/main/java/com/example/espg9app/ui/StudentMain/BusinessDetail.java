@@ -1,7 +1,5 @@
 package com.example.espg9app.ui.StudentMain;
 
-import static com.example.espg9app.ui.StudentMain.StudentMainFragment.username;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.example.espg9app.Business;
 import com.example.espg9app.DBAccess;
 import com.example.espg9app.R;
+import com.example.espg9app.StudentUser;
 import com.example.espg9app.Voucher;
 import com.example.espg9app.VoucherPage;
 
@@ -40,6 +39,8 @@ public class BusinessDetail extends AppCompatActivity {
     RatingBar susrb;
     static Business selectedBusiness;
     ArrayList<Business> BusinessArrayList = new ArrayList<Business>();
+
+    ArrayList<Business> businessArrayList = new ArrayList<Business>();
 
     private ListView listView;
 
@@ -108,7 +109,7 @@ public class BusinessDetail extends AppCompatActivity {
 
     private void setVoucherList() {
         ListView listView = (ListView) findViewById(R.id.voucherList);
-        BusinessArrayList.add(selectedBusiness);
+        businessArrayList.add(selectedBusiness);
         BusinessViewAdapter adapter = new BusinessViewAdapter(getApplicationContext(), 0, BusinessArrayList);
         listView.setAdapter(adapter);
 
@@ -123,6 +124,8 @@ public class BusinessDetail extends AppCompatActivity {
                 DBAccess db = new DBAccess();
                 Intent showDetail = new Intent(getApplicationContext(), VoucherPage.class);
                 int businessID = selectedBusiness.getId();
+                StudentUser su = new StudentUser();
+                String username = su.getUsername();
 
                 if (db.isVoucherInstance(selectedBusiness.getId(),username)){
                     showDetail.putExtra("instance_id",Integer.toString(db.getVoucherInstanceID(username, businessID)));
@@ -143,12 +146,14 @@ public class BusinessDetail extends AppCompatActivity {
     private void getSelectedBusiness() {
         Intent previousIntent = getIntent();
         String parsedStringID = previousIntent.getStringExtra("id");
-        System.out.println("The passed string id to busniess detail -------------------------");
-        System.out.println(parsedStringID);
+
+        DBAccess dba = new DBAccess();
+        businessArrayList = dba.getAllBusinesses();
+
         // Bug fix!!! This gets the correct business from the businessArraylist using the id
-        for (int i = 0; i < StudentMainFragment.businessArraylist.size(); i++) {
-            if (Integer.valueOf(parsedStringID) == Integer.valueOf(StudentMainFragment.businessArraylist.get(i).getId())) {
-                selectedBusiness = StudentMainFragment.businessArraylist.get(i);
+        for (int i = 0; i < businessArrayList.size(); i++) {
+            if (Integer.valueOf(parsedStringID) == Integer.valueOf(businessArrayList.get(i).getId())) {
+                selectedBusiness = businessArrayList.get(i);
             };
         }
         System.out.println(selectedBusiness);
@@ -157,7 +162,7 @@ public class BusinessDetail extends AppCompatActivity {
     private void updateBusinessArr() {
 
         DBAccess dba = new DBAccess();
-        StudentMainFragment.businessArraylist = dba.getAllBusinesses();
+        businessArrayList = dba.getAllBusinesses();
         getSelectedBusiness();
         setBusinessDetails();
         setRatingBar();
@@ -171,7 +176,8 @@ public class BusinessDetail extends AppCompatActivity {
     private void setOverlay() {
         Button submit_button = (Button) findViewById(R.id.submit_button);
         Button review_button = (Button) findViewById(R.id.review_button);
-        String username = StudentMainFragment.username;
+        StudentUser su = new StudentUser();
+        String username = su.getUsername();
 //        String username="ethanwcit";
         DBAccess db = new DBAccess();
         RatingBar bar = (RatingBar) findViewById(R.id.ratingBar2);
@@ -215,7 +221,6 @@ public class BusinessDetail extends AppCompatActivity {
     }
 
     private void setBusinessDetails() {
-
         susrb = (RatingBar) findViewById(R.id.susRatingBar);
         TextView businessName = (TextView) findViewById(R.id.businessName);
         TextView businessDesc = (TextView) findViewById(R.id.businessDesc);

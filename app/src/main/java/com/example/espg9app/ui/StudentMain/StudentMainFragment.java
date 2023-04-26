@@ -50,9 +50,6 @@ public class StudentMainFragment extends AppCompatActivity {
         setUpList();
         navbar();
         setUpOnclickListener();
-
-        Intent i = new Intent(StudentMainFragment.this, WelcomePage.class);
-        startActivity(i);
     }
 
 
